@@ -1,24 +1,24 @@
 import { Scene } from "phaser";
-import tilePNG from "../assets/tiles.png";
-import gameBoard from "../assets/level1.json";
 
 export default class Level1 extends Scene {
   constructor() {
     super("level1");
   }
 
-  preload() {
-    // load the tilemap
-    this.load.tilemapTiledJSON("level1GameBoard", gameBoard);
-    //load the sprite sheet
-    this.load.spritesheet("tiles", tilePNG, {
-      frameWidth: 200,
-      frameHeight: 200,
-    });
-  }
+  preload() {}
 
   create() {
-    // this.add.image(400, 300, "level1Image", Level1Image);
+    this.events.on("resize", this.resize, this);
+    this.createMap();
+  }
+  resize(width, height) {
+    if (width === undefined) {
+      width = this.sys.game.config.width;
+      height = this.sys.game.config.height;
+    }
+    this.cameras.resize(width, height);
+  }
+  createMap() {
     // //create the tilemap
     const board = this.make.tilemap({ key: "level1GameBoard" });
     //add tileset image
@@ -30,8 +30,8 @@ export default class Level1 extends Scene {
       0,
       0
     );
-    backGroundLayer.setDepth(0);
+    // backGroundLayer.setDepth(0);
     const topLayer = board.createStaticLayer("top", tilesPNG, 0, 0);
-    topLayer.setDepth(1);
+    // topLayer.setDepth(1);
   }
 }

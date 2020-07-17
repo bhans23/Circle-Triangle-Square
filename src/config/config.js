@@ -1,5 +1,9 @@
 export default {
   type: Phaser.AUTO,
-  width: 1200,
-  height: 1200,
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 1200,
+    height: 1200
+}
 };
