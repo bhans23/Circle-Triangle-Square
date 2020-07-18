@@ -1,7 +1,5 @@
 import Phaser from "phaser";
-import logo from "../assets/sQTLogo.png";
-import startButton from "../assets/startButton.png";
-import mountainBG from "../assets/mountainBG.png";
+
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -9,14 +7,12 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('mountainBG', mountainBG);
-    this.load.image("startButton", startButton);
-    this.load.image("logo", logo);
+   
   }
 
   create() {
     // Background image
-    const bgImage = this.add.image(0,0,'mountainBG', mountainBG).setOrigin(0, 0).setDepth(0);
+    const bgImage = this.add.image(0,0,'mountainBG').setOrigin(0, 0).setDepth(0);
     bgImage.displayWidth = 800;
     bgImage.displayHeight = 600;
 
