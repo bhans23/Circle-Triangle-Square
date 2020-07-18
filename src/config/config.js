@@ -1,11 +1,7 @@
 export default {
   type: Phaser.AUTO,
   physics: {
-    default: "arcade",
-    arcade: {
-      debug: true,
-      gravity: { y: 0 },
-    },
+    default: "arcade"
   },
   scale: {
     mode: Phaser.Scale.FIT,

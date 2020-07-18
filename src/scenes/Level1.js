@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { runInThisContext } from "vm";
 
 export default class Level1 extends Scene {
   constructor() {
@@ -11,11 +12,13 @@ export default class Level1 extends Scene {
     this.events.on("resize", this.resize, this);
     this.createMap();
     //circle sprite
-    this.circleSprite = this.physics.add.sprite(500, 900, "circle");
-    this.circleMoves();
+    this.circleSprite = this.physics.add.image(500, 900, "circle");
+    this.circleMoveSetup();
   }
 
-  update() {}
+  update() {
+    this.circleMoves();
+  }
 
   resize(width, height) {
     if (width === undefined) {
@@ -41,15 +44,37 @@ export default class Level1 extends Scene {
     // topLayer.setDepth(1);
   }
 
-  circleMoves() {
-    this.pointerCord = game.input.mousePointer;
-    this.pointer = this.input.activePointer;
-    this.input.on("pointerdown", function (pointer) {
-      this.physics.moveTo(this.circleSprite,this.pointerCord.x,this.pointerCord.y, 240);
-    }, this);
-    if (this.circleSprite.x == this.pointerCord.x && this.circleSprite.y == this.pointerCord.y ) {
-      this.circleSprite.stop();
-    }
+  circleMoveSetup() {
+    this.target = new Phaser.Math.Vector2();
     
+    this.input.on(
+      "pointerdown",
+      function (pointer) {
+        this.target.x = pointer.x;
+        this.target.y = pointer.y;
+
+        // Move at 200 px/s:
+        this.physics.moveToObject(this.circleSprite, this.target, 200);
+      },
+      this
+    );
+  }
+
+  circleMoves() {
+    this.distance = Phaser.Math.Distance.Between(
+      this.circleSprite.x,
+      this.circleSprite.y,
+      this.target.x,
+      this.target.y
+    );
+    if (this.circleSprite.body.speed > 0) {
+      //  4 is our distance tolerance, i.e. how close the source can get to the this.target
+      //  before it is considered as being there. The faster it moves, the more tolerance is required.
+
+      if (this.distance < 4) {
+        this.circleSprite.body.reset(this.target.x, this.target.y);
+      
+      }
+    }
   }
 }
