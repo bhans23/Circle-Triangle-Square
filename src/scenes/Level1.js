@@ -3,8 +3,10 @@ import { Scene } from "phaser";
 export default class Level1 extends Scene {
   constructor() {
     super("level1");
+    this.characterSelect
   }
 
+  // Preload, create, uupdate functions ---------------------------------
   preload() {}
 
   create() {
@@ -18,6 +20,8 @@ export default class Level1 extends Scene {
   update() {
     this.circleMoves();
   }
+
+  //---------------------------------------------------------------------
 
   resize(width, height) {
     if (width === undefined) {
@@ -38,16 +42,16 @@ export default class Level1 extends Scene {
       0,
       0
     );
-    // backGroundLayer.setDepth(0);
     const topLayer = board.createStaticLayer("top", tilesPNG, 0, 0);
-    // topLayer.setDepth(1);
   }
 
+  //Circle sprite move functions -------------------------------------------
+   
   circleMoveSetup() {
+    
     this.target = new Phaser.Math.Vector2();
-
-    console.log(this.circleSprite.selected);
     this.circleSprite.setInteractive();
+    
     this.circleSprite.on(
       "pointerdown",
       function () {
@@ -55,9 +59,11 @@ export default class Level1 extends Scene {
 
         if (this.circleSprite.selected === true) {
           this.circleSprite.setTint(0xff00ff);
+          this.characterSelect = this.circleSprite;
           this.circleMoveTo();
         }
         if (this.circleSprite.selected === false) {
+          this.characterSelect = 'none';
           this.circleSprite.clearTint();
         }
       },
@@ -71,9 +77,7 @@ export default class Level1 extends Scene {
       function (pointer) {
         this.target.x = pointer.x;
         this.target.y = pointer.y;
-
-        // Move at 200 px/s:
-        this.physics.moveToObject(this.circleSprite, this.target, 400);
+        this.physics.moveToObject(this.characterSelect, this.target, 400);
       },
       this
     );
@@ -95,4 +99,5 @@ export default class Level1 extends Scene {
       }
     }
   }
+  //------------------------------------------------------------------------------------------------------------
 }
