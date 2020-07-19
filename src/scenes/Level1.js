@@ -1,5 +1,4 @@
 import { Scene } from "phaser";
-import { runInThisContext } from "vm";
 
 export default class Level1 extends Scene {
   constructor() {
@@ -12,7 +11,7 @@ export default class Level1 extends Scene {
     this.events.on("resize", this.resize, this);
     this.createMap();
     //circle sprite
-    this.circleSprite = this.physics.add.image(500, 900, "circle");
+    this.circleSprite = this.physics.add.sprite(500, 900, "circle");
     this.circleMoveSetup();
   }
 
@@ -46,7 +45,27 @@ export default class Level1 extends Scene {
 
   circleMoveSetup() {
     this.target = new Phaser.Math.Vector2();
-    
+
+    console.log(this.circleSprite.selected);
+    this.circleSprite.setInteractive();
+    this.circleSprite.on(
+      "pointerdown",
+      function () {
+        this.circleSprite.selected = !this.circleSprite.selected;
+
+        if (this.circleSprite.selected === true) {
+          this.circleSprite.setTint(0xff00ff);
+          this.circleMoveTo();
+        }
+        if (this.circleSprite.selected === false) {
+          this.circleSprite.clearTint();
+        }
+      },
+      this
+    );
+  }
+
+  circleMoveTo() {
     this.input.on(
       "pointerdown",
       function (pointer) {
@@ -54,7 +73,7 @@ export default class Level1 extends Scene {
         this.target.y = pointer.y;
 
         // Move at 200 px/s:
-        this.physics.moveToObject(this.circleSprite, this.target, 200);
+        this.physics.moveToObject(this.circleSprite, this.target, 400);
       },
       this
     );
@@ -73,7 +92,6 @@ export default class Level1 extends Scene {
 
       if (this.distance < 4) {
         this.circleSprite.body.reset(this.target.x, this.target.y);
-      
       }
     }
   }
