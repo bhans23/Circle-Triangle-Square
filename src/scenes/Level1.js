@@ -3,7 +3,8 @@ import { Scene } from "phaser";
 export default class Level1 extends Scene {
   constructor() {
     super("level1");
-    this.characterSelect
+    this.characterSelect;
+    this.target = new Phaser.Math.Vector2();
   }
 
   // Preload, create, uupdate functions ---------------------------------
@@ -14,10 +15,15 @@ export default class Level1 extends Scene {
     this.createMap();
     //circle sprite
     this.circleSprite = this.physics.add.sprite(500, 900, "circle");
+    this.triangleSprite = this.physics.add.sprite(700, 900, "triangle");
+    this.squareSprite = this.physics.add.sprite(300, 900, "square");
     this.circleMoveSetup();
+    this. squareMoveSetup()
+    
   }
 
   update() {
+    this.spriteMoveTo();
     this.circleMoves();
   }
 
@@ -45,42 +51,84 @@ export default class Level1 extends Scene {
     const topLayer = board.createStaticLayer("top", tilesPNG, 0, 0);
   }
 
-  //Circle sprite move functions -------------------------------------------
-   
+  // sprite move functions -------------------------------------------
+
   circleMoveSetup() {
     
-    this.target = new Phaser.Math.Vector2();
     this.circleSprite.setInteractive();
-    
+    this.squareSprite.setInteractive();
+
     this.circleSprite.on(
       "pointerdown",
       function () {
         this.circleSprite.selected = !this.circleSprite.selected;
+        this.characterSelect = this.circleSprite;
 
-        if (this.circleSprite.selected === true) {
+        if (
+          this.circleSprite.selected === true &&
+          this.characterSelect === this.circleSprite
+          
+        ) {
           this.circleSprite.setTint(0xff00ff);
-          this.characterSelect = this.circleSprite;
-          this.circleMoveTo();
+          this.squareSprite.clearTint();
         }
-        if (this.circleSprite.selected === false) {
-          this.characterSelect = 'none';
+        if (this.circleSprite.selected === false || this.characterSelect != this.circleSprite) {
+          this.characterSelect = "none";
           this.circleSprite.clearTint();
         }
       },
       this
     );
-  }
 
-  circleMoveTo() {
-    this.input.on(
+   
+  }
+  squareMoveSetup() {
+    this.squareSprite.on(
       "pointerdown",
-      function (pointer) {
-        this.target.x = pointer.x;
-        this.target.y = pointer.y;
-        this.physics.moveToObject(this.characterSelect, this.target, 400);
+      function () {
+        this.squareSprite.selected = !this.squareSprite.selected;
+        this.characterSelect = this.squareSprite;
+
+        if (
+          this.squareSprite.selected === true &&
+          this.characterSelect === this.squareSprite
+        ) {
+          this.squareSprite.setTint(0xff00ff);
+          this.circleSprite.clearTint();
+        }
+        if (this.squareSprite.selected === false) {
+          this.characterSelect = "none";
+          this.squareSprite.clearTint();
+        }
       },
       this
     );
+
+  }
+
+
+  spriteMoveTo() {
+    if (this.characterSelect == this.circleSprite) {
+      this.input.on(
+        "pointerdown",
+        function (pointer) {
+          this.target.x = pointer.x;
+          this.target.y = pointer.y;
+          this.physics.moveToObject(this.circleSprite, this.target, 400);
+        },
+        this
+      );
+    } else {
+      this.input.on(
+        "pointerdown",
+        function (pointer) {
+          this.target.x = pointer.x;
+          this.target.y = pointer.y;
+          this.physics.moveToObject(this.circleSprite, this.target, 0);
+        },
+        this
+      );
+    }
   }
 
   circleMoves() {

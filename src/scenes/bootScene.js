@@ -5,6 +5,8 @@ import logo from "../assets/sQTLogo.png";
 import startButton from "../assets/startButton.png";
 import mountainBG from "../assets/mountainBG.png";
 import circleSprite from "../assets/Circle.png";
+import squareSprite from "../assets/Square.png";
+import triangleSprite from "../assets/Triangle.png";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -20,6 +22,8 @@ export default class bootScene extends Scene {
     //level 1 assets
     this.load.tilemapTiledJSON("level1GameBoard", gameBoard);
     this.load.image("circle", circleSprite);
+    this.load.image("square", squareSprite);
+    this.load.image("triangle", triangleSprite);
     this.load.spritesheet("tiles", tilePNG, {
       frameWidth: 200,
       frameHeight: 200,
