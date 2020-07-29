@@ -4,6 +4,7 @@ import TitleScene from "./scenes/TitleScene";
 import Level1 from "./scenes/Level1";
 import bootScene from './scenes/bootScene';
 
+
 class Game extends Phaser.Game {
   constructor() {
     super(config);
