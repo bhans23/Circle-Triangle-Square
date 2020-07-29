@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import spriteMoves from "../logic/spriteMoves";
+import spriteCreation from "../logic/spriteCreation";
 
 
 export default class Level1 extends Scene {
@@ -16,22 +16,18 @@ export default class Level1 extends Scene {
     this.events.on("resize", this.resize, this);
     this.createMap();
     //sprite
-    this.circleSprite = this.physics.add.sprite(500, 900, "circle");
-    this.triangleSprite = this.physics.add.sprite(700, 900, "triangle");
-    this.squareSprite = this.physics.add.sprite(300, 900, "square");
+    this.spriteSelection = [
+      new spriteCreation('circle',300,900),
+      new spriteCreation('square',700, 900),
+      new spriteCreation('triangle',500,900),
+    ];
    
   }
 
   update() {}
 
   //---------------------------------------------------------------------
-  createSpriteArray() {
-    this.spriteSelection = [
-      new spriteMoves(this.circleSprite),
-      new spriteMoves(this.squareSprite),
-      new spriteMoves(this.triangleSprite),
-    ];
-  }
+
   
   handlePointerDown(spriteSelection) {
     this.spriteSelection.forEach((rockSprite) => {

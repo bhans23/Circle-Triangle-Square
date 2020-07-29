@@ -1,18 +1,24 @@
 import Phaser from "phaser";
 
-export default class spriteMoves extends Phaser.Scene {
-  constructor(rockSprite) {
+export default class spriteCreation extends Phaser.Scene {
+  constructor(rockSprite, spriteXValue, spriteYValue) {
     this.rockSprite = rockSprite;
+    this.spriteXValue = spriteXValue;
+    this.spriteyValue  = spriteYValue;
   }
+  preload() {};
+  // create() {
+  //   this.physics.add.sprite(this.spriteXValue, this.spriteyValue, this.rockSprite);
+  // }
   update() {
-    this.spriteMoves();
-  }
-  onPointerDown() {
-    this.rockSprite.setInteractive();
-    this.rockSprite.on("pointerdown", function () {
-      this.handlePointerDown()
+  //   this.spriteMoves();
+  // }
+  // onPointerDown() {
+  //   this.rockSprite.setInteractive();
+  //   this.rockSprite.on("pointerdown", function () {
+  //     this.handlePointerDown()
 
-    }, this);
+  //   }, this);
   }
   select() {
     this.update();
