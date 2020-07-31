@@ -1,58 +1,21 @@
 import Phaser from "phaser";
 
-export default class spriteCreation extends Phaser.Scene {
-  constructor(rockSprite, spriteXValue, spriteYValue) {
-    this.rockSprite = rockSprite;
-    this.spriteXValue = spriteXValue;
-    this.spriteyValue  = spriteYValue;
+export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
+  constructor(spriteValues) {
+    super(spriteValues.scene, spriteValues.x, spriteValues.y, spriteValues.key);
+    spriteValues.scene.add.existing(this);
+    spriteValues.scene.physics.add.existing(this);
+    this.spriteValues = spriteValues;
   }
-  preload() {};
-  // create() {
-  //   this.physics.add.sprite(this.spriteXValue, this.spriteyValue, this.rockSprite);
-  // }
-  update() {
-  //   this.spriteMoves();
-  // }
-  // onPointerDown() {
-  //   this.rockSprite.setInteractive();
-  //   this.rockSprite.on("pointerdown", function () {
-  //     this.handlePointerDown()
+  preload() {}
 
-  //   }, this);
-  }
-  select() {
-    this.update();
-    rockSprite.setTint(0x32a852);
-  }
+  create() {}
 
-  deselect() {}
+  update() {}
+  // select() {
 
-  // spriteMoveTo() {
-  //   this.input.on(
-  //     "pointerdown",
-  //     function (pointer) {
-  //       this.target.x = pointer.x;
-  //       this.target.y = pointer.y;
-  //       this.physics.moveToObject(this.circleSprite, this.target, 400);
-  //     },
-  //     this
-  //   );
+  //   rockSprite.setTint(0x32a852);
   // }
 
-  // spriteMoves() {
-  //   this.distance = Phaser.Math.Distance.Between(
-  //     this.circleSprite.x,
-  //     this.circleSprite.y,
-  //     this.target.x,
-  //     this.target.y
-  //   );
-  //   if (this.circleSprite.body.speed > 0) {
-  //     //  4 is our distance tolerance, i.e. how close the source can get to the this.target
-  //     //  before it is considered as being there. The faster it moves, the more tolerance is required.
-
-  //     if (this.distance < 4) {
-  //       this.circleSprite.body.reset(this.target.x, this.target.y);
-  //     }
-  //   }
-  // }
+  // deselect() {}
 }
