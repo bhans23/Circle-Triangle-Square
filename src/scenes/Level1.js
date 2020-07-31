@@ -23,20 +23,26 @@ export default class Level1 extends Scene {
   }
 
   update() {
+    this.spriteSelection.forEach( (sprite) => {
+      sprite.on("pointerDown", this.handlePointerDown)
+    }
+    
+      )
     this.spriteMoves();
   }
 
   //---------------------------------------------------------------------
 
-  // handlePointerDown(spriteSelection) {
-  //   this.spriteSelection.forEach((rockSprite) => {
-  //     if (rockSprite === spriteSelection) {
-  //       rockSprite.select();
-  //     } else {
-  //       rockSprite.deselect();
-  //     }
-  //   });
-  // }
+  handlePointerDown(selectedSprite) {
+    this.spriteSelection.forEach((sprite) => {
+      if (sprite === selectedSprite) {
+        sprite.select();
+      } else {
+        sprite.deselect();
+      }
+    });
+  }
+  
 
   spriteMoveTo() {
     this.spriteSelection.forEach((sprite) => {

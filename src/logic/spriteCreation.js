@@ -12,10 +12,39 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   create() {}
 
   update() {}
-  // select() {
 
-  //   rockSprite.setTint(0x32a852);
-  // }
 
-  // deselect() {}
+  
+  select() {
+
+    this.setTint(0x32a852);
+  }
+
+  deselect() {
+    this.clearTint();
+
+  }
 }
+
+
+
+// class Shared {
+//   onPointerDown(callback) {
+//     this.on('pointerdown', () => callback(this));
+//   }
+// }
+// circleTriangleSquareArray.forEach(item => item.onPointerDown(this.handlePointerDown)):
+
+
+
+// class Level1 {
+//   handlePointerDown(circleTriangleOrSquare) {
+//     this.circleTriangleSquareArray.forEach(item => {
+//       if (item === circleTriangleOrSquare) {
+//         item.select();
+//       } else {
+//         item.deselect();
+//       }
+//     });
+//   }
+// }
