@@ -9,47 +9,12 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   }
   preload() {}
 
-  create() {
-    
-  
-     
-  }
+  create() {}
 
-  update() {
-    
-  }
+  update() {}
 
+  select() {}
 
-  
-  select() {
-
-  }
-
-  deselect() {
-    
-
-  }
+  deselect() {}
 }
 
-
-
-// class Shared {
-//   onPointerDown(callback) {
-//     this.on('pointerdown', () => callback(this));
-//   }
-// }
-// circleTriangleSquareArray.forEach(item => item.onPointerDown(this.handlePointerDown)):
-
-
-
-// class Level1 {
-//   handlePointerDown(circleTriangleOrSquare) {
-//     this.circleTriangleSquareArray.forEach(item => {
-//       if (item === circleTriangleOrSquare) {
-//         item.select();
-//       } else {
-//         item.deselect();
-//       }
-//     });
-//   }
-// }

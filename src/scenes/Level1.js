@@ -1,5 +1,8 @@
 import { Scene } from "phaser";
 import spriteCreation from "../logic/spriteCreation";
+import align from "../utilities/align.js";
+import AlignGrid from "../utilities/alignGrid.js";
+import UIBlock from "../utilities/UIBlock.js";
 
 export default class Level1 extends Scene {
   constructor() {
@@ -10,6 +13,9 @@ export default class Level1 extends Scene {
   preload() {}
 
   create() {
+    this.aGrid = new AlignGrid({ scene: this, rows: 6, cols: 6 });
+    this.aGrid.showNumbers();
+
     this.target = new Phaser.Math.Vector2();
     this.events.on("resize", this.resize, this);
     this.createMap();
@@ -38,9 +44,11 @@ export default class Level1 extends Scene {
       if (sprite === selectedSprite) {
         sprite.setTint(0x32a852);
         this.spriteSpeed(sprite, 400);
-      } else {
+      }
+      if (sprite !== selectedSprite || sprite.selected === false) {
         sprite.clearTint();
         this.spriteSpeed(sprite, 0);
+      } else {
       }
     });
   }
@@ -48,7 +56,14 @@ export default class Level1 extends Scene {
   spriteMoveTo() {
     this.spriteSelection.forEach((sprite) => {
       sprite.setInteractive();
-      sprite.on("pointerdown", () => this.handlePointerDown(sprite), this);
+      sprite.on(
+        "pointerdown",
+        () => {
+          sprite.selected = !sprite.selected;
+          this.handlePointerDown(sprite);
+        },
+        this
+      );
     });
   }
 
@@ -56,8 +71,26 @@ export default class Level1 extends Scene {
     this.input.on(
       "pointerdown",
       function (pointer) {
-        this.target.x = pointer.x;
-        this.target.y = pointer.y;
+        //Converting pointer x value to a center value
+        this.singleDigitX = Math.floor(Math.floor(pointer.x) / 100);
+
+        this.evenOddX = this.singleDigitX % 2;
+
+        if (this.evenOddX === 0) {
+          this.centerX = this.singleDigitX * 100 + 100;
+        } else {
+          this.centerX = this.singleDigitX * 100;
+        }
+        //Converting pointer y value to a center value
+        this.singleDigitY = Math.floor(Math.floor(pointer.y) / 100);
+        this.evenOddY = this.singleDigitY % 2;
+        if (this.evenOddY === 0) {
+          this.centerY = this.singleDigitY * 100 + 100;
+        } else {
+          this.centerY = this.singleDigitY * 100;
+        }
+        this.target.x = this.centerX;
+        this.target.y = this.centerY;
         this.physics.moveToObject(sprite, this.target, speed);
       },
       this
