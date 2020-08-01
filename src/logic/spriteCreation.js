@@ -9,19 +9,24 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   }
   preload() {}
 
-  create() {}
+  create() {
+    
+  
+     
+  }
 
-  update() {}
+  update() {
+    
+  }
 
 
   
   select() {
 
-    this.setTint(0x32a852);
   }
 
   deselect() {
-    this.clearTint();
+    
 
   }
 }

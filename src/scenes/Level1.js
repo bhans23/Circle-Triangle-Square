@@ -23,11 +23,11 @@ export default class Level1 extends Scene {
   }
 
   update() {
-    this.spriteSelection.forEach( (sprite) => {
-      sprite.on("pointerDown", this.handlePointerDown)
-    }
-    
-      )
+    // this.spriteSelection.forEach( (sprite) => {
+    //   sprite.on("pointerDown", this.handlePointerDown)
+    // }
+
+    //   )
     this.spriteMoves();
   }
 
@@ -36,27 +36,32 @@ export default class Level1 extends Scene {
   handlePointerDown(selectedSprite) {
     this.spriteSelection.forEach((sprite) => {
       if (sprite === selectedSprite) {
-        sprite.select();
+        sprite.setTint(0x32a852);
+        this.spriteSpeed(sprite, 400);
       } else {
-        sprite.deselect();
+        sprite.clearTint();
+        this.spriteSpeed(sprite, 0);
       }
     });
   }
-  
 
   spriteMoveTo() {
     this.spriteSelection.forEach((sprite) => {
       sprite.setInteractive();
-      this.input.on(
-        "pointerdown",
-        function (pointer) {
-          this.target.x = pointer.x;
-          this.target.y = pointer.y;
-          this.physics.moveToObject(sprite, this.target, 400);
-        },
-        this
-      );
+      sprite.on("pointerdown", () => this.handlePointerDown(sprite), this);
     });
+  }
+
+  spriteSpeed(sprite, speed) {
+    this.input.on(
+      "pointerdown",
+      function (pointer) {
+        this.target.x = pointer.x;
+        this.target.y = pointer.y;
+        this.physics.moveToObject(sprite, this.target, speed);
+      },
+      this
+    );
   }
 
   spriteMoves() {
