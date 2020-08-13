@@ -1,24 +1,24 @@
 import { Scene } from "phaser";
 import spriteCreation from "../logic/spriteCreation";
-import align from "../utilities/align.js";
-import AlignGrid from "../utilities/alignGrid.js";
-import UIBlock from "../utilities/UIBlock.js";
+import GameBoard from "../logic/GameBoard";
+
 
 export default class Level1 extends Scene {
   constructor() {
     super("level1");
   }
-
   // Preload, create, update functions ---------------------------------
-  preload() {}
+  preload() { }
 
   create() {
-    this.aGrid = new AlignGrid({ scene: this, rows: 6, cols: 6 });
-    this.aGrid.showNumbers();
-
+    
+    this.gB = new GameBoard({rows: 6, cols: 6, sqW: 200, sqH: 200}) 
+    this.gB.squareBoard()
+    var graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
+    this.gB.sqNum.map(x => graphics.fillRectShape(x));
     this.target = new Phaser.Math.Vector2();
     this.events.on("resize", this.resize, this);
-    this.createMap();
+    // this.createMap();
     //sprite
     this.spriteSelection = [
       new spriteCreation({ scene: this, x: 300, y: 900, key: "circle" }),
@@ -73,25 +73,16 @@ export default class Level1 extends Scene {
       function (pointer) {
         //Converting pointer x value to a center value
         this.singleDigitX = Math.floor(Math.floor(pointer.x) / 100);
-
-        this.evenOddX = this.singleDigitX % 2;
-
-        if (this.evenOddX === 0) {
-          this.centerX = this.singleDigitX * 100 + 100;
-        } else {
-          this.centerX = this.singleDigitX * 100;
-        }
+        this.centerX = Math.floor(this.singleDigitX / 2);
         //Converting pointer y value to a center value
         this.singleDigitY = Math.floor(Math.floor(pointer.y) / 100);
-        this.evenOddY = this.singleDigitY % 2;
-        if (this.evenOddY === 0) {
-          this.centerY = this.singleDigitY * 100 + 100;
-        } else {
-          this.centerY = this.singleDigitY * 100;
-        }
-        this.target.x = this.centerX;
-        this.target.y = this.centerY;
-        this.physics.moveToObject(sprite, this.target, speed);
+        this.centerY = Math.floor(this.singleDigitY / 2);
+       
+        
+         this.squareSelected =  this.gB.sqNum[this.gB.squareMatrix[this.centerX][this.centerX]]
+        
+         console.log(this.squareSelected.x)
+        this.physics.moveToObject(sprite, this.squareSelected, speed);
       },
       this
     );
@@ -105,6 +96,7 @@ export default class Level1 extends Scene {
         this.target.x,
         this.target.y
       );
+      console.log(this.squareSelected.x)
       if (sprite.body.speed > 0) {
         //  4 is our distance tolerance, i.e. how close the source can get to the this.target
         //  before it is considered as being there. The faster it moves, the more tolerance is required.

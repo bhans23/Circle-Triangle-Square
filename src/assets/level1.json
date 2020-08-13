@@ -1,11 +1,21 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"level1.json"
+        }
+    },
  "height":6,
  "infinite":false,
  "layers":[
         {
-         "data":[6, 6, 6, 6, 6, 6, 6, 4, 3, 4, 3, 6, 6, 3, 4, 3, 4, 6, 6, 4, 3, 4, 3, 6, 6, 3, 4, 3, 4, 6, 6, 6, 6, 6, 6, 6],
+         "compression":"",
+         "data":"BgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAQAAAADAAAABAAAAAMAAAAGAAAABgAAAAMAAAAEAAAAAwAAAAQAAAAGAAAABgAAAAQAAAADAAAABAAAAAMAAAAGAAAABgAAAAMAAAAEAAAAAwAAAAQAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAA",
+         "encoding":"base64",
          "height":6,
-         "id":1,
+         "id":2,
          "name":"background",
          "opacity":1,
          "type":"tilelayer",
@@ -15,9 +25,11 @@
          "y":0
         }, 
         {
-         "data":[0, 2, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "compression":"",
+         "data":"AAAAAAEAAAACAAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+         "encoding":"base64",
          "height":6,
-         "id":2,
+         "id":3,
          "name":"top",
          "opacity":1,
          "type":"tilelayer",
@@ -26,7 +38,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":3,
+ "nextlayerid":4,
  "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"right-down",
@@ -36,7 +48,7 @@
         {
          "columns":6,
          "firstgid":1,
-         "image":"H:\/Assets\/Circle Triangle Sqaure\/tiles.png",
+         "image":"tiles.png",
          "imageheight":200,
          "imagewidth":1200,
          "margin":0,
