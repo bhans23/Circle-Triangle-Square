@@ -12,6 +12,7 @@ export default class Level1 extends Scene {
 
   create() {
     
+    
     this.gB = new GameBoard({rows: 6, cols: 6, sqW: 200, sqH: 200}) 
     this.gB.squareBoard()
     var graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
@@ -29,11 +30,7 @@ export default class Level1 extends Scene {
   }
 
   update() {
-    // this.spriteSelection.forEach( (sprite) => {
-    //   sprite.on("pointerDown", this.handlePointerDown)
-    // }
-
-    //   )
+    
     this.spriteMoves();
   }
 
@@ -93,16 +90,16 @@ export default class Level1 extends Scene {
       this.distance = Phaser.Math.Distance.Between(
         sprite.x,
         sprite.y,
-        this.target.x,
-        this.target.y
+        this.squareSelected.x,
+        this.squareSelected.y
       );
-      console.log(this.squareSelected.x)
+      // console.log(this.squareSelected.x)
       if (sprite.body.speed > 0) {
         //  4 is our distance tolerance, i.e. how close the source can get to the this.target
         //  before it is considered as being there. The faster it moves, the more tolerance is required.
 
         if (this.distance < 4) {
-          sprite.body.reset(this.target.x, this.target.y);
+          sprite.body.reset(this.squareSelected.x, this.squareSelected.y);
         }
       }
     });
