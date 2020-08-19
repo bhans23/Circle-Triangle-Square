@@ -1,16 +1,27 @@
 import { Scene } from "phaser";
 import spriteCreation from "../logic/spriteCreation";
+import GameBoard from "../logic/GameBoard";
+
 
 export default class Level1 extends Scene {
   constructor() {
     super("level1");
   }
-
   // Preload, create, update functions ---------------------------------
-  preload() {}
+  preload() { }
 
   create() {
-    this.target = new Phaser.Math.Vector2();
+    this.gB = new GameBoard({ rows: 6, cols: 6, sqW: 200, sqH: 200 })
+    this.gB.squareBoard()
+    var graphics = this.add.graphics();
+    // graphics.fillGradientStyle(0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 1);
+    this.gB.sqNum.map(x => graphics.fillRectShape(x));
+
+    for (let i = 0; i < this.gB.sqNum.length; i++) {
+      this.add.text(this.gB.sqNum[i].x, this.gB.sqNum[i].y, i, { color: "#ffffff", fontSize: "30px"})
+    }
+    
+
     this.events.on("resize", this.resize, this);
     this.createMap();
     //sprite
@@ -23,11 +34,7 @@ export default class Level1 extends Scene {
   }
 
   update() {
-    // this.spriteSelection.forEach( (sprite) => {
-    //   sprite.on("pointerDown", this.handlePointerDown)
-    // }
 
-    //   )
     this.spriteMoves();
   }
 
@@ -36,11 +43,14 @@ export default class Level1 extends Scene {
   handlePointerDown(selectedSprite) {
     this.spriteSelection.forEach((sprite) => {
       if (sprite === selectedSprite) {
-        sprite.setTint(0x32a852);
-        this.spriteSpeed(sprite, 400);
+        sprite.select()
+        this.pointerXY(sprite, 400)
+
+      }
+      if (sprite !== selectedSprite || sprite.selected === false) {
+        this.pointerXY(sprite, 0)
+        sprite.deselect()
       } else {
-        sprite.clearTint();
-        this.spriteSpeed(sprite, 0);
       }
     });
   }
@@ -48,17 +58,33 @@ export default class Level1 extends Scene {
   spriteMoveTo() {
     this.spriteSelection.forEach((sprite) => {
       sprite.setInteractive();
-      sprite.on("pointerdown", () => this.handlePointerDown(sprite), this);
+      sprite.on(
+        "pointerdown",
+        () => {
+          sprite.selected = !sprite.selected;
+          this.handlePointerDown(sprite);
+        },
+        this
+      );
     });
   }
 
-  spriteSpeed(sprite, speed) {
+  pointerXY(sprite, speed) {
     this.input.on(
       "pointerdown",
       function (pointer) {
-        this.target.x = pointer.x;
-        this.target.y = pointer.y;
-        this.physics.moveToObject(sprite, this.target, speed);
+        let sqX = Math.floor(pointer.x / this.gB.sqW);
+        let sqY = Math.floor(pointer.y / this.gB.sqH);
+        let sqI = this.gB.squareMatrix[sqX][sqY];
+
+        sprite.target.x = this.gB.sqNum[sqI].centerX
+        sprite.target.y = this.gB.sqNum[sqI].centerY
+       
+        console.log(this.gB.sqNum[sqI])
+        console.log(sprite.target.y)
+
+
+        this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, speed);
       },
       this
     );
@@ -66,21 +92,8 @@ export default class Level1 extends Scene {
 
   spriteMoves() {
     this.spriteSelection.forEach((sprite) => {
-      this.distance = Phaser.Math.Distance.Between(
-        sprite.x,
-        sprite.y,
-        this.target.x,
-        this.target.y
-      );
-      if (sprite.body.speed > 0) {
-        //  4 is our distance tolerance, i.e. how close the source can get to the this.target
-        //  before it is considered as being there. The faster it moves, the more tolerance is required.
-
-        if (this.distance < 4) {
-          sprite.body.reset(this.target.x, this.target.y);
-        }
-      }
-    });
+      sprite.update();
+    })
   }
 
   resize(width, height) {

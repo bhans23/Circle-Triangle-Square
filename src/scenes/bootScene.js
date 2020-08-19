@@ -4,7 +4,7 @@ import gameBoard from "../assets/level1.json";
 import logo from "../assets/sQTLogo.png";
 import startButton from "../assets/startButton.png";
 import mountainBG from "../assets/mountainBG.png";
-import circleSprite from "../assets/Circle.png";
+import circleSprite from "../assets/Circles.png";
 import squareSprite from "../assets/Square.png";
 import triangleSprite from "../assets/Triangle.png";
 
