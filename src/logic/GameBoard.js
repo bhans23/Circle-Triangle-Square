@@ -19,15 +19,16 @@ export default class GameBoard {
         //Creating Geometric square objects on each square coordinates
         let num2 = 0
         let num3 = 0
-        let xSq = Array(this.rows).fill(num3).map((x) => x = num3++ * this.sqH);
-         xSq = Array(this.rows).fill(xSq);
-        xSq = xSq.flat().sort()
+        const compareNumbers = (a, b) => a - b;
+        let ySq = Array(this.rows).fill(num3).map((x) => x = num3++ * this.sqH);
+         ySq = Array(this.rows).fill(ySq);
+        ySq = ySq.flat().sort(compareNumbers)
         
-       
-        let ySq = Array(this.rows).fill(num2).map((x) => x = num2++ * this.sqH);
-        ySq = Array(this.rows).fill(ySq);
-        ySq = ySq.flat()
-         
+        let xSq = Array(this.rows).fill(num2).map((x) => x = num2++ * this.sqW);
+        xSq = Array(this.rows).fill(xSq);
+        xSq = xSq.flat()
+         console.log(xSq)
+         console.log(ySq)
         for(let i = 0;i < this.sqNum.length; i++ ){
             this.sqNum[i] = new Phaser.Geom.Rectangle(xSq[i], ySq[i], this.sqW, this.sqH)
 
