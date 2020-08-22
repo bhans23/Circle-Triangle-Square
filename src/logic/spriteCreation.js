@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { config } from "process";
 
 export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   constructor(spriteValues) {
@@ -7,22 +6,24 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     spriteValues.scene.add.existing(this);
     spriteValues.scene.physics.add.existing(this);
     this.spriteValues = spriteValues;
+    this.scene = this.spriteValues.scene;
     this.target = new Phaser.Math.Vector2();
   }
-  preload() { }
+  preload() {}
 
-  create() { }
+  create() {}
 
   update() {
     this.spriteMoves();
   }
 
   select() {
-    this.setTint(0x32a852);
+    this.setTint(0x0e9c2a);
   }
 
   deselect() {
     this.clearTint();
+    this.graphics.clear();
   }
 
   spriteMoves() {
@@ -31,7 +32,6 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
       this.y,
       this.target.x,
       this.target.y
-
     );
     // console.log(this.squareSelected.x)
     if (this.body.speed > 0) {
@@ -42,7 +42,13 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
         this.body.reset(this.target.x, this.target.y);
       }
     }
-
+    if (this.distance > 0 && this.body.speed > 0) {
+      this.graphics.clear();
+      
+      if (this.distance < 20) {
+        this.moves();
+      } else {
+      }
+    }
   }
 }
-

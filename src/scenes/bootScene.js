@@ -11,12 +11,11 @@ import triangleSprite from "../assets/Triangle.png";
 export default class bootScene extends Scene {
   constructor() {
     super("bootScene");
-    
   }
 
   preload() {
-      //title Scene assets
-    this.load.image('mountainBG', mountainBG);
+    //title Scene assets
+    this.load.image("mountainBG", mountainBG);
     this.load.image("startButton", startButton);
     this.load.image("logo", logo);
     //level 1 assets
