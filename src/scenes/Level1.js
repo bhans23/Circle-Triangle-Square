@@ -51,7 +51,6 @@ export default class Level1 extends Scene {
 
   handlePointerDown(selectedSprite) {
     this.spriteSelection.forEach((sprite) => {
-      
       if (sprite === selectedSprite) {
         if (sprite.isTinted) {
           sprite.deselect();
@@ -97,7 +96,10 @@ export default class Level1 extends Scene {
         this.sqI = this.gB.squareMatrix[sqX][sqY];
         sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
         sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
-        this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, speed);
+
+        if (sprite.availableMoves.some((x) => x === this.sqI)) {
+          this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, speed);
+        }
       },
       this
     );
