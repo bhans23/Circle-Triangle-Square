@@ -2,10 +2,7 @@ import Phaser from "phaser";
 import config from "./config/config";
 import TitleScene from "./scenes/TitleScene";
 import Level1 from "./scenes/Level1";
-import bootScene from './scenes/bootScene';
-
-
-
+import bootScene from "./scenes/bootScene";
 
 class Game extends Phaser.Game {
   constructor() {
@@ -18,9 +15,6 @@ class Game extends Phaser.Game {
 }
 
 window.game = new Game();
-window.addEventListener('resize', (event) => {
-  window.game.resize(window.innerWidth,window.innerHeight)
-})
-
-
-
+window.addEventListener("resize", (event) => {
+  window.game.resize(window.innerWidth, window.innerHeight);
+});
