@@ -76,13 +76,18 @@ export default class Level1 extends Scene {
       sprite.on(
         "pointerdown",
         () => {
+          this.getSpriteSquare(sprite);
           this.handlePointerDown(sprite);
         },
         this
       );
     });
   }
-
+  getSpriteSquare(sprite) {
+    let sqX = Math.floor(sprite.x / this.gB.sqW);
+    let sqY = Math.floor(sprite.y / this.gB.sqH);
+    this.spSq = this.gB.squareMatrix[sqX][sqY];
+  }
   pointerXY(sprite, speed) {
     this.input.on(
       "pointerdown",

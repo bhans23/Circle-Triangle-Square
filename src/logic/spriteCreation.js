@@ -46,6 +46,7 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
       this.graphics.clear();
       
       if (this.distance < 20) {
+        this.scene.getSpriteSquare(this);
         this.moves();
       } else {
       }

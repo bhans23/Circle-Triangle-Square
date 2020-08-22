@@ -9,10 +9,10 @@ export default class SquareSprite extends spriteCreation {
     this.speed = null;
   }
 
-  moves(speed) {
-    this.speed = speed;
+  moves(x,y) {
+    
     //filter out available moves
-    this.selectedSquare = this.gB.sqNum.indexOf(this.gB.sqNum[this.scene.sqI]);
+    this.selectedSquare = this.gB.sqNum.indexOf(this.gB.sqNum[this.scene.spSq]);
     this.availableMoves = this.gB.sqIndex.filter(
       (x) =>
         x === this.selectedSquare - 1 ||
