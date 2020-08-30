@@ -7,6 +7,7 @@ import mountainBG from "../assets/mountainBG.png";
 import circleSprite from "../assets/Circles.png";
 import squareSprite from "../assets/Square.png";
 import triangleSprite from "../assets/Triangle.png";
+import pillar from "../assets/pillar.png";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -23,6 +24,7 @@ export default class bootScene extends Scene {
     this.load.image("circle", circleSprite);
     this.load.image("square", squareSprite);
     this.load.image("triangle", triangleSprite);
+    this.load.image('pillar', pillar);
     this.load.spritesheet("tiles", tilePNG, {
       frameWidth: 200,
       frameHeight: 200,
