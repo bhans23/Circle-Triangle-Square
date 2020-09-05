@@ -21,6 +21,7 @@ export default class Level1 extends Scene {
     this.createGameObjects();
     this.spriteMoveTo();
     this.addCollisions();
+    this.debug();
   }
 
   update() {
@@ -73,16 +74,16 @@ export default class Level1 extends Scene {
     this.input.on(
       "pointerdown",
       function (pointer) {
+        if(sprite.body.speed === 0){
         let sqX = Math.floor(pointer.x / this.gB.sqW);
         let sqY = Math.floor(pointer.y / this.gB.sqH);
         this.sqI = this.gB.squareMatrix[sqX][sqY];
-
         sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
         sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
-
         if (sprite.availableMoves.some((x) => x === this.sqI)) {
           this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, speed);
         }
+      }else {}
       },
       this
     );
@@ -157,12 +158,12 @@ export default class Level1 extends Scene {
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
-        console.log(pillar.body.velocity)
-        if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0 ) {
-          
+       
+        if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
           let x = (this.gB.sqW / 2) * Math.round(sprite.x / (this.gB.sqW / 2));
           let y = (this.gB.sqW / 2) * Math.round(sprite.y / (this.gB.sqW / 2));
           sprite.body.reset(x, y);
+          sprite.moves();
         }
       }
     );
@@ -193,7 +194,7 @@ export default class Level1 extends Scene {
         y: 900,
         key: "circle",
         gB: this.gB,
-      }).setDepth(2),
+      }).setDepth(2).setBodySize(170,170),
       // .setBounce(0),
 
       // new TriangleSprite({
@@ -232,5 +233,10 @@ export default class Level1 extends Scene {
         selected: this.selectedSquare,
       }).setDepth(20),
     ];
+  }
+  debug () {
+    this.pillars.forEach((x) => {
+      
+    });
   }
 }

@@ -27,7 +27,7 @@ export default class CircleSprite extends spriteCreation {
         (x) => x !== this.gB.sqIndex[i]
       );
     }
-    
+
     // Filtering out only sprite specific moves squares
     this.availableMoves = this.availableMoves.filter(
       (x) =>
@@ -42,9 +42,11 @@ export default class CircleSprite extends spriteCreation {
     );
     // Add highlights to squares
     this.graphics.clear();
-    this.graphics.fillStyle(0x2f40de, 0.6);
-    this.availableMoves.map((x) =>
-      this.graphics.fillRectShape(this.gB.sqNum[x])
-    );
+    if (this.isTinted === true) {
+      this.graphics.fillStyle(0x2f40de, 0.6);
+      this.availableMoves.map((x) =>
+        this.graphics.fillRectShape(this.gB.sqNum[x])
+      );
+    }
   }
 }
