@@ -157,7 +157,9 @@ export default class Level1 extends Scene {
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
-        if (pillar.body.speed === 0) {
+        console.log(pillar.body.velocity)
+        if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0 ) {
+          
           let x = (this.gB.sqW / 2) * Math.round(sprite.x / (this.gB.sqW / 2));
           let y = (this.gB.sqW / 2) * Math.round(sprite.y / (this.gB.sqW / 2));
           sprite.body.reset(x, y);
