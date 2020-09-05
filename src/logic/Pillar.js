@@ -1,19 +1,18 @@
 import Phaser from "phaser";
 
 export default class Pillar extends Phaser.Physics.Arcade.Sprite {
-constructor(config) {
-    super(config.scene, config.x, config.y, config.key)
+  constructor(config) {
+    super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
     config.scene.physics.add.existing(this);
-    this.selected = config.selected;
-}
+    this.movable = false;
+  }
 
-
-update(){
+  update() {
     this.spriteMoves();
-}
+  }
 
-spriteMoves() {
+  spriteMoves() {
     this.distance = Phaser.Math.Distance.Between(
       this.x,
       this.y,
@@ -29,9 +28,5 @@ spriteMoves() {
         this.body.reset(this.selected.x, this.selected.y);
       }
     }
-    
   }
-
-
-
 }

@@ -20,13 +20,11 @@ export default class Level1 extends Scene {
     this.createSprites();
     this.createGameObjects();
     this.spriteMoveTo();
-    
+    this.addCollisions();
   }
 
   update() {
     this.spriteMoves();
-    this.addCollisions();
-    
 
     // this.pillarMoves();
   }
@@ -142,22 +140,30 @@ export default class Level1 extends Scene {
   }
   addCollisions() {
     this.physics.add.collider(
-      this.spriteSelection,
       this.pillars,
-      (sprite, pillar2) => {
+      this.pillars,
+      (pillar1, pillar2) => {
         this.pillars.forEach((pillar) => {
-          if (pillar === pillar2) {
-            pillar.setImmovable(false);
-          } else {
-            pillar.setImmovable(true);
-          }
+          let x = (this.gB.sqW / 2) * Math.round(pillar.x / (this.gB.sqW / 2));
+          let y = (this.gB.sqW / 2) * Math.round(pillar.y / (this.gB.sqW / 2));
+          pillar.body.reset(x, y);
         });
       }
     );
-
-    this.physics.add.collider(this.pillars, this.pillars);
+    this.physics.add.collider(this.spriteSelection, this.pillars);
     this.physics.add.collider(this.spriteSelection, this.topLayer);
     this.physics.add.collider(this.pillars, this.topLayer);
+    this.physics.add.overlap(
+      this.spriteSelection,
+      this.pillars,
+      (sprite, pillar) => {
+        if (pillar.body.speed === 0) {
+          let x = (this.gB.sqW / 2) * Math.round(sprite.x / (this.gB.sqW / 2));
+          let y = (this.gB.sqW / 2) * Math.round(sprite.y / (this.gB.sqW / 2));
+          sprite.body.reset(x, y);
+        }
+      }
+    );
   }
 
   createMap() {
@@ -169,7 +175,6 @@ export default class Level1 extends Scene {
     this.backGroundLayer = board.createStaticLayer("floor", tilesPNG, 0, 0);
     this.topLayer = board.createStaticLayer("wall", tilesPNG, 0, 0);
     this.topLayer.setCollisionByExclusion([-1]);
-    
   }
   createSprites() {
     this.spriteSelection = [
@@ -186,10 +191,9 @@ export default class Level1 extends Scene {
         y: 900,
         key: "circle",
         gB: this.gB,
-      })
-        .setDepth(2)
-        .setBounce(0),
-        
+      }).setDepth(2),
+      // .setBounce(0),
+
       // new TriangleSprite({
       //   scene: this,
       //   x: 700,
@@ -208,31 +212,23 @@ export default class Level1 extends Scene {
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
-      })
-        .setDepth(2),
-        
-
+      }).setDepth(2),
       new Pillar({
         scene: this,
         x: 300,
-        y: 300,
+        y: 500,
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
-      })
-        .setDepth(2),
-        
-
+      }).setDepth(2),
       new Pillar({
         scene: this,
         x: 700,
-        y: 300,
+        y: 500,
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
-      })
-        .setDepth(2),
-        
+      }).setDepth(20),
     ];
   }
 }
