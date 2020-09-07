@@ -11,7 +11,10 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   }
   preload() {}
 
-  create() {}
+  create() {
+    
+   
+  }
 
   update() {
     this.spriteMoves();
