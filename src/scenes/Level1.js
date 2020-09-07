@@ -237,6 +237,19 @@ export default class Level1 extends Scene {
     ];
   }
   createGameObjects() {
+    var config = {
+      key: "rollDoor",
+      frames: this.anims.generateFrameNumbers("doorSheet", {
+        start: 1,
+        end: 20,
+        first: 1,
+      }),
+      frameRate: 14,
+      repeat: -1,
+    };
+    this.anims.create(config);
+    this.stoneDoor = this.add.sprite(500,150,"doorSheet");
+    // this.stoneDoor.play("rollDoor")
     this.pillars = [
       new Pillar({
         scene: this,

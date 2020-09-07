@@ -8,8 +8,8 @@ import circleSprite from "../assets/Circles.png";
 import squareSprite from "../assets/Square.png";
 import triangleSprite from "../assets/Triangle.png";
 import pillar from "../assets/pillar.png";
-import circleSheet from "../assets/circleSheet.png"
-
+import circleSheet from "../assets/circleSheet.png";
+import doorSheet from "../assets/stoneDoor.png";
 export default class bootScene extends Scene {
   constructor() {
     super("bootScene");
@@ -25,14 +25,23 @@ export default class bootScene extends Scene {
     this.load.image("circle", circleSprite);
     this.load.image("square", squareSprite);
     this.load.image("triangle", triangleSprite);
-    this.load.image('pillar', pillar);
+    this.load.image("pillar", pillar);
     this.load.spritesheet("tiles", tilePNG, {
       frameWidth: 200,
       frameHeight: 200,
     });
-    this.load.spritesheet('circleSheet',circleSheet, { frameWidth: 200, frameHeight: 200, endFrame: 59 });
-  }
+    this.load.spritesheet("circleSheet", circleSheet, {
+      frameWidth: 200,
+      frameHeight: 200,
+      endFrame: 59,
+    });
 
+    this.load.spritesheet("doorSheet", doorSheet, {
+      frameWidth: 200,
+      frameHeight: 200,
+      endFrame: 59,
+    });
+  }
   create() {
     this.scene.start("Title");
   }
