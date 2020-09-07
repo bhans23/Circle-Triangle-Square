@@ -10,15 +10,15 @@ export default class TitleScene extends Phaser.Scene {
   create() {
     // Background image
     const bgImage = this.add
-      .image(0, 0, "mountainBG")
+      .image(0, 0, "title")
       .setOrigin(0, 0)
       .setDepth(0);
-    bgImage.displayWidth = 800;
-    bgImage.displayHeight = 600;
+    bgImage.displayWidth = 1200;
+    bgImage.displayHeight = 1200;
 
     //Start ButtonSprite
     const startButtonSprite = this.add
-      .sprite(400, 300, "startButton")
+      .sprite(600, 600, "startButton")
       .setDepth(1);
     startButtonSprite.displayWidth = 100;
     startButtonSprite.displayHeight = 100;
@@ -26,7 +26,7 @@ export default class TitleScene extends Phaser.Scene {
     startButtonSprite.on("pointerdown", () => this.scene.start("level1"));
 
     // title Logo
-    const logo = this.add.image(400, 200, "logo").setDepth(1);
+    const logo = this.add.image(600, 500, "logo").setDepth(1);
     logo.displayWidth = 650;
     logo.displayHeight = 400;
 
