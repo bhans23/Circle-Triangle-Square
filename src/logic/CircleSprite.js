@@ -27,6 +27,11 @@ export default class CircleSprite extends spriteCreation {
         (x) => x !== this.gB.sqIndex[i]
       );
     }
+    //Adding exit 
+    const compareNumbers = (a, b) => a - b;
+    
+    this.availableMoves.push(this.gB.exit);
+    this.availableMoves = this.availableMoves.sort(compareNumbers);
 
     // Filtering out only sprite specific moves squares
     this.availableMoves = this.availableMoves.filter(
@@ -43,10 +48,18 @@ export default class CircleSprite extends spriteCreation {
     // Add highlights to squares
     this.graphics.clear();
     if (this.isTinted === true) {
-      this.graphics.fillStyle(0x2f40de, 0.6);
-      this.availableMoves.map((x) =>
-        this.graphics.fillRectShape(this.gB.sqNum[x])
-      );
+      
+      this.availableMoves.map((x) => {
+        if(x === this.gB.exit || x === this.gB.altar) {
+          this.graphics.fillStyle(0xf5e102, 0.6);
+          this.graphics.fillRectShape(this.gB.sqNum[x]);
+        } else {
+          this.graphics.fillStyle(0x419ef0, 0.6);
+          this.graphics.fillRectShape(this.gB.sqNum[x]);
+        }
+        
+
+      });
     }
   }
 }
