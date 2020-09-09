@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-export default class stoneSprite extends Phaser.Physics.Arcade.Sprite {
+export default class doorSprite extends Phaser.Physics.Arcade.Sprite {
   constructor(spriteValues) {
     super(spriteValues.scene, spriteValues.x, spriteValues.y, spriteValues.key);
     spriteValues.scene.add.existing(this);
@@ -30,15 +30,14 @@ export default class stoneSprite extends Phaser.Physics.Arcade.Sprite {
       this.target.x,
       this.target.y
     );
-    
+     
     if (this.body.speed > 0) {
       //  4 is our distance tolerance, i.e. how close the source can get to the this.target
       //  before it is considered as being there. The faster it moves, the more tolerance is required.
-     
-      
+
       if (this.distance < 10) {
         this.body.reset(this.target.x, this.target.y);
-        this.scene.impactSFX.play();
+        
       }
     }
     

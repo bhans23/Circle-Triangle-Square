@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -23,11 +24,9 @@ module.exports = {
         test: /\.(gif|png|jpe?g|svg|xml)$/i,
         use: "file-loader",
       },
-      
     ],
   },
   plugins: [
-    
     new CleanWebpackPlugin({
       root: path.resolve(__dirname, "../"),
     }),
@@ -38,6 +37,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html",
     }),
-    
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/assets', to: 'assets' },
+        
+      ],
+    }),
   ],
 };

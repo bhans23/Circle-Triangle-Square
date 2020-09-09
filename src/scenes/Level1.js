@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import stoneSprite from "../logic/stoneSprite";
 import CircleSprite from "../logic/CircleSprite";
-import TriangleSprite from "../logic/TriangleSprite";
+import doorSprite from "../logic/doorSprite";
 import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
 import spriteCreation from "../logic/spriteCreation";
@@ -14,7 +14,7 @@ export default class Level1 extends Scene {
   preload() {}
 
   create() {
-    // this.createAudio();
+    this.createAudio();
     this.squareGameBoard();
     // this.higlightSquares()
     this.events.on("resize", this.resize, this);
@@ -28,6 +28,7 @@ export default class Level1 extends Scene {
   update() {
     this.spriteMoves();
     this.altarPress();
+    this.pillarMoves()
 
     // this.pillarMoves();
   }
@@ -140,6 +141,7 @@ export default class Level1 extends Scene {
     });
     this.stone.update();
     this.stoneDoor.update();
+    
   }
   pillarMoves() {
     this.pillars.forEach((sprite) => {
@@ -202,6 +204,7 @@ export default class Level1 extends Scene {
       this.pillars,
       this.pillars,
       (pillar1, pillar2) => {
+        this.impactSFX.play();
         this.pillars.forEach((pillar) => {
           this.bounceReset(pillar);
         });
@@ -213,22 +216,34 @@ export default class Level1 extends Scene {
       (sprite, door) => {
         this.bounceReset(sprite);
         sprite.moves();
+        this.impactSFX.play();
       }
     );
     this.physics.add.collider(this.pillars, this.stoneDoor);
     this.physics.add.collider(this.pillars, this.stone);
     this.physics.add.collider(this.pillars, this.door);
-    this.physics.add.collider(this.spriteSelection, this.pillars);
+    this.physics.add.collider(this.spriteSelection, this.pillars, (sprite, pillar) => {
+      console.log(pillar.body.speed)
+      if(pillar.body.velocity.x !== 0 || pillar.body.velocity.y !== 0 && pillar.body.speed === 0){
+        this.impactSFX.play();
+      this.slideShortSFX.play();
+      }
+    });
     this.physics.add.collider(this.spriteSelection, this.wall);
-    this.physics.add.collider(this.pillars, this.wall);
+    this.physics.add.collider(this.pillars, this.wall, () => {
+      this.impactSFX.play();
+    });
     this.physics.add.collider(this.pillars, this.alter);
     this.physics.add.overlap(
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
+        
         if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
           this.bounceReset(sprite);
           sprite.moves();
+          this.impactSFX.play();
+          
         }
       }
     );
@@ -247,7 +262,7 @@ export default class Level1 extends Scene {
         this.stoneDoor,
         this.stoneDoor.target.x,
         this.stoneDoor.target.y,
-        400
+        200
       );
       this.stoneDoor.play("rollDoor");
     }
@@ -281,7 +296,10 @@ export default class Level1 extends Scene {
   }
 
   createAudio() {
-    // this.sound.add("level1", { loop: true }).play();
+    this.music = this.sound.add("level1", { loop: true }).play();
+    this.slideSFX = this.sound.add("slide", {volume: .2});
+    this.slideShortSFX = this.sound.add("slideShort", {volume: .2});
+    this.impactSFX = this.sound.add("impact", {volume: .5});
   }
   createSprites() {
     //Sprite animation
@@ -330,13 +348,14 @@ export default class Level1 extends Scene {
     // Opening Stone movement Intro
     this.stone.target.x = 500;
     this.stone.target.y = 900;
+    this.slideSFX.play();
     this.physics.moveTo(
       this.stone,
       this.stone.target.x,
       this.stone.target.y,
       300
     );
-
+    
     //Door rolling animation
     var config = {
       key: "rollDoor",
@@ -349,7 +368,7 @@ export default class Level1 extends Scene {
       repeat: 1,
     };
     this.stoneDoorMove = this.anims.create(config);
-    this.stoneDoor = new stoneSprite({
+    this.stoneDoor = new doorSprite({
       scene: this,
       x: 500,
       y: 125,

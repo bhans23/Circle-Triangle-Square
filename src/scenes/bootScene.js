@@ -11,9 +11,8 @@ import pillar from "../assets/pillar.png";
 import circleSheet from "../assets/circleSheet.png";
 import doorSheet from "../assets/stoneDoor.png";
 import alter from "../assets/alter.png";
-import grass from '../assets/grass.png';
-import stone from '../assets/stone.png';
-// import level1 from "../assets/level1.mp3";
+import grass from "../assets/grass.png";
+import stone from "../assets/stone.png";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -22,16 +21,19 @@ export default class bootScene extends Scene {
 
   preload() {
     //audio
-     this.load.audio('level1Music', "/assets/level1.mp3")
+    this.load.audio("level1", "/assets/level1.mp3");
+    this.load.audio("slide", "/assets/slide.mp3");
+    this.load.audio("slideShort", "/assets/slideShort.mp3");
+    this.load.audio("impact", "/assets/impact.mp3");
     // title Scene assets
-    this.load.image('grass', grass)
+    this.load.image("grass", grass);
     this.load.image("alter", alter);
     this.load.image("title", title);
     this.load.image("stone", stone);
     this.load.image("startButton", startButton);
     this.load.image("logo", logo);
     //level 1 assets
-    
+
     this.load.tilemapTiledJSON("level1GameBoard", gameBoard);
     this.load.image("circle", circleSprite);
     this.load.image("square", squareSprite);
