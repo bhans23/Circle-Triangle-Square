@@ -7,6 +7,8 @@ export default class GameBoard {
     this.sqW = config.sqW;
     this.sqH = config.sqH;
     this.scene = config.scene;
+    this.exit = config.exit;
+    this.altar = config.altar;
   }
 
   squareBoard() {

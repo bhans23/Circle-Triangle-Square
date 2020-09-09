@@ -10,4 +10,7 @@ export default {
     width: 1200,
     height: 1200,
   },
+  audio: {
+    disableWebAudio: true
+}
 };
