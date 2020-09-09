@@ -27,7 +27,7 @@ export default class Level1 extends Scene {
 
   update() {
     this.spriteMoves();
-    
+    this.altarPress();
 
     // this.pillarMoves();
   }
@@ -139,6 +139,7 @@ export default class Level1 extends Scene {
       }
     });
     this.stone.update();
+    this.stoneDoor.update();
   }
   pillarMoves() {
     this.pillars.forEach((sprite) => {
@@ -188,10 +189,10 @@ export default class Level1 extends Scene {
   }
 
   addCollisions() {
-    this.physics.add.overlap(this.spriteSelection, this.alter, () => {
-      this.altarPress();
-    })
-   
+    // this.physics.add.overlap(this.spriteSelection, this.alter, () => {
+    //   this.altarPress();
+    // })
+
     this.bounceReset = (object) => {
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
       let y = (this.gB.sqW / 2) * Math.round(object.y / (this.gB.sqW / 2));
@@ -234,12 +235,13 @@ export default class Level1 extends Scene {
   }
 
   altarPress() {
-   
-    if(this.spriteSelection[0].x === 300 && this.spriteSelection[0].y === 500){
-      
+    if (
+      this.spriteSelection[0].x === 300 &&
+      this.spriteSelection[0].y === 500
+    ) {
       this.emitter.explode();
       this.emitter.killAll();
-      this.stoneDoor.target.x = 700;
+      this.stoneDoor.target.x = 750;
       this.stoneDoor.target.y = 125;
       this.physics.moveTo(
         this.stoneDoor,
@@ -249,8 +251,9 @@ export default class Level1 extends Scene {
       );
       this.stoneDoor.play("rollDoor");
     }
-    }
     
+  }
+
   createMap() {
     // //create the tilemap
     const board = this.make.tilemap({ key: "level1GameBoard" });
@@ -353,7 +356,7 @@ export default class Level1 extends Scene {
       key: "doorSheet",
     })
       .setDepth(7)
-      .setScale(1.50)
+      .setScale(1.5)
       .setImmovable(true)
       .setBodySize(50, 50);
 
