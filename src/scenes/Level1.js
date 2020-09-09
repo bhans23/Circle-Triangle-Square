@@ -358,7 +358,7 @@ export default class Level1 extends Scene {
       .setDepth(7)
       .setScale(1.5)
       .setImmovable(true)
-      .setBodySize(50, 50);
+      .setBodySize(100, 100);
 
     //alter
     this.alter = new Pillar({
