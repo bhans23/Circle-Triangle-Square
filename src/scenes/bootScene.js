@@ -13,7 +13,7 @@ import doorSheet from "../assets/stoneDoor.png";
 import alter from "../assets/alter.png";
 import grass from '../assets/grass.png';
 import stone from '../assets/stone.png';
-import level1 from "../assets/level1.mp3";
+// import level1 from "../assets/level1.mp3";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -22,7 +22,7 @@ export default class bootScene extends Scene {
 
   preload() {
     //audio
-    this.load.audio('level1Music', level1)
+     this.load.audio('level1Music', "/assets/level1.mp3")
     // title Scene assets
     this.load.image('grass', grass)
     this.load.image("alter", alter);

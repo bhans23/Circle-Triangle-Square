@@ -90,22 +90,37 @@ export default class Level1 extends Scene {
               speed
             );
 
-            if (sprite.body.velocity.x >= 0 && sprite.body.velocity.y < 0 && sprite.isTinted) {
+            if (
+              sprite.body.velocity.x >= 0 &&
+              sprite.body.velocity.y < 0 &&
+              sprite.isTinted
+            ) {
               sprite.setAngle(0);
             }
-            if (sprite.body.velocity.x >= 0 && sprite.body.velocity.y === 0 && sprite.isTinted) {
+            if (
+              sprite.body.velocity.x >= 0 &&
+              sprite.body.velocity.y === 0 &&
+              sprite.isTinted
+            ) {
               sprite.setAngle(90);
             }
-            if (sprite.body.velocity.x < 0 && sprite.body.velocity.y >= 0 && sprite.isTinted) {
+            if (
+              sprite.body.velocity.x < 0 &&
+              sprite.body.velocity.y >= 0 &&
+              sprite.isTinted
+            ) {
               sprite.setAngle(-90);
             }
-            if (sprite.body.velocity.x >= 0 && sprite.body.velocity.y > 0 && sprite.isTinted) {
+            if (
+              sprite.body.velocity.x >= 0 &&
+              sprite.body.velocity.y > 0 &&
+              sprite.isTinted
+            ) {
               sprite.setAngle(180);
             }
-            if(sprite.isTinted){
+            if (sprite.isTinted) {
               this.rockMove.pause();
             }
-            
           }
         } else {
         }
@@ -117,7 +132,7 @@ export default class Level1 extends Scene {
   spriteMoves() {
     this.spriteSelection.forEach((sprite) => {
       sprite.update();
-      if (sprite.body.speed ===  0) {
+      if (sprite.body.speed === 0) {
         this.rockMove.pause();
       } else {
         this.rockMove.resume();
@@ -173,6 +188,10 @@ export default class Level1 extends Scene {
   }
 
   addCollisions() {
+    this.physics.add.overlap(this.spriteSelection, this.alter, () => {
+      this.altarPress();
+    })
+   
     this.bounceReset = (object) => {
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
       let y = (this.gB.sqW / 2) * Math.round(object.y / (this.gB.sqW / 2));
@@ -187,10 +206,14 @@ export default class Level1 extends Scene {
         });
       }
     );
-    this.physics.add.collider(this.spriteSelection, this.stoneDoor, (sprite, door) => {
-      this.bounceReset(sprite);
-      sprite.moves();
-    });
+    this.physics.add.collider(
+      this.spriteSelection,
+      this.stoneDoor,
+      (sprite, door) => {
+        this.bounceReset(sprite);
+        sprite.moves();
+      }
+    );
     this.physics.add.collider(this.pillars, this.stoneDoor);
     this.physics.add.collider(this.pillars, this.stone);
     this.physics.add.collider(this.pillars, this.door);
@@ -204,13 +227,30 @@ export default class Level1 extends Scene {
       (sprite, pillar) => {
         if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
           this.bounceReset(sprite);
-
           sprite.moves();
         }
       }
     );
   }
 
+  altarPress() {
+   
+    if(this.spriteSelection[0].x === 300 && this.spriteSelection[0].y === 500){
+      
+      this.emitter.explode();
+      this.emitter.killAll();
+      this.stoneDoor.target.x = 700;
+      this.stoneDoor.target.y = 125;
+      this.physics.moveTo(
+        this.stoneDoor,
+        this.stoneDoor.target.x,
+        this.stoneDoor.target.y,
+        400
+      );
+      this.stoneDoor.play("rollDoor");
+    }
+    }
+    
   createMap() {
     // //create the tilemap
     const board = this.make.tilemap({ key: "level1GameBoard" });
@@ -238,7 +278,7 @@ export default class Level1 extends Scene {
   }
 
   createAudio() {
-    this.sound.add("level1", { loop: true }).play();
+    // this.sound.add("level1", { loop: true }).play();
   }
   createSprites() {
     //Sprite animation
@@ -274,24 +314,19 @@ export default class Level1 extends Scene {
       this.spriteSelection[0].target.y,
       400
     );
-    this.spriteSelection[0].play('roll')
-    
-   
-
-
+    this.spriteSelection[0].play("roll");
   }
   createGameObjects() {
     //Stone sprite Creation
     this.stone = new stoneSprite({
       scene: this,
-        x: 500,
-        y: 1700,
-        key: "stone",
-    }).setImmovable(true)
+      x: 500,
+      y: 1700,
+      key: "stone",
+    }).setImmovable(true);
     // Opening Stone movement Intro
     this.stone.target.x = 500;
     this.stone.target.y = 900;
-    console.log(this.stone.target)
     this.physics.moveTo(
       this.stone,
       this.stone.target.x,
@@ -308,23 +343,20 @@ export default class Level1 extends Scene {
         first: 1,
       }),
       frameRate: 14,
-      repeat: -1,
+      repeat: 1,
     };
     this.stoneDoorMove = this.anims.create(config);
-    this.stoneDoor = new Pillar({
+    this.stoneDoor = new stoneSprite({
       scene: this,
       x: 500,
       y: 125,
       key: "doorSheet",
-      gB: this.gB,
-      selected: this.selectedSquare,
     })
       .setDepth(7)
-      .setScale(1.5)
+      .setScale(1.50)
       .setImmovable(true)
-      .setBodySize(100, 100);
+      .setBodySize(50, 50);
 
-    // this.stoneDoor.play("rollDoor")
     //alter
     this.alter = new Pillar({
       scene: this,
@@ -334,15 +366,19 @@ export default class Level1 extends Scene {
       gB: this.gB,
       selected: this.selectedSquare,
     }).setImmovable(true);
-
-    let emitter = this.add.particles("grass").createEmitter({
+    let circle = (this.emitter = this.add.particles("grass").createEmitter({
       x: 300,
       y: 500,
       blendMode: "SCREEN",
-      scale: { start: 0.05, end: 0 },
+      scale: { start: 0.03, end: 0 },
       speed: { min: -100, max: 100 },
-      quantity: 50,
-    });
+      quantity: 20,
+      emitZone: {
+        source: new Phaser.Geom.Circle(0, 0, 100),
+        type: "edge",
+        quantity: 20,
+      },
+    }));
 
     this.pillars = [
       new Pillar({
