@@ -319,7 +319,7 @@ export default class Level1 extends Scene {
       key: "roll",
       frames: this.anims.generateFrameNumbers("circleSheet", {
         start: 0,
-        end: 60,
+        end: 59,
         first: 0,
       }),
       frameRate: 60,
