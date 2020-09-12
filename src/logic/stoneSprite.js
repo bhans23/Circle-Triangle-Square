@@ -38,6 +38,7 @@ export default class stoneSprite extends Phaser.Physics.Arcade.Sprite {
       
       if (this.distance < 10) {
         this.body.reset(this.target.x, this.target.y);
+        this.scene.cameras.main.shake(300,0.002);
         this.scene.impactSFX.play();
       }
     }

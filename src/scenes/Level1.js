@@ -27,7 +27,6 @@ export default class Level1 extends Scene {
 
   update() {
     this.spriteMoves();
-    this.altarPress();
     this.pillarMoves();
 
     // this.pillarMoves();
@@ -191,13 +190,15 @@ export default class Level1 extends Scene {
   }
 
   addCollisions() {
-    // this.physics.add.overlap(this.spriteSelection, this.alter, () => {
-    //   this.altarPress();
-    // })
+    this.physics.add.overlap(this.spriteSelection, this.alter, () => {
+      this.altarPress();
+    });
 
     this.bounceReset = (object) => {
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
       let y = (this.gB.sqW / 2) * Math.round(object.y / (this.gB.sqW / 2));
+      this.cameras.main.shake(300, 0.003);
+        this.impactSFX.play();
       object.body.reset(x, y);
     };
     this.physics.add.collider(
@@ -216,12 +217,19 @@ export default class Level1 extends Scene {
       (sprite, door) => {
         this.bounceReset(sprite);
         sprite.moves();
-        this.impactSFX.play();
+        
       }
     );
-    this.physics.add.collider(this.pillars, this.stoneDoor);
+    this.physics.add.collider(this.pillars, this.stoneDoor, () => {
+      this.cameras.main.shake(300, 0.003);
+      this.impactSFX.play();
+    });
     this.physics.add.collider(this.pillars, this.stone);
-    this.physics.add.collider(this.pillars, this.door);
+    this.physics.add.collider(this.pillars, this.door),
+      () => {
+        this.cameras.main.shake(300, 0.003);
+        this.impactSFX.play();
+      };
     this.physics.add.collider(
       this.spriteSelection,
       this.pillars,
@@ -229,16 +237,18 @@ export default class Level1 extends Scene {
         console.log(pillar.body);
         if (
           pillar.body.velocity.x !== 0 ||
-          (pillar.body.velocity.y !== 0 && pillar.body.speed === 0 && sprite.body.speed !== 0)
+          (pillar.body.velocity.y !== 0 &&
+            pillar.body.speed === 0 &&
+            sprite.body.speed !== 0)
         ) {
           this.impactSFX.play();
           this.slideShortSFX.play();
         }
-
       }
     );
     this.physics.add.collider(this.spriteSelection, this.wall);
     this.physics.add.collider(this.pillars, this.wall, () => {
+      this.cameras.main.shake(300, 0.003);
       this.impactSFX.play();
     });
     this.physics.add.collider(this.pillars, this.alter);
@@ -246,13 +256,7 @@ export default class Level1 extends Scene {
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
-    
-
-        if (
-          pillar.body.velocity.x === 0 &&
-          pillar.body.velocity.y === 0 
-          
-        ) {
+        if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
           this.bounceReset(sprite);
           sprite.moves();
           this.impactSFX.play();
@@ -262,10 +266,7 @@ export default class Level1 extends Scene {
   }
 
   altarPress() {
-    if (
-      this.spriteSelection[0].x === 300 &&
-      this.spriteSelection[0].y === 500
-    ) {
+    if (this.isPressed === false) {
       this.emitter.explode();
       this.emitter.killAll();
       this.stoneDoor.target.x = 750;
@@ -277,9 +278,30 @@ export default class Level1 extends Scene {
         200
       );
       this.stoneDoor.play("rollDoor");
+      this.cameras.main.shake(1000, 0.005);
+      this.isPressed = true;
+      // this.altarEmitterPressed();
     }
   }
+  altarEmitterPressed() {
+    let particles = this.add.particles("grass").setDepth(11);
 
+    let rect = new Phaser.Geom.Rectangle(0, 0, 1600, 100);
+
+    let emitter = particles.createEmitter({
+      // frame: { frames: ["red", "green", "blue"], cycle: true, quantity: 2 },
+      x: 300,
+      y: 500,
+      moveToX: 500,
+      moveToY: 100,
+      scale: { start: 0.03, end: 0 },
+      speed: { min: -100, max: 100 },
+      quantity: 20,
+      _frequency: 20,
+      blendMode: "SCREEN",
+      emitZone: { source: new Phaser.Geom.Circle(0, 0, 100) },
+    });
+  }
   createMap() {
     // //create the tilemap
     const board = this.make.tilemap({ key: "level1GameBoard" });
@@ -372,12 +394,12 @@ export default class Level1 extends Scene {
     var config = {
       key: "rollDoor",
       frames: this.anims.generateFrameNumbers("doorSheet", {
-        start: 1,
-        end: 30,
-        first: 1,
+        start: 0,
+        end: 17,
+        first: 0,
       }),
       frameRate: 14,
-      repeat: 1,
+      repeat: 0,
     };
     this.stoneDoorMove = this.anims.create(config);
     this.stoneDoor = new doorSprite({
@@ -400,6 +422,7 @@ export default class Level1 extends Scene {
       gB: this.gB,
       selected: this.selectedSquare,
     }).setImmovable(true);
+    this.isPressed = false;
     let circle = (this.emitter = this.add.particles("grass").createEmitter({
       x: 300,
       y: 500,
