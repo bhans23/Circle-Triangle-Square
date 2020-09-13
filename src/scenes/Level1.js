@@ -280,7 +280,7 @@ export default class Level1 extends Scene {
     this.slideShortSFX = this.sound.add("slideShort", { volume: 0.2 });
     this.impactSFX = this.sound.add("impact", { volume: 0.3 });
     this.rockRollSFX = this.sound.add("rockRoll", { volume: 0.5 });
-    this.doorMoveSFX = this.sound.add("doorMove", { volume: 0.8 });
+    this.doorMoveSFX = this.sound.add("doorMove", { volume: 0.4 });
   }
   createSprites() {
     this.spriteSelection = [
