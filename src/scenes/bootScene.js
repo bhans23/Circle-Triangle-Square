@@ -10,9 +10,10 @@ import triangleSprite from "../assets/Triangle.png";
 import pillar from "../assets/pillar.png";
 import circleSheet from "../assets/circleSheet.png";
 import doorSheet from "../assets/stoneDoor.png";
-import alter from "../assets/alter.png";
+import altar from "../assets/altar.png";
 import grass from "../assets/grass.png";
 import stone from "../assets/stone.png";
+import dirt from "../assets/dirt.png";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -26,9 +27,11 @@ export default class bootScene extends Scene {
     this.load.audio("slideShort", "/assets/slideShort.mp3");
     this.load.audio("impact", "/assets/impact.mp3");
     this.load.audio("rockRoll", "/assets/rockRoll.mp3");
+    this.load.audio("doorMove", "/assets/doorMove.mp3");
     // title Scene assets
     this.load.image("grass", grass);
-    this.load.image("alter", alter);
+    this.load.image("dirt", dirt);
+    this.load.image("altar", altar);
     this.load.image("title", title);
     this.load.image("stone", stone);
     this.load.image("startButton", startButton);
