@@ -7,8 +7,21 @@ export default class CircleSprite extends spriteCreation {
     this.gB = spriteValues.gB;
     this.graphics = this.scene.add.graphics().setDepth(1);
     this.speed = null;
+    this.rockAnim();
   }
-
+rockAnim () {
+  var config = {
+    key: "roll",
+    frames: this.scene.anims.generateFrameNumbers("circleSheet", {
+      start: 0,
+      end: 59,
+      first: 0,
+    }),
+    frameRate: 60,
+    repeat: -1,
+  };
+  this.scene.rockMove = this.scene.anims.create(config);
+}
   moves(x, y) {
     //filter out available moves and border
     this.selectedSquare = this.gB.sqNum.indexOf(this.gB.sqNum[this.scene.spSq]);
