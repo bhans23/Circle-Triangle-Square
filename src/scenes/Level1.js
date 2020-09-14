@@ -5,6 +5,7 @@ import doorSprite from "../logic/doorSprite";
 import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
 import altar from "../logic/altar";
+import score from "../logic/score";
 
 export default class Level1 extends Scene {
   constructor() {
@@ -23,13 +24,12 @@ export default class Level1 extends Scene {
     this.createGameObjects();
     this.spriteMoveTo();
     this.addCollisions();
+    this.createGui();
   }
 
   update() {
     this.spriteMoves();
-    // this.pillarMoves();
-
-    // this.pillarMoves();
+    this.winCon();
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -84,6 +84,7 @@ export default class Level1 extends Scene {
           sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
           if (sprite.availableMoves.some((x) => x === this.sqI)) {
             this.rockRollSFX.play();
+            this.scoreBox.addMove();
             this.physics.moveTo(
               sprite,
               sprite.target.x,
@@ -323,7 +324,7 @@ export default class Level1 extends Scene {
       this.stone.target.y,
       300
     );
-   //Stone door creation
+    //Stone door creation
 
     this.stoneDoor = new doorSprite({
       scene: this,
@@ -372,5 +373,24 @@ export default class Level1 extends Scene {
         selected: this.selectedSquare,
       }).setDepth(1),
     ];
+  }
+  createGui() {
+    this.scoreBox = new score({ scene: this, totalMoves: 0 });
+  }
+  winCon() {
+    if (
+      this.spriteSelection[0].x ===
+        this.gB.sqNum[this.gB.exit].x + this.gB.sqW / 2 &&
+      this.spriteSelection[0].y ===
+        this.gB.sqNum[this.gB.exit].y + this.gB.sqH / 2
+    ) {
+      this.add
+        .text(600, 500, "You WIN!!!!!!", {
+          fontFamily: "Arial",
+          fontSize: 70,
+          color: "#ffffff",
+        })
+        .setDepth(13);
+    }
   }
 }
