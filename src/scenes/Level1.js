@@ -10,7 +10,6 @@ import score from "../logic/score";
 export default class Level1 extends Scene {
   constructor(config) {
     super("level1");
-    
   }
   // Preload, create, update functions ---------------------------------
   preload() {}
@@ -379,11 +378,19 @@ export default class Level1 extends Scene {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
   }
   winCon() {
-   this.completed = this.scene.get('levelMap').levelComplete.level1
-   
-    if(this.spriteSelection[0].distance === 0 && this.completed == true){
-        
-        this.scene.start('levelMap');
+    let findLevel1 = this.scene
+      .get("levelMap")
+      .levelArray.find((x) => x.key === "level1");
+
+    let findLevel2 = this.scene
+      .get("levelMap")
+      .levelArray.find((x) => x.key === "level2");
+
+    if (
+      this.spriteSelection[0].distance === 0 &&
+      this.scene.get("levelMap").levelArray[0].complete === true
+    ) {
+      this.scene.start("levelMap");
     }
     if (
       this.spriteSelection[0].x ===
@@ -399,11 +406,11 @@ export default class Level1 extends Scene {
         this.spriteSelection[0].target.y,
         400
       );
-      this.scene.get('levelMap').levelComplete.level1 = true;
-      this.spriteSelection[0].play("roll");
 
-     
-      }
+      this.scene.get("levelMap").levelArray[0].complete = true;
+      this.scene.get("levelMap").levelArray[1].complete = true;
       
+      this.spriteSelection[0].play("roll");
+    }
   }
 }

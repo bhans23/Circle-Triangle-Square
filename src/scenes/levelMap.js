@@ -13,7 +13,8 @@ export default class levelMap extends Phaser.Scene {
     bgImage.displayHeight = 1200;
     this.levels();
     this.buttons();
-    console.log(this.levelArray);
+    this.hover();
+    console.log(this.levelArray)
   }
 
   buttons() {
@@ -54,14 +55,26 @@ export default class levelMap extends Phaser.Scene {
       this.physics.add.existing(this.levelArray[i]);
       // Level Scene link
       this.levelArray[i].setInteractive();
-      this.levelArray[i].on("pointerdown", () =>
-        this.scene.start(this.levelKeys[i])
-      );
+      this.levelArray[i].on("pointerdown", (event, gameObjects) => {
+        if (
+          this.levelArray[i].complete === true ||
+          this.levelArray[i].key === "level1"
+        ) {
+          this.scene.start(this.levelKeys[i]);
+        } else {
+          this.levelArray[i].complete = false;
+          this.levelArray[i].key = "none";
+        }
+      });
       this.levelArray[i].key = this.levelKeys[i];
     }
 
     this.levelArray.map((x) => {
-      x.setFillStyle(0xdbc997, 0.7);
+      if (x.complete === true || x.key === "level1") {
+        x.setFillStyle(0xdbc997, 1);
+      } else {
+        x.setFillStyle(0xa18785, 0.5);
+      }
     });
   }
 
@@ -69,7 +82,16 @@ export default class levelMap extends Phaser.Scene {
     this.input.on(
       "pointerover",
       function (event, gameObjects) {
-        if (gameObjects[0]) gameObjects[0].setFillStyle(0xdbc997, 1);
+        console.log(gameObjects[0].complete)
+        if (
+          
+          gameObjects[0].complete === true ||
+          gameObjects[0].key === "level1"
+        ) {
+          gameObjects[0].setFillStyle(0x87eb4d, 1);
+        } else {
+          gameObjects[0].setFillStyle(0xd10d0d, 0.7);
+        }
       },
       this
     );
@@ -77,19 +99,19 @@ export default class levelMap extends Phaser.Scene {
     this.input.on(
       "pointerout",
       function (event, gameObjects) {
-        gameObjects[0].setFillStyle(0xdbc997, 0.8);
+        if (
+          gameObjects[0].complete === true ||
+          gameObjects[0].key === "level1"
+        ) {
+          gameObjects[0].setFillStyle(0xdbc997, 1);
+        } else {
+          gameObjects[0].setFillStyle(0xa18785, 0.5);
+        }
       },
       this
     );
   }
   levels() {
     this.levelKeys = ["level1", "level2", "level3", "level4", "level5"];
-    this.levelComplete = {
-      level1: false,
-      level2: false,
-      level3: false,
-      level4: false,
-      level5: false,
-    };
   }
 }
