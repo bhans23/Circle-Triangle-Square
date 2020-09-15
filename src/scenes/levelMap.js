@@ -62,11 +62,12 @@ export default class levelMap extends Phaser.Scene {
         ) {
           this.scene.start(this.levelKeys[i]);
         } else {
-          this.levelArray[i].complete = false;
+          
           this.levelArray[i].key = "none";
         }
       });
       this.levelArray[i].key = this.levelKeys[i];
+      this.levelArray[i].complete
     }
 
     this.levelArray.map((x) => {

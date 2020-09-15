@@ -10,10 +10,9 @@ import score from "../logic/score";
 export default class Level1 extends Scene {
   constructor(config) {
     super("level1");
-
   }
   // Preload, create, update functions ---------------------------------
-  preload() { }
+  preload() {}
 
   create() {
     this.createAudio();
@@ -41,7 +40,6 @@ export default class Level1 extends Scene {
         if (sprite.isTinted) {
           sprite.deselect();
           this.pointerXY(sprite, 0);
-
         } else {
           sprite.select();
           sprite.moves();
@@ -78,15 +76,13 @@ export default class Level1 extends Scene {
     this.input.on(
       "pointerdown",
       function (pointer) {
-
         if (sprite.body.speed === 0) {
           let sqX = Math.floor(pointer.x / this.gB.sqW);
           let sqY = Math.floor(pointer.y / this.gB.sqH);
           this.sqI = this.gB.squareMatrix[sqX][sqY];
           sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
           sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
-
-          if (sprite.availableMoves.some((x) => x === this.sqI && sprite.isTinted)) {
+          if (sprite.availableMoves.some((x) => x === this.sqI)) {
             this.rockRollSFX.play();
             this.scoreBox.addMove();
             this.physics.moveTo(
@@ -101,7 +97,6 @@ export default class Level1 extends Scene {
               sprite.body.velocity.y < 0 &&
               sprite.isTinted
             ) {
-
               sprite.setAngle(0);
             }
             if (
@@ -383,17 +378,25 @@ export default class Level1 extends Scene {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
   }
   winCon() {
-    this.completed = this.scene.get('levelMap').levelComplete.level1
+    let findLevel1 = this.scene
+      .get("levelMap")
+      .levelArray.find((x) => x.key === "level1");
 
-    if (this.spriteSelection[0].distance === 0 && this.completed == true) {
+    let findLevel2 = this.scene
+      .get("levelMap")
+      .levelArray.find((x) => x.key === "level2");
 
-      this.scene.start('levelMap');
+    if (
+      this.spriteSelection[0].distance === 0 &&
+      this.scene.get("levelMap").levelArray[0].complete === true
+    ) {
+      this.scene.start("levelMap");
     }
     if (
       this.spriteSelection[0].x ===
-      this.gB.sqNum[this.gB.exit].x + this.gB.sqW / 2 &&
+        this.gB.sqNum[this.gB.exit].x + this.gB.sqW / 2 &&
       this.spriteSelection[0].y ===
-      this.gB.sqNum[this.gB.exit].y + this.gB.sqH / 2
+        this.gB.sqNum[this.gB.exit].y + this.gB.sqH / 2
     ) {
       this.spriteSelection[0].target.x = 500;
       this.spriteSelection[0].target.y = -700;
@@ -403,11 +406,11 @@ export default class Level1 extends Scene {
         this.spriteSelection[0].target.y,
         400
       );
-      this.scene.get('levelMap').levelComplete.level1 = true;
+
+      this.scene.get("levelMap").levelArray[0].setData('complete', true)
+      this.scene.get("levelMap").levelArray[1].setData('complete', true)
+      
       this.spriteSelection[0].play("roll");
-
-
     }
-
   }
 }
