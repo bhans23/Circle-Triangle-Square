@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import spriteCreation from "./spriteCreation";
 
 export default class score {
   constructor(config) {
@@ -6,13 +7,14 @@ export default class score {
     this.totalMoves = config.totalMoves;
     this.scoreBox();
   }
-  addMove() {
+  addMove(sprite) {
     
+   
       this.totalMoves++;
       this.box.clear();
       this.scoreText.destroy();
       this.scoreBox();
-      
+    
     
   }
 
