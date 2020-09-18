@@ -407,10 +407,11 @@ export default class Level1 extends Scene {
         400
       );
 
-      this.scene.get("levelMap").levelArray[0].complete = true;
-      this.scene.get("levelMap").levelArray[1].complete = true;
+     
+     this.scene.get('levelMap').localStorage.setItem('level2','level2')
       
       this.spriteSelection[0].play("roll");
+      this.scene.start("levelMap");
     }
   }
 }
