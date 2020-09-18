@@ -23,7 +23,7 @@ export default class TitleScene extends Phaser.Scene {
     startButtonSprite.displayWidth = 100;
     startButtonSprite.displayHeight = 100;
     startButtonSprite.setInteractive();
-    startButtonSprite.on("pointerdown", () => this.scene.start("level1"));
+    startButtonSprite.on("pointerdown", () => this.scene.start("levelMap"));
 
     // title Logo
     const logo = this.add.image(600, 500, "logo").setDepth(1);

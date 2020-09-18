@@ -8,7 +8,7 @@ import altar from "../logic/altar";
 import score from "../logic/score";
 
 export default class Level1 extends Scene {
-  constructor() {
+  constructor(config) {
     super("level1");
   }
   // Preload, create, update functions ---------------------------------
@@ -378,19 +378,40 @@ export default class Level1 extends Scene {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
   }
   winCon() {
+    let findLevel1 = this.scene
+      .get("levelMap")
+      .levelArray.find((x) => x.key === "level1");
+
+    let findLevel2 = this.scene
+      .get("levelMap")
+      .levelArray.find((x) => x.key === "level2");
+
+    if (
+      this.spriteSelection[0].distance === 0 &&
+      this.scene.get("levelMap").levelArray[0].complete === true
+    ) {
+      this.scene.start("levelMap");
+    }
     if (
       this.spriteSelection[0].x ===
         this.gB.sqNum[this.gB.exit].x + this.gB.sqW / 2 &&
       this.spriteSelection[0].y ===
         this.gB.sqNum[this.gB.exit].y + this.gB.sqH / 2
     ) {
-      this.add
-        .text(600, 500, "You WIN!!!!!!", {
-          fontFamily: "Arial",
-          fontSize: 70,
-          color: "#ffffff",
-        })
-        .setDepth(13);
+      this.spriteSelection[0].target.x = 500;
+      this.spriteSelection[0].target.y = -700;
+      this.physics.moveTo(
+        this.spriteSelection[0],
+        this.spriteSelection[0].target.x,
+        this.spriteSelection[0].target.y,
+        400
+      );
+
+     
+     this.scene.get('levelMap').localStorage.setItem('level2','level2')
+      
+      this.spriteSelection[0].play("roll");
+      this.scene.start("levelMap");
     }
   }
 }
