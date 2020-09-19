@@ -2,6 +2,7 @@ import { Scene } from "phaser";
 import tilePNG from "../assets/level1tiles.png";
 import level1Map from "../assets/level1.json";
 import level2Map from "../assets/level2.json";
+import level3Map from "../assets/level3.json";
 import logo from "../assets/sQTLogo.png";
 import startButton from "../assets/startButton.png";
 import title from "../assets/title.png";
@@ -41,6 +42,7 @@ export default class bootScene extends Scene {
 
     this.load.tilemapTiledJSON("level1Map", level1Map);
     this.load.tilemapTiledJSON("level2Map", level2Map);
+    this.load.tilemapTiledJSON("level3Map", level3Map);
     this.load.image("circle", circleSprite);
     this.load.image("square", squareSprite);
     this.load.image("triangle", triangleSprite);
