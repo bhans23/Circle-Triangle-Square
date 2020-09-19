@@ -25,6 +25,7 @@ export default class Level1 extends Scene {
     this.spriteMoveTo();
     this.addCollisions();
     this.createGui();
+    
   }
 
   update() {
@@ -156,9 +157,11 @@ export default class Level1 extends Scene {
       cols: 5,
       sqW: 200,
       sqH: 200,
+      firstSq: 0,
       scene: this,
       exit: 2,
-      altar: 11,
+      altar: 11
+      
     });
     this.gB.squareBoard();
   }
@@ -251,7 +254,7 @@ export default class Level1 extends Scene {
 
   createMap() {
     // //create the tilemap
-    const board = this.make.tilemap({ key: "level1GameBoard" });
+    const board = this.make.tilemap({ key: "level1Map" });
     //add tileset image
     const tilesPNG = board.addTilesetImage("tiles");
     // create our layers
@@ -345,6 +348,8 @@ export default class Level1 extends Scene {
       key: "altar",
       gB: this.gB,
       selected: this.selectedSquare,
+      endX: 850,
+      endY:125
     }).setImmovable(true);
 
     this.pillars = [
@@ -378,13 +383,7 @@ export default class Level1 extends Scene {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
   }
   winCon() {
-    let findLevel1 = this.scene
-      .get("levelMap")
-      .levelArray.find((x) => x.key === "level1");
-
-    let findLevel2 = this.scene
-      .get("levelMap")
-      .levelArray.find((x) => x.key === "level2");
+  
 
     if (
       this.spriteSelection[0].distance === 0 &&
