@@ -49,7 +49,7 @@ export default class altar extends Phaser.Physics.Arcade.Sprite {
         this.scene.stoneDoor.target.y,
         200
       );
-      this.scene.stoneDoor.play("rollDoor");
+      this.scene.stoneDoor.play("rollDoor")
       this.scene.cameras.main.shake(1000, 0.005);
       this.isPressed = true;
     }

@@ -282,8 +282,8 @@ export default class Level3 extends Scene {
       .createStaticLayer("vines2", tilesPNG, 0, 0)
       .setDepth(2);
     this.trees = board.createStaticLayer("vines3", tilesPNG, 0, 0).setDepth(3);
-    this.tree1 = board.createStaticLayer("trees", tilesPNG, 0, 0).setDepth(8);
-    this.tree2 = board.createStaticLayer("trees2", tilesPNG, 0, 0).setDepth(8);
+    this.tree1 = board.createStaticLayer("trees", tilesPNG, 0, 0).setDepth(3);
+    this.tree2 = board.createStaticLayer("trees2", tilesPNG, 0, 0).setDepth(4);
     
   }
 
@@ -308,7 +308,7 @@ export default class Level3 extends Scene {
         .setBodySize(150, 150).setAngle(90)
     ];
     // Intro movement for sprite
-    this.spriteSelection[0].target.x = 900;
+    this.spriteSelection[0].target.x = 300;
     this.spriteSelection[0].target.y = 700;
     this.physics.moveTo(
       this.spriteSelection[0],
@@ -352,8 +352,8 @@ export default class Level3 extends Scene {
     //altar creation
     this.altar = new altar({
       scene: this,
-      x: 900,
-      y: 500,
+      x: 700,
+      y: 900,
       key: "altar",
       gB: this.gB,
       selected: this.selectedSquare,
@@ -362,17 +362,25 @@ export default class Level3 extends Scene {
     }).setImmovable(true);
 
     this.pillars = [
+    //   new Pillar({
+    //     scene: this,
+    //     x: 900,
+    //     y: 700,
+    //     key: "pillar",
+    //     gB: this.gB,
+    //     selected: this.selectedSquare,
+    //   }).setDepth(1),
+    //   new Pillar({
+    //     scene: this,
+    //     x: 700,
+    //     y: 300,
+    //     key: "pillar",
+    //     gB: this.gB,
+    //     selected: this.selectedSquare,
+    //   }).setDepth(1),
       new Pillar({
         scene: this,
-        x: 900,
-        y: 700,
-        key: "pillar",
-        gB: this.gB,
-        selected: this.selectedSquare,
-      }).setDepth(1),
-      new Pillar({
-        scene: this,
-        x: 700,
+        x: 500,
         y: 900,
         key: "pillar",
         gB: this.gB,
@@ -381,11 +389,27 @@ export default class Level3 extends Scene {
       new Pillar({
         scene: this,
         x: 500,
-        y: 700,
+        y: 300,
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
       }).setDepth(1),
+      new Pillar({
+        scene: this,
+        x: 500,
+        y: 500,
+        key: "pillar",
+        gB: this.gB,
+        selected: this.selectedSquare,
+      }).setDepth(1),
+    //   new Pillar({
+    //     scene: this,
+    //     x: 300,
+    //     y: 500,
+    //     key: "pillar",
+    //     gB: this.gB,
+    //     selected: this.selectedSquare,
+    //   }).setDepth(1),
     ];
   }
   createGui() {
