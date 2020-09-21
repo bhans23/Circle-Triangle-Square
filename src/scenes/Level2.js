@@ -6,6 +6,7 @@ import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
 import altar from "../logic/altar";
 import score from "../logic/score";
+import menu from "../logic/menu";
 
 export default class Level2 extends Scene {
   constructor(config) {
@@ -232,7 +233,7 @@ export default class Level2 extends Scene {
             pillar.body.speed === 0 &&
             sprite.body.speed !== 0)
         ) {
-          this.impactSFX.play();
+          
           this.slideShortSFX.play();
         }
       }
@@ -382,6 +383,7 @@ export default class Level2 extends Scene {
   }
   createGui() {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
+    this.menu = new menu({ scene: this, level: 'level2' });
   }
   winCon() {
    

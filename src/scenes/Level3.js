@@ -6,6 +6,7 @@ import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
 import altar from "../logic/altar";
 import score from "../logic/score";
+import menu from "../logic/menu";
 
 export default class Level3 extends Scene {
   constructor(config) {
@@ -15,7 +16,7 @@ export default class Level3 extends Scene {
   preload() {}
 
   create() {
-    this.localStorage = window.localStorage
+    this.localStorage = window.localStorage;
     this.createAudio();
     this.squareGameBoard();
     // this.higlightSquares()
@@ -26,7 +27,6 @@ export default class Level3 extends Scene {
     this.spriteMoveTo();
     this.addCollisions();
     this.createGui();
-    
   }
 
   update() {
@@ -70,13 +70,9 @@ export default class Level3 extends Scene {
     });
   }
   getSpriteSquare(sprite) {
-      console.log(sprite.x)
     let sqX = Math.floor((sprite.x - this.gB.firstSq) / this.gB.sqW);
     let sqY = Math.floor((sprite.y - this.gB.firstSq) / this.gB.sqH);
-    console.log(sqX)
-    console.log(sqY)
     this.spSq = this.gB.squareMatrix[sqX][sqY];
-    console.log(this.spSq)
   }
   pointerXY(sprite, speed) {
     this.input.on(
@@ -164,10 +160,9 @@ export default class Level3 extends Scene {
       sqH: 200,
       firstSq: 0,
       scene: this,
-      exit:23,
+      exit: 23,
       altar: 8,
     });
-    
   }
 
   //--------------------------------------------------------------------
@@ -188,17 +183,17 @@ export default class Level3 extends Scene {
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
       let y = (this.gB.sqW / 2) * Math.round(object.y / (this.gB.sqW / 2));
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
+      this.impactSFX.play()
       object.body.reset(x, y);
     };
     this.physics.add.collider(
-        this.spriteSelection,
-        this.wall,
-        (sprite, wall) => {
-          this.bounceReset(sprite);
-          sprite.moves();
-        }
-      );
+      this.spriteSelection,
+      this.wall,
+      (sprite, wall) => {
+        this.bounceReset(sprite);
+        sprite.moves();
+      }
+    );
     this.physics.add.collider(
       this.pillars,
       this.pillars,
@@ -234,13 +229,15 @@ export default class Level3 extends Scene {
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
+       
+        console.log(pillar.body);
         if (
           pillar.body.velocity.x !== 0 ||
           (pillar.body.velocity.y !== 0 &&
             pillar.body.speed === 0 &&
             sprite.body.speed !== 0)
         ) {
-          this.impactSFX.play();
+          
           this.slideShortSFX.play();
         }
       }
@@ -284,7 +281,6 @@ export default class Level3 extends Scene {
     this.trees = board.createStaticLayer("vines3", tilesPNG, 0, 0).setDepth(3);
     this.tree1 = board.createStaticLayer("trees", tilesPNG, 0, 0).setDepth(3);
     this.tree2 = board.createStaticLayer("trees2", tilesPNG, 0, 0).setDepth(4);
-    
   }
 
   createAudio() {
@@ -305,7 +301,8 @@ export default class Level3 extends Scene {
         gB: this.gB,
       })
         .setDepth(5)
-        .setBodySize(150, 150).setAngle(90)
+        .setBodySize(150, 150)
+        .setAngle(90),
     ];
     // Intro movement for sprite
     this.spriteSelection[0].target.x = 300;
@@ -347,7 +344,8 @@ export default class Level3 extends Scene {
       .setDepth(7)
       .setScale(1.5)
       .setImmovable(true)
-      .setBodySize(100, 100).setAngle(90);
+      .setBodySize(100, 100)
+      .setAngle(90);
 
     //altar creation
     this.altar = new altar({
@@ -358,26 +356,26 @@ export default class Level3 extends Scene {
       gB: this.gB,
       selected: this.selectedSquare,
       endX: 1075,
-      endY:400
+      endY: 400,
     }).setImmovable(true);
 
     this.pillars = [
-    //   new Pillar({
-    //     scene: this,
-    //     x: 900,
-    //     y: 700,
-    //     key: "pillar",
-    //     gB: this.gB,
-    //     selected: this.selectedSquare,
-    //   }).setDepth(1),
-    //   new Pillar({
-    //     scene: this,
-    //     x: 700,
-    //     y: 300,
-    //     key: "pillar",
-    //     gB: this.gB,
-    //     selected: this.selectedSquare,
-    //   }).setDepth(1),
+      //   new Pillar({
+      //     scene: this,
+      //     x: 900,
+      //     y: 700,
+      //     key: "pillar",
+      //     gB: this.gB,
+      //     selected: this.selectedSquare,
+      //   }).setDepth(1),
+      //   new Pillar({
+      //     scene: this,
+      //     x: 700,
+      //     y: 300,
+      //     key: "pillar",
+      //     gB: this.gB,
+      //     selected: this.selectedSquare,
+      //   }).setDepth(1),
       new Pillar({
         scene: this,
         x: 500,
@@ -401,23 +399,22 @@ export default class Level3 extends Scene {
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
-      }).setDepth(1),
-    //   new Pillar({
-    //     scene: this,
-    //     x: 300,
-    //     y: 500,
-    //     key: "pillar",
-    //     gB: this.gB,
-    //     selected: this.selectedSquare,
-    //   }).setDepth(1),
+      }).setDepth(1)
+      //   new Pillar({
+      //     scene: this,
+      //     x: 300,
+      //     y: 500,
+      //     key: "pillar",
+      //     gB: this.gB,
+      //     selected: this.selectedSquare,
+      //   }).setDepth(1),
     ];
   }
   createGui() {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
+    this.menu = new menu({ scene: this, level: 'level3' });
   }
   winCon() {
-   
-
     if (
       this.spriteSelection[0].distance === 0 &&
       this.scene.get("levelMap").levelArray[0].complete === true
@@ -439,16 +436,10 @@ export default class Level3 extends Scene {
         400
       );
 
-     
-      this.scene.get('levelMap').localStorage.setItem('level4','level4')
-      
+      this.scene.get("levelMap").localStorage.setItem("level4", "level4");
+
       this.spriteSelection[0].play("roll");
       this.scene.start("levelMap");
     }
   }
- 
-     
-     
-    
-  
 }
