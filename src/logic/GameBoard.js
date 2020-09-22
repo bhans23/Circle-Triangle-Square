@@ -9,6 +9,9 @@ export default class GameBoard {
     this.scene = config.scene;
     this.exit = config.exit;
     this.altar = config.altar;
+    this.firstSq = config.firstSq;
+    this.squareBoard();
+    // this.numbers();
   }
 
   squareBoard() {
@@ -32,7 +35,7 @@ export default class GameBoard {
     this.squareMatrix = Phaser.Utils.Array.Matrix.TransposeMatrix(
       this.squareMatrix
     );
-    
+
     //Creating Geometric square objects on each square coordinates
     let num2 = 0;
     let num3 = 0;
@@ -52,14 +55,28 @@ export default class GameBoard {
     for (let i = 0; i < this.sqNum.length; i++) {
       this.sqNum[i] = new Phaser.GameObjects.Rectangle(
         this.scene,
-        xSq[i],
-        ySq[i],
+        xSq[i] + this.firstSq,
+        ySq[i] + this.firstSq,
         this.sqW,
         this.sqH
-      )
-      // this.sqNum[i] = new Phaser.Geom.Rectangle(xSq[i], ySq[i], this.sqW, this.sqH)
+      );
+
       this.scene.add.existing(this.sqNum[i]);
       this.scene.physics.add.existing(this.sqNum[i]);
+    }
+  }
+
+  numbers() {
+    for (let i = 0; i < this.sqNum.length; i++) {
+      
+      this.scene.add
+        .text(this.sqNum[i].x, this.sqNum[i].y, i, {
+          fontFamily: "Arial",
+          fontSize: 25,
+          color: "#ffffff",
+        })
+
+        .setDepth(20);
     }
   }
 }

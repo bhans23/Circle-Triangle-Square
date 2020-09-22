@@ -25,6 +25,7 @@ rockAnim () {
   moves(x, y) {
     //filter out available moves and border
     this.selectedSquare = this.gB.sqNum.indexOf(this.gB.sqNum[this.scene.spSq]);
+    
     //Removing border squares
     this.availableMoves = this.gB.sqIndex.filter(
       (x) => x < this.gB.sqIndex.length - this.gB.rows
@@ -55,9 +56,8 @@ rockAnim () {
         x === this.selectedSquare - this.gB.rows
     );
 
-    this.nonAvailMoves = this.gB.sqIndex.filter(
-      (x) => !this.availableMoves.includes(x)
-    );
+    // console.log(this.availableMoves)
+    
     // Add highlights to squares
     this.graphics.clear();
     if (this.isTinted === true) {

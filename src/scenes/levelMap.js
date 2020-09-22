@@ -12,7 +12,7 @@ export default class levelMap extends Phaser.Scene {
     bgImage.displayWidth = 1200;
     bgImage.displayHeight = 1200;
     this.localStorage = window.localStorage;
-
+    this.sound.stopAll()
     this.levels();
     this.buttons();
     this.hover();
@@ -60,7 +60,7 @@ export default class levelMap extends Phaser.Scene {
       // Level Scene link
       this.levelArray[i].setInteractive();
       this.levelArray[i].on("pointerdown", (event, gameObjects) => {
-        console.log(gameObjects)
+        
         let keyFind = (x) =>
           this.localStorage.getItem(x) === this.levelArray[i].key;
         let findKey = this.levelKeys.some(keyFind);
@@ -93,7 +93,7 @@ export default class levelMap extends Phaser.Scene {
         let keyFind = (x) =>
           this.localStorage.getItem(x) === gameObjects[0].key;
         let findKey = this.levelKeys.some(keyFind);
-        console.log(findKey);
+        
 
         if (gameObjects[0].key === "level1" || findKey) {
           gameObjects[0].setFillStyle(0x87eb4d, 1);

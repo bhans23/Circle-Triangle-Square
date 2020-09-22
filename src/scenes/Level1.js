@@ -6,6 +6,7 @@ import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
 import altar from "../logic/altar";
 import score from "../logic/score";
+import menu from "../logic/menu";
 
 export default class Level1 extends Scene {
   constructor(config) {
@@ -25,6 +26,7 @@ export default class Level1 extends Scene {
     this.spriteMoveTo();
     this.addCollisions();
     this.createGui();
+    
   }
 
   update() {
@@ -156,9 +158,11 @@ export default class Level1 extends Scene {
       cols: 5,
       sqW: 200,
       sqH: 200,
+      firstSq: 0,
       scene: this,
       exit: 2,
-      altar: 11,
+      altar: 11
+      
     });
     this.gB.squareBoard();
   }
@@ -216,16 +220,18 @@ export default class Level1 extends Scene {
         this.impactSFX.play();
       };
     this.physics.add.collider(
+      
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
+        
         if (
           pillar.body.velocity.x !== 0 ||
           (pillar.body.velocity.y !== 0 &&
             pillar.body.speed === 0 &&
             sprite.body.speed !== 0)
         ) {
-          this.impactSFX.play();
+          
           this.slideShortSFX.play();
         }
       }
@@ -241,6 +247,7 @@ export default class Level1 extends Scene {
       this.pillars,
       (sprite, pillar) => {
         if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
+          
           this.bounceReset(sprite);
           sprite.moves();
           this.impactSFX.play();
@@ -251,7 +258,7 @@ export default class Level1 extends Scene {
 
   createMap() {
     // //create the tilemap
-    const board = this.make.tilemap({ key: "level1GameBoard" });
+    const board = this.make.tilemap({ key: "level1Map" });
     //add tileset image
     const tilesPNG = board.addTilesetImage("tiles");
     // create our layers
@@ -345,6 +352,8 @@ export default class Level1 extends Scene {
       key: "altar",
       gB: this.gB,
       selected: this.selectedSquare,
+      endX: 850,
+      endY:125
     }).setImmovable(true);
 
     this.pillars = [
@@ -376,15 +385,11 @@ export default class Level1 extends Scene {
   }
   createGui() {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
+    this.menu = new menu({ scene: this, level: 'level1' });
+
   }
   winCon() {
-    let findLevel1 = this.scene
-      .get("levelMap")
-      .levelArray.find((x) => x.key === "level1");
-
-    let findLevel2 = this.scene
-      .get("levelMap")
-      .levelArray.find((x) => x.key === "level2");
+  
 
     if (
       this.spriteSelection[0].distance === 0 &&

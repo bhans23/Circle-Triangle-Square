@@ -1,6 +1,10 @@
 import { Scene } from "phaser";
 import tilePNG from "../assets/level1tiles.png";
-import gameBoard from "../assets/level1.json";
+import level1Map from "../assets/level1.json";
+import level2Map from "../assets/level2.json";
+import level3Map from "../assets/level3.json";
+import level4Map from "../assets/level4.json";
+import level5Map from "../assets/level5.json";
 import logo from "../assets/sQTLogo.png";
 import startButton from "../assets/startButton.png";
 import title from "../assets/title.png";
@@ -14,6 +18,7 @@ import altar from "../assets/altar.png";
 import grass from "../assets/grass.png";
 import stone from "../assets/stone.png";
 import dirt from "../assets/dirt.png";
+import water from "../assets/water.png";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -28,6 +33,7 @@ export default class bootScene extends Scene {
     this.load.audio("impact", "/assets/impact.mp3");
     this.load.audio("rockRoll", "/assets/rockRoll.mp3");
     this.load.audio("doorMove", "/assets/doorMove.mp3");
+    this.load.audio("water", "/assets/water.mp3");
     // title Scene assets
     this.load.image("grass", grass);
     this.load.image("dirt", dirt);
@@ -36,9 +42,14 @@ export default class bootScene extends Scene {
     this.load.image("stone", stone);
     this.load.image("startButton", startButton);
     this.load.image("logo", logo);
+    this.load.image("water", water);
     //level 1 assets
 
-    this.load.tilemapTiledJSON("level1GameBoard", gameBoard);
+    this.load.tilemapTiledJSON("level1Map", level1Map);
+    this.load.tilemapTiledJSON("level2Map", level2Map);
+    this.load.tilemapTiledJSON("level3Map", level3Map);
+    this.load.tilemapTiledJSON("level4Map", level4Map);
+    this.load.tilemapTiledJSON("level5Map", level5Map);
     this.load.image("circle", circleSprite);
     this.load.image("square", squareSprite);
     this.load.image("triangle", triangleSprite);

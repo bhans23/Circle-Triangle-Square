@@ -7,6 +7,8 @@ export default class altar extends Phaser.Physics.Arcade.Sprite {
     config.scene.physics.add.existing(this);
     this.config = config;
     this.scene = this.config.scene;
+    this.endX = config.endX
+    this.endY = config.endY
     this.create();
   }
   preload() {}
@@ -39,15 +41,15 @@ export default class altar extends Phaser.Physics.Arcade.Sprite {
       this.emitter.killAll();
       //Door move FX
       this.scene.doorMoveSFX.play();
-      this.scene.stoneDoor.target.x = 750;
-      this.scene.stoneDoor.target.y = 125;
+      this.scene.stoneDoor.target.x = this.endX;
+      this.scene.stoneDoor.target.y = this.endY;
       this.scene.physics.moveTo(
         this.scene.stoneDoor,
         this.scene.stoneDoor.target.x,
         this.scene.stoneDoor.target.y,
         200
       );
-      this.scene.stoneDoor.play("rollDoor");
+      this.scene.stoneDoor.play("rollDoor")
       this.scene.cameras.main.shake(1000, 0.005);
       this.isPressed = true;
     }

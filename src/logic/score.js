@@ -8,14 +8,10 @@ export default class score {
     this.scoreBox();
   }
   addMove(sprite) {
-    
-   
-      this.totalMoves++;
-      this.box.clear();
-      this.scoreText.destroy();
-      this.scoreBox();
-    
-    
+    this.totalMoves++;
+    this.box.clear();
+    this.scoreText.destroy();
+    this.scoreBox();
   }
 
   scoreBox() {
@@ -42,5 +38,6 @@ export default class score {
         color: "#ffffff",
       })
       .setDepth(13);
+   
   }
 }

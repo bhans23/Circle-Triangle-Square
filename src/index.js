@@ -22,6 +22,7 @@ class Game extends Phaser.Game {
     this.scene.add("Title", TitleScene);
     this.scene.add("levelMap", levelMap);
     this.scene.start("bootScene");
+    
   }
 }
 
