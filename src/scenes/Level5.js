@@ -11,6 +11,8 @@ import menu from "../logic/menu";
 export default class Level5 extends Scene {
   constructor(config) {
     super("level5");
+    this.count = 0;
+    this.count2 = 0;
   }
   // Preload, create, update functions ---------------------------------
   preload() {}
@@ -33,6 +35,8 @@ export default class Level5 extends Scene {
     this.spriteMoves();
     this.pillarMoves();
     this.winCon();
+    this.waterRope();
+    this.waterRope2();
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -268,20 +272,22 @@ export default class Level5 extends Scene {
     const tilesPNG = board.addTilesetImage("tiles");
     // create our layers
     this.ground = board.createStaticLayer("ground", tilesPNG, 0, 0);
-    this.floor = board.createStaticLayer("tiles", tilesPNG, 0, 0);
+    this.floor = board.createStaticLayer("tiles", tilesPNG, 0, 0).setDepth(1);
     this.vinesFloor = board.createStaticLayer("vines", tilesPNG, 0, 0);
     this.wall = board.createStaticLayer("wall", tilesPNG, 0, 0);
     this.wall.setCollisionByExclusion([-1]);
     this.door = board.createStaticLayer("door", tilesPNG, 0, 0);
     this.door.setCollisionByExclusion([-1]);
-    this.vines = board.createStaticLayer("vines1", tilesPNG, 0, 0);
-    this.vines2 = board.createStaticLayer("vines2", tilesPNG, 0, 0);
+    this.vines = board.createStaticLayer("vines1", tilesPNG, 0, 0).setDepth(1);
+    this.vines2 = board.createStaticLayer("vines2", tilesPNG, 0, 0).setDepth(1);
     this.tree1 = board.createStaticLayer("trees", tilesPNG, 0, 0).setDepth(3);
     this.tree2 = board.createStaticLayer("trees2", tilesPNG, 0, 0).setDepth(4);
   }
 
   createAudio() {
     this.music = this.sound.add("level1", { loop: true }).play();
+    this.waterSFX = this.sound.add("water", { loop: true, volume: 0.07 })
+    this.waterSFX.play();
     this.slideSFX = this.sound.add("slide", { volume: 0.2 });
     this.slideShortSFX = this.sound.add("slideShort", { volume: 0.2 });
     this.impactSFX = this.sound.add("impact", { volume: 0.3 });
@@ -408,6 +414,37 @@ export default class Level5 extends Scene {
         selected: this.selectedSquare,
       }).setDepth(1),
     ];
+    this.water = this.add
+      .rope(500, 500, "water", null, 64, false, null, 0.6)
+      .setDepth(0)
+      .setScale(0.7, 1.3)
+      .setAngle(180);
+    this.water2 = this.add
+      .rope(500, 450, "water", null, 34, false, null, 0.7)
+      .setDepth(0)
+      .setScale(0.7, 1.3);
+  }
+  waterRope2() {
+    this.count2 += 0.1;
+
+    let points = this.water2.points;
+
+    for (let i = 0; i < points.length; i++) {
+      points[i].x = Math.sin(i * 0.3 + this.count) * 16;
+    }
+
+    this.water2.setDirty();
+  }
+  waterRope() {
+    this.count += 0.05;
+
+    let points = this.water.points;
+
+    for (let i = 0; i < points.length; i++) {
+      points[i].x = Math.sin(i * 0.3 + this.count) * 16;
+    }
+
+    this.water.setDirty();
   }
   createGui() {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
@@ -436,6 +473,7 @@ export default class Level5 extends Scene {
       );
       this.scene.get("levelMap").localStorage.setItem("level5", "level5");
       this.spriteSelection[0].play("roll");
+      this.waterSFX.pause()
       this.scene.start("levelMap");
     }
   }

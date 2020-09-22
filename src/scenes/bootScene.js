@@ -18,6 +18,7 @@ import altar from "../assets/altar.png";
 import grass from "../assets/grass.png";
 import stone from "../assets/stone.png";
 import dirt from "../assets/dirt.png";
+import water from "../assets/water.png";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -32,6 +33,7 @@ export default class bootScene extends Scene {
     this.load.audio("impact", "/assets/impact.mp3");
     this.load.audio("rockRoll", "/assets/rockRoll.mp3");
     this.load.audio("doorMove", "/assets/doorMove.mp3");
+    this.load.audio("water", "/assets/water.mp3");
     // title Scene assets
     this.load.image("grass", grass);
     this.load.image("dirt", dirt);
@@ -40,6 +42,7 @@ export default class bootScene extends Scene {
     this.load.image("stone", stone);
     this.load.image("startButton", startButton);
     this.load.image("logo", logo);
+    this.load.image("water", water);
     //level 1 assets
 
     this.load.tilemapTiledJSON("level1Map", level1Map);

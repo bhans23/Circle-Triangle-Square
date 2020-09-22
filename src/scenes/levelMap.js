@@ -12,7 +12,7 @@ export default class levelMap extends Phaser.Scene {
     bgImage.displayWidth = 1200;
     bgImage.displayHeight = 1200;
     this.localStorage = window.localStorage;
-
+    this.sound.stopAll()
     this.levels();
     this.buttons();
     this.hover();

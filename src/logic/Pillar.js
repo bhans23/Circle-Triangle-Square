@@ -10,6 +10,7 @@ export default class Pillar extends Phaser.Physics.Arcade.Sprite {
     
   }
   update() {
+    
     if(this.body.onWorldBounds === true){
       this.scene.bounceReset(this.scene.spriteSelection[0]);
           this.scene.sprite.moves();

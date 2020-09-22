@@ -220,6 +220,7 @@ export default class Level1 extends Scene {
         this.impactSFX.play();
       };
     this.physics.add.collider(
+      
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
