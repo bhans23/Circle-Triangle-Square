@@ -100,37 +100,7 @@ export default class Level5 extends Scene {
               speed
             );
 
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y < 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(0);
-            }
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y === 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(90);
-            }
-            if (
-              sprite.body.velocity.x < 0 &&
-              sprite.body.velocity.y >= 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(-90);
-            }
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y > 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(180);
-            }
-            if (sprite.isTinted) {
-              this.rockMove.pause();
-            }
+            sprite.moveDirection();
           }
         } else {
         }
@@ -286,7 +256,7 @@ export default class Level5 extends Scene {
 
   createAudio() {
     this.music = this.sound.add("level1", { loop: true }).play();
-    this.waterSFX = this.sound.add("water", { loop: true, volume: 0.07 })
+    this.waterSFX = this.sound.add("water", { loop: true, volume: 0.07 });
     this.waterSFX.play();
     this.slideSFX = this.sound.add("slide", { volume: 0.2 });
     this.slideShortSFX = this.sound.add("slideShort", { volume: 0.2 });
@@ -473,7 +443,7 @@ export default class Level5 extends Scene {
       );
       this.scene.get("levelMap").localStorage.setItem("level5", "level5");
       this.spriteSelection[0].play("roll");
-      this.waterSFX.pause()
+      this.waterSFX.pause();
       this.scene.start("levelMap");
     }
   }

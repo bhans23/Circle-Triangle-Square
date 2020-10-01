@@ -7,16 +7,20 @@ import GameBoard from "../logic/GameBoard";
 import altar from "../logic/altar";
 import score from "../logic/score";
 import menu from "../logic/menu";
+import win from "../logic/win";
+import tree from "../logic/tree";
+import createMap from "../logic/createMap";
 
 export default class Level2 extends Scene {
   constructor(config) {
     super("level2");
+    this.key = "level2"
+    this.keyWin = "level3"
   }
   // Preload, create, update functions ---------------------------------
   preload() {}
 
   create() {
-    this.localStorage = window.localStorage
     this.createAudio();
     this.squareGameBoard();
     // this.higlightSquares()
@@ -27,12 +31,15 @@ export default class Level2 extends Scene {
     this.spriteMoveTo();
     this.addCollisions();
     this.createGui();
-    
+    console.log(this.spriteSelection[0])
   }
 
   update() {
     this.spriteMoves();
     this.winCon();
+    this.treeRopes.forEach((tree) => {
+      tree.update();
+    });
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -71,21 +78,18 @@ export default class Level2 extends Scene {
     });
   }
   getSpriteSquare(sprite) {
-      console.log(sprite.x)
-    let sqX = Math.floor((sprite.x - this.gB.firstSq) / this.gB.sqW);
-    let sqY = Math.floor((sprite.y - this.gB.firstSq) / this.gB.sqH);
-    console.log(sqX)
-    console.log(sqY)
+    let sqX = Math.floor(sprite.x / this.gB.sqW);
+    let sqY = Math.floor((sprite.y - this.gB.firstSq.y) / this.gB.sqH);
+
     this.spSq = this.gB.squareMatrix[sqX][sqY];
-    console.log(this.spSq)
   }
   pointerXY(sprite, speed) {
     this.input.on(
       "pointerdown",
       function (pointer) {
         if (sprite.body.speed === 0) {
-          let sqX = Math.floor((pointer.x - this.gB.firstSq) / this.gB.sqW);
-          let sqY = Math.floor((pointer.y - this.gB.firstSq) / this.gB.sqH);
+          let sqX = Math.floor(pointer.x / this.gB.sqW);
+          let sqY = Math.floor((pointer.y - this.gB.firstSq.y) / this.gB.sqH);
           this.sqI = this.gB.squareMatrix[sqX][sqY];
           sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
           sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
@@ -98,38 +102,7 @@ export default class Level2 extends Scene {
               sprite.target.y,
               speed
             );
-
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y < 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(0);
-            }
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y === 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(90);
-            }
-            if (
-              sprite.body.velocity.x < 0 &&
-              sprite.body.velocity.y >= 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(-90);
-            }
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y > 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(180);
-            }
-            if (sprite.isTinted) {
-              this.rockMove.pause();
-            }
+            sprite.moveDirection();
           }
         } else {
         }
@@ -163,12 +136,12 @@ export default class Level2 extends Scene {
       cols: 5,
       sqW: 200,
       sqH: 200,
-      firstSq: 200,
+      firstSq: { x: 0, y: 136 },
       scene: this,
-      exit: 14,
-      altar: 8,
+      exit: 3,
+      altar: 5,
     });
-    
+    this.gB.squareBoard();
   }
 
   //--------------------------------------------------------------------
@@ -186,12 +159,15 @@ export default class Level2 extends Scene {
     });
 
     this.bounceReset = (object) => {
+      console.log(object)
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
-      let y = (this.gB.sqW / 2) * Math.round(object.y / (this.gB.sqW / 2));
+      let y = ((this.gB.sqW  / 2) * Math.round((object.y - 36)  / (this.gB.sqW  / 2))) + 36;
+      
       this.cameras.main.shake(300, 0.003);
       this.impactSFX.play();
       object.body.reset(x, y);
     };
+
     this.physics.add.collider(
       this.pillars,
       this.pillars,
@@ -202,6 +178,7 @@ export default class Level2 extends Scene {
         });
       }
     );
+
     this.physics.add.collider(
       this.spriteSelection,
       this.stoneDoor,
@@ -218,7 +195,7 @@ export default class Level2 extends Scene {
       this.cameras.main.shake(300, 0.003);
       this.impactSFX.play();
     });
-    this.physics.add.collider(this.pillars, this.door),
+    this.physics.add.collider(this.pillars, this.map.door),
       () => {
         this.cameras.main.shake(300, 0.003);
         this.impactSFX.play();
@@ -233,13 +210,12 @@ export default class Level2 extends Scene {
             pillar.body.speed === 0 &&
             sprite.body.speed !== 0)
         ) {
-          
           this.slideShortSFX.play();
         }
       }
     );
-    this.physics.add.collider(this.spriteSelection, this.wall);
-    this.physics.add.collider(this.pillars, this.wall, () => {
+    this.physics.add.collider(this.spriteSelection, this.map.wall);
+    this.physics.add.collider(this.pillars, this.map.wall, () => {
       this.cameras.main.shake(300, 0.003);
       this.impactSFX.play();
     });
@@ -258,26 +234,28 @@ export default class Level2 extends Scene {
   }
 
   createMap() {
-    // //create the tilemap
-    const board = this.make.tilemap({ key: "level2Map" });
-    //add tileset image
-    const tilesPNG = board.addTilesetImage("tiles");
-    // create our layers
-    this.ground = board.createStaticLayer("floor", tilesPNG, 0, 0);
-    this.floor = board.createStaticLayer("tiles", tilesPNG, 0, 0);
-    this.vinesFloor = board.createStaticLayer("vines0", tilesPNG, 0, 0);
-    this.wall = board.createStaticLayer("wall", tilesPNG, 0, 0);
-    this.wall.setCollisionByExclusion([-1]);
-    this.door = board.createStaticLayer("door", tilesPNG, 0, 0).setDepth(6);
-    this.door.setCollisionByExclusion([-1]);
-    this.vines = board.createStaticLayer("vines", tilesPNG, 0, 0);
-    this.otherTree = board
-      .createStaticLayer("vines2", tilesPNG, 0, 0)
-      .setDepth(3);
-    this.trees = board.createStaticLayer("vines3", tilesPNG, 0, 0).setDepth(3);
-    this.tree1 = board.createStaticLayer("trees", tilesPNG, 0, 0).setDepth(8);
-    this.tree2 = board.createStaticLayer("trees2", tilesPNG, 0, 0).setDepth(8);
     
+    let rect0 = new Phaser.GameObjects.Rectangle(this, 100, 200, 950, 950).setDepth(8).setOrigin(0)
+    let rect = new Phaser.GameObjects.Rectangle(this, 0, 136, 1200, 1200).setDepth(8).setOrigin(0)
+    let shape = this.make.graphics();
+    shape.fillRectShape(rect0)
+    var mask = shape.createGeometryMask();
+    mask.setInvertAlpha()
+    this.box = this.add
+    .graphics({ fillStyle: { color: 0x000000, alpha: 0.2 } }). setDepth(8)
+    // this.box.fillRectShape(rect)
+    
+    this.box.setMask(mask)
+
+    
+    this.bg = this.add.image(0,0,"stoneBg").setOrigin(0).setScale(.6,.6).setDepth(9).setCrop(0,0,2000,300)
+    this.add.image(0,1000,"stoneBg").setOrigin(0).setScale(.6,.6).setDepth(9).setCrop(0,350,2000,2000)
+   
+    this.map = new createMap({
+      scene: this,
+      mapKey: this.key,
+      tileMap: "tiles",
+    });
   }
 
   createAudio() {
@@ -296,21 +274,17 @@ export default class Level2 extends Scene {
         y: 1500,
         key: "circleSheet",
         gB: this.gB,
-      })
-        .setDepth(5)
-        .setBodySize(150, 150),
+        bodySize: { x: 150, y: 150 },
+        depth: 1,
+        introSq: { x: 500, y: 836 },
+      }),
     ];
-    // Intro movement for sprite
-    this.spriteSelection[0].target.x = 500;
-    this.spriteSelection[0].target.y = 900;
-    this.physics.moveTo(
-      this.spriteSelection[0],
-      this.spriteSelection[0].target.x,
-      this.spriteSelection[0].target.y,
-      400
-    );
-    this.spriteSelection[0].play("roll");
+    //Sprite Intros
+    this.spriteSelection.map((x) => {
+      x.intro();
+    });
   }
+
   createGameObjects() {
     //Stone sprite Creation
     this.stone = new stoneSprite({
@@ -318,107 +292,106 @@ export default class Level2 extends Scene {
       x: 500,
       y: 1700,
       key: "stone",
-    }).setImmovable(true);
-    // Opening Stone movement Intro
-    this.stone.target.x = 500;
-    this.stone.target.y = 1100;
-    this.slideSFX.play();
-    this.physics.moveTo(
-      this.stone,
-      this.stone.target.x,
-      this.stone.target.y,
-      300
-    );
+      introSq: { x: 500, y: 1036 },
+    });
+
     //Stone door creation
 
     this.stoneDoor = new doorSprite({
       scene: this,
-      x: 1075,
-      y: 700,
+      x: 700,
+      y: 125 + this.gB.firstSq.y,
       key: "doorSheet",
-    })
-      .setDepth(7)
-      .setScale(1.5)
-      .setImmovable(true)
-      .setBodySize(100, 100).setAngle(90);
+      depth: 2,
+      scale: 1.5,
+      immovable: true,
+      bodySize: { x: 100, y: 100 },
+    });
 
     //altar creation
     this.altar = new altar({
       scene: this,
-      x: 900,
-      y: 500,
+      x: 300,
+      y: 300 + this.gB.firstSq.y,
       key: "altar",
       gB: this.gB,
       selected: this.selectedSquare,
-      endX: 1075,
-      endY:400
+      endX: 950,
+      endY: 125 + this.gB.firstSq.y,
     }).setImmovable(true);
 
     this.pillars = [
       new Pillar({
         scene: this,
-        x: 900,
-        y: 700,
+        x: 500,
+        y: 300 + this.gB.firstSq.y,
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
-      }).setDepth(1),
-      new Pillar({
-        scene: this,
-        x: 700,
-        y: 900,
-        key: "pillar",
-        gB: this.gB,
-        selected: this.selectedSquare,
-      }).setDepth(1),
+      }),
+      // new Pillar({
+      //   scene: this,
+      //   x: 700,
+      //   y: 500 + this.gB.firstSq.y,
+      //   key: "pillar",
+      //   gB: this.gB,
+      //   selected: this.selectedSquare,
+      // }),
       new Pillar({
         scene: this,
         x: 500,
-        y: 700,
+        y: 500 + this.gB.firstSq.y,
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
-      }).setDepth(1),
+      }),
+    ];
+    this.treeRopes = [
+      new tree({
+        scene: this,
+        pos: { x: 1000, y: 1200 },
+        speed: 0.03,
+        angle: 30,
+        depth: 3
+      }),
+      new tree({
+        scene: this,
+        pos: { x: 100, y: 900 },
+        speed: 0.04,
+        angle: -270,
+        depth: 3
+      }),
+      new tree({
+        scene: this,
+        pos: { x: 1160, y: 700 },
+        speed: 0.05,
+        depth: 5
+      }),
+      new tree({
+        scene: this,
+        pos: { x: 1150, y: 950 },
+        speed: 0.1,
+        depth: 4
+      }),
+      new tree({
+        scene: this,
+        pos: { x: 1000, y:200  },
+        speed: 0.03,
+        depth: 3
+    
+      }),
     ];
   }
   createGui() {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
-    this.menu = new menu({ scene: this, level: 'level2' });
+    this.menu = new menu({ scene: this, level: "level2" });
   }
   winCon() {
-   
-
-    if (
-      this.spriteSelection[0].distance === 0 &&
-      this.scene.get("levelMap").levelArray[0].complete === true
-    ) {
-      this.scene.start("levelMap");
-    }
-    if (
-      this.spriteSelection[0].x ===
-        this.gB.sqNum[this.gB.exit].x + this.gB.sqW / 2 &&
-      this.spriteSelection[0].y ===
-        this.gB.sqNum[this.gB.exit].y + this.gB.sqH / 2
-    ) {
-      this.spriteSelection[0].target.x = 500;
-      this.spriteSelection[0].target.y = -700;
-      this.physics.moveTo(
-        this.spriteSelection[0],
-        this.spriteSelection[0].target.x,
-        this.spriteSelection[0].target.y,
-        400
-      );
-
-     
-      this.scene.get('levelMap').localStorage.setItem('level3','level3')
-      
-      this.spriteSelection[0].play("roll");
-      this.scene.start("levelMap");
-    }
+    new win({
+      scene: this,
+      gB: this.gB,
+      leave: { x: 500, y: -700 },
+      key: this.keyWin
+    });
   }
- 
-     
-     
-    
-  
 }

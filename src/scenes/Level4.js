@@ -98,37 +98,7 @@ export default class Level4 extends Scene {
               speed
             );
 
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y < 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(0);
-            }
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y === 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(90);
-            }
-            if (
-              sprite.body.velocity.x < 0 &&
-              sprite.body.velocity.y >= 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(-90);
-            }
-            if (
-              sprite.body.velocity.x >= 0 &&
-              sprite.body.velocity.y > 0 &&
-              sprite.isTinted
-            ) {
-              sprite.setAngle(180);
-            }
-            if (sprite.isTinted) {
-              this.rockMove.pause();
-            }
+            sprite.moveDirection()
           }
         } else {
         }

@@ -7,6 +7,7 @@ export default class Pillar extends Phaser.Physics.Arcade.Sprite {
     config.scene.physics.add.existing(this);
     this.scene = config.scene;
     this.setCollideWorldBounds(true);
+    this.setDepth(1);
     
   }
   update() {

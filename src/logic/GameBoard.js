@@ -11,7 +11,7 @@ export default class GameBoard {
     this.altar = config.altar;
     this.firstSq = config.firstSq;
     this.squareBoard();
-    // this.numbers();
+    this.numbers();
   }
 
   squareBoard() {
@@ -55,8 +55,8 @@ export default class GameBoard {
     for (let i = 0; i < this.sqNum.length; i++) {
       this.sqNum[i] = new Phaser.GameObjects.Rectangle(
         this.scene,
-        xSq[i] + this.firstSq,
-        ySq[i] + this.firstSq,
+        xSq[i] + this.firstSq.x,
+        ySq[i] + this.firstSq.y,
         this.sqW,
         this.sqH
       );

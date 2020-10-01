@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
-import tilePNG from "../assets/level1tiles.png";
+import tilePNG from "../assets/tiles.png";
+import tile2PNG from "../assets/tiles2.png";
 import level1Map from "../assets/level1.json";
 import level2Map from "../assets/level2.json";
 import level3Map from "../assets/level3.json";
@@ -19,6 +20,8 @@ import grass from "../assets/grass.png";
 import stone from "../assets/stone.png";
 import dirt from "../assets/dirt.png";
 import water from "../assets/water.png";
+import stoneBg from "../assets/stoneBg.png";
+import tree from "../assets/tree.png";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -43,13 +46,15 @@ export default class bootScene extends Scene {
     this.load.image("startButton", startButton);
     this.load.image("logo", logo);
     this.load.image("water", water);
+    this.load.image("stoneBg", stoneBg);
+    this.load.image("tree", tree);
     //level 1 assets
 
-    this.load.tilemapTiledJSON("level1Map", level1Map);
-    this.load.tilemapTiledJSON("level2Map", level2Map);
-    this.load.tilemapTiledJSON("level3Map", level3Map);
-    this.load.tilemapTiledJSON("level4Map", level4Map);
-    this.load.tilemapTiledJSON("level5Map", level5Map);
+    this.load.tilemapTiledJSON("level1", level1Map);
+    this.load.tilemapTiledJSON("level2", level2Map);
+    this.load.tilemapTiledJSON("level3", level3Map);
+    this.load.tilemapTiledJSON("level4", level4Map);
+    this.load.tilemapTiledJSON("level5", level5Map);
     this.load.image("circle", circleSprite);
     this.load.image("square", squareSprite);
     this.load.image("triangle", triangleSprite);
@@ -58,6 +63,7 @@ export default class bootScene extends Scene {
       frameWidth: 200,
       frameHeight: 200,
     });
+    
     this.load.spritesheet("circleSheet", circleSheet, {
       frameWidth: 200,
       frameHeight: 200,
