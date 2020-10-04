@@ -1,5 +1,5 @@
 export default {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   physics: {
     default: "arcade",
     // arcade: { debug: true }

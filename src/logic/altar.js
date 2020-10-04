@@ -9,6 +9,7 @@ export default class altar extends Phaser.Physics.Arcade.Sprite {
     this.scene = this.config.scene;
     this.endX = config.endX
     this.endY = config.endY
+    this.setPipeline("Light2D");
     this.create();
   }
   preload() {}

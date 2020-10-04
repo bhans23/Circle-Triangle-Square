@@ -8,23 +8,29 @@ export default class doorSprite extends Phaser.Physics.Arcade.Sprite {
     this.config = config;
     this.scene = this.config.scene;
     this.target = new Phaser.Math.Vector2();
-    this.doorAnim();
+    console.log(this.scene.textures.get("doorSheet"))
     this.attributes();
+    this.doorAnim();
+    
+    this.setPipeline('Light2D')
   }
   preload() {}
 
   doorAnim() {
     var config = {
       key: "rollDoor",
-      frames: this.scene.anims.generateFrameNumbers("doorSheet", {
-        start: 0,
-        end: 17,
-        first: 0,
+      frames: this.scene.anims.generateFrameNames('doorSheet', {
+        start: 1,
+        end: 60,
+        first: 1,
       }),
-      frameRate: 14,
+      frameRate: 30,
       repeat: 0,
     };
     this.scene.stoneDoorMove = this.scene.anims.create(config);
+   
+    
+   
   }
 
   update() {

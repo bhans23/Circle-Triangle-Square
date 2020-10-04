@@ -7,8 +7,9 @@ export default class score {
     this.totalMoves = config.totalMoves;
     this.scoreBox();
   }
-  addMove(sprite) {
-    this.totalMoves++;
+  addMove() {
+    
+    this.totalMoves++
     this.box.clear();
     this.scoreText.destroy();
     this.scoreBox();

@@ -4,9 +4,9 @@ export default class tree {
   constructor(config) {
     this.scene = config.scene;
     this.pos = config.pos;
-    this.speed = config.speed
-    this.angle = config.angle
-    this.depth = config.depth
+    this.speed = config.speed;
+    this.angle = config.angle;
+    this.depth = config.depth;
     this.ropeTree();
   }
 
@@ -29,5 +29,6 @@ export default class tree {
       .rope(this.pos.x, this.pos.y, "tree", null, 7)
       .setDepth(this.depth)
       .setAngle(this.angle)
+      
   }
 }

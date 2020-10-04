@@ -4,6 +4,7 @@ import { config } from "process";
 export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   constructor(spriteValues) {
     super(spriteValues.scene, spriteValues.x, spriteValues.y, spriteValues.key);
+    
     spriteValues.scene.add.existing(this);
     spriteValues.scene.physics.add.existing(this);
     this.spriteValues = spriteValues;
@@ -15,9 +16,9 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     this.depth = spriteValues.depth;
     this.bodySize = spriteValues.bodySize;
     this.introSq = spriteValues.introSq;
+    this.setPipeline("Light2D")
     this.attributes();
-
-    
+   
   }
   preload() {}
 
@@ -70,7 +71,7 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
       this.setAngle(180);
     }
     if (this.isTinted) {
-      this.rockMove.pause();
+      this.rockMove.pause("roll");
     }
   }
   intro() {
@@ -121,10 +122,10 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     if (this.isTinted === true) {
       this.availableMoves.map((x) => {
         if (x === this.gB.exit || x === this.gB.altar) {
-          this.graphics.fillStyle(0xf5e102, 0.6);
+          this.graphics.fillStyle(0xf5e102, 0.4);
           this.graphics.fillRectShape(this.gB.sqNum[x]);
         } else {
-          this.graphics.fillStyle(0x419ef0, 0.6);
+          this.graphics.fillStyle(0x419ef0, 0.4);
           this.graphics.fillRectShape(this.gB.sqNum[x]);
         }
       });

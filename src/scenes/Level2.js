@@ -21,6 +21,10 @@ export default class Level2 extends Scene {
   preload() {}
 
   create() {
+    this.lights.enable();
+    this.lights.setAmbientColor(0x808080);
+    this.lights.addLight(600, 600, 1000).setColor(0xffffff).setIntensity(.9);
+    this.lights.addLight(900,1200, 1000).setColor(0xffffff).setIntensity(.9);
     this.createAudio();
     this.squareGameBoard();
     // this.higlightSquares()

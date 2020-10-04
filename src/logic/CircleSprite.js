@@ -5,18 +5,20 @@ export default class CircleSprite extends spriteCreation {
   constructor(spriteValues) {
     super(spriteValues);
     this.scene = this.spriteValues.scene;
+    
     this.rockAnim();
+    
     
   }
   rockAnim() {
     var config = {
       key: "roll",
-      frames: this.scene.anims.generateFrameNumbers("circleSheet", {
-        start: 0,
-        end: 59,
-        first: 0,
+      frames: this.scene.anims.generateFrameNames("circleSheet", {
+        start: 1,
+        end: 60,
+        first: 1,
       }),
-      frameRate: 60,
+      frameRate: 90,
       repeat: -1,
     };
     this.scene.rockMove = this.scene.anims.create(config);

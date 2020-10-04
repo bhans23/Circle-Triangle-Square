@@ -21,6 +21,19 @@ export default class Level1 extends Scene {
   preload() {}
 
   create() {
+    this.lights.enable();
+    this.lights.setAmbientColor(0x808080);
+    this.lights.addLight(600, 600, 1000).setColor(0xffffff).setIntensity(1);
+    this.lights.addLight(1000,1200, 1000).setColor(0xffffff).setIntensity(1);
+    this.lights.addLight(0,1500, 1000).setColor(0xffffff).setIntensity(1);
+    // this.lights.addLight(0,400, 1000).setColor(0xffffff).setIntensity(.9);
+    // this.lights.addLight(600, 600, 3000).setColor(0xffffff).setIntensity(1.2);
+
+    // this.lights.addLight(600, 600, 3000).setColor(0xffffff).setIntensity(1.2);
+
+
+
+    // //create the tilemap
     this.createAudio();
     this.squareGameBoard();
     // this.higlightSquares()
@@ -31,6 +44,7 @@ export default class Level1 extends Scene {
     this.spriteMoveTo();
     this.addCollisions();
     this.createGui();
+    
   }
 
   update() {
@@ -54,8 +68,7 @@ export default class Level1 extends Scene {
           sprite.moves();
           this.pointerXY(sprite, 400);
         }
-      }
-      if (sprite !== selectedSprite) {
+      } else if (sprite !== selectedSprite) {
         sprite.deselect();
         this.pointerXY(sprite, 0);
       } else {
@@ -86,18 +99,16 @@ export default class Level1 extends Scene {
     this.input.on(
       "pointerdown",
       function (pointer) {
-        let selectedTile = this.map.floor.getTileAtWorldXY(pointer.x, pointer.y, true);
-        console.log(selectedTile)
-
         if (sprite.body.speed === 0) {
           let sqX = Math.floor(pointer.x / this.gB.sqW);
           let sqY = Math.floor((pointer.y - this.gB.firstSq.y) / this.gB.sqH);
           this.sqI = this.gB.squareMatrix[sqX][sqY];
           sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
           sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
+
           if (sprite.availableMoves.some((x) => x === this.sqI)) {
             this.rockRollSFX.play();
-            this.scoreBox.addMove();
+
             this.physics.moveTo(
               sprite,
               sprite.target.x,
@@ -105,6 +116,7 @@ export default class Level1 extends Scene {
               speed
             );
             sprite.moveDirection();
+          } else {
           }
         } else {
         }
@@ -138,7 +150,7 @@ export default class Level1 extends Scene {
       cols: 5,
       sqW: 200,
       sqH: 200,
-      firstSq: { x: 0, y: 136 },
+      firstSq: { x: 0, y: 468 },
       scene: this,
       exit: 2,
       altar: 11,
@@ -162,10 +174,12 @@ export default class Level1 extends Scene {
 
     this.bounceReset = (object) => {
       console.log(object);
+      let remainder = this.gB.firstSq.y % 100;
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
       let y =
-        (this.gB.sqW / 2) * Math.round((object.y - 36) / (this.gB.sqW / 2)) +
-        36;
+        (this.gB.sqW / 2) *
+          Math.round((object.y - remainder) / (this.gB.sqW / 2)) +
+        remainder;
 
       this.cameras.main.shake(300, 0.003);
       this.impactSFX.play();
@@ -260,13 +274,13 @@ export default class Level1 extends Scene {
       .setOrigin(0)
       .setScale(0.6, 0.6)
       .setDepth(9)
-      .setCrop(0, 0, 2000, 300);
+      .setCrop(0, 0, 2000, 785);
     this.add
       .image(0, 1000, "stoneBg")
       .setOrigin(0)
       .setScale(0.6, 0.6)
       .setDepth(9)
-      .setCrop(0, 350, 2000, 2000);
+      .setCrop(0, 1075, 2000, 2000);
 
     this.map = new createMap({
       scene: this,
@@ -293,8 +307,8 @@ export default class Level1 extends Scene {
         gB: this.gB,
         bodySize: { x: 150, y: 150 },
         depth: 1,
-        introSq: { x: 500, y: 836 },
-      }),
+        introSq: { x: 500, y: 700 + this.gB.firstSq.y },
+      })
     ];
     //Sprite Intros
     this.spriteSelection.map((x) => {
@@ -309,11 +323,11 @@ export default class Level1 extends Scene {
       x: 500,
       y: 1700,
       key: "stone",
-      introSq: { x: 500, y: 1036 },
+      introSq: { x: 500, y: 900 + this.gB.firstSq.y },
     });
 
     //Stone door creation
-
+    
     this.stoneDoor = new doorSprite({
       scene: this,
       x: 500,
@@ -366,33 +380,33 @@ export default class Level1 extends Scene {
     this.treeRopes = [
       new tree({
         scene: this,
-        pos: { x: 800, y: 1200 },
+        pos: { x: 800, y: 1200 + this.gB.firstSq.y },
         speed: 0.03,
         angle: 30,
         depth: 3,
       }),
       new tree({
         scene: this,
-        pos: { x: 100, y: 500 },
+        pos: { x: 100, y: 500 + this.gB.firstSq.y },
         speed: 0.04,
         angle: -270,
         depth: 3,
       }),
       new tree({
         scene: this,
-        pos: { x: 1095, y: 600 },
+        pos: { x: 1095, y: 600 + this.gB.firstSq.y },
         speed: 0.05,
         depth: 3,
       }),
       new tree({
         scene: this,
-        pos: { x: 1095, y: 950 },
+        pos: { x: 1095, y: 950 + this.gB.firstSq.y },
         speed: 0.1,
         depth: 3,
       }),
       new tree({
         scene: this,
-        pos: { x: 1000, y: 100 },
+        pos: { x: 1000, y: 100 + this.gB.firstSq.y },
         speed: 0.03,
         depth: 3,
       }),
