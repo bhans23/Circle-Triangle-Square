@@ -1,6 +1,5 @@
 import { Scene } from "phaser";
 import stoneSprite from "../logic/stoneSprite";
-import CircleSprite from "../logic/CircleSprite";
 import doorSprite from "../logic/doorSprite";
 import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
@@ -10,21 +9,19 @@ import menu from "../logic/menu";
 import win from "../logic/win";
 import tree from "../logic/tree";
 import createMap from "../logic/createMap";
+import spriteCreation from "../logic/spriteCreation";
 
 export default class Level2 extends Scene {
   constructor(config) {
     super("level2");
-    this.key = "level2"
-    this.keyWin = "level3"
+    this.key = "level2";
+    this.keyWin = "level3";
   }
   // Preload, create, update functions ---------------------------------
   preload() {}
 
   create() {
-    this.lights.enable();
-    this.lights.setAmbientColor(0x808080);
-    this.lights.addLight(600, 600, 1000).setColor(0xffffff).setIntensity(.9);
-    this.lights.addLight(900,1200, 1000).setColor(0xffffff).setIntensity(.9);
+    this.lightFX();
     this.createAudio();
     this.squareGameBoard();
     // this.higlightSquares()
@@ -35,7 +32,7 @@ export default class Level2 extends Scene {
     this.spriteMoveTo();
     this.addCollisions();
     this.createGui();
-    console.log(this.spriteSelection[0])
+    console.log(this.map.config.y);
   }
 
   update() {
@@ -140,10 +137,10 @@ export default class Level2 extends Scene {
       cols: 5,
       sqW: 200,
       sqH: 200,
-      firstSq: { x: 0, y: 136 },
+      firstSq: { x: 0, y: 668 },
       scene: this,
-      exit: 3,
-      altar: 5,
+      exit: 14,
+      altar: 8,
     });
     this.gB.squareBoard();
   }
@@ -163,10 +160,12 @@ export default class Level2 extends Scene {
     });
 
     this.bounceReset = (object) => {
-      console.log(object)
+      console.log(object);
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
-      let y = ((this.gB.sqW  / 2) * Math.round((object.y - 36)  / (this.gB.sqW  / 2))) + 36;
-      
+      let y =
+        (this.gB.sqW / 2) * Math.round((object.y - 36) / (this.gB.sqW / 2)) +
+        36;
+
       this.cameras.main.shake(300, 0.003);
       this.impactSFX.play();
       object.body.reset(x, y);
@@ -238,27 +237,41 @@ export default class Level2 extends Scene {
   }
 
   createMap() {
-    
-    let rect0 = new Phaser.GameObjects.Rectangle(this, 100, 200, 950, 950).setDepth(8).setOrigin(0)
-    let rect = new Phaser.GameObjects.Rectangle(this, 0, 136, 1200, 1200).setDepth(8).setOrigin(0)
+    let rect0 = new Phaser.GameObjects.Rectangle(this, 100, 200, 950, 950)
+      .setDepth(8)
+      .setOrigin(0);
+    let rect = new Phaser.GameObjects.Rectangle(this, 0, 136, 1200, 1200)
+      .setDepth(8)
+      .setOrigin(0);
     let shape = this.make.graphics();
-    shape.fillRectShape(rect0)
+    shape.fillRectShape(rect0);
     var mask = shape.createGeometryMask();
-    mask.setInvertAlpha()
+    mask.setInvertAlpha();
     this.box = this.add
-    .graphics({ fillStyle: { color: 0x000000, alpha: 0.2 } }). setDepth(8)
+      .graphics({ fillStyle: { color: 0x000000, alpha: 0.2 } })
+      .setDepth(8);
     // this.box.fillRectShape(rect)
-    
-    this.box.setMask(mask)
 
-    
-    this.bg = this.add.image(0,0,"stoneBg").setOrigin(0).setScale(.6,.6).setDepth(9).setCrop(0,0,2000,300)
-    this.add.image(0,1000,"stoneBg").setOrigin(0).setScale(.6,.6).setDepth(9).setCrop(0,350,2000,2000)
-   
+    this.box.setMask(mask);
+
+    this.bg = this.add
+      .image(0, 0, "stoneBg")
+      .setOrigin(0)
+      .setScale(0.6, 0.6)
+      .setDepth(9)
+      .setCrop(0, 0, 2000, 785);
+    this.add
+      .image(0, 1000, "stoneBg")
+      .setOrigin(0)
+      .setScale(0.6, 0.6)
+      .setDepth(9)
+      .setCrop(0, 1075, 2000, 2000);
+
     this.map = new createMap({
       scene: this,
       mapKey: this.key,
       tileMap: "tiles",
+      y: 468,
     });
   }
 
@@ -272,15 +285,15 @@ export default class Level2 extends Scene {
   }
   createSprites() {
     this.spriteSelection = [
-      new CircleSprite({
+      new spriteCreation({
         scene: this,
-        x: 500,
+        x: 300,
         y: 1500,
         key: "circleSheet",
         gB: this.gB,
         bodySize: { x: 150, y: 150 },
         depth: 1,
-        introSq: { x: 500, y: 836 },
+        introSq: { x: 300, y: 900 + this.map.config.y },
       }),
     ];
     //Sprite Intros
@@ -293,58 +306,59 @@ export default class Level2 extends Scene {
     //Stone sprite Creation
     this.stone = new stoneSprite({
       scene: this,
-      x: 500,
+      x: 300,
       y: 1700,
       key: "stone",
-      introSq: { x: 500, y: 1036 },
+      introSq: { x: 300, y: 1100 + this.map.config.y },
     });
 
     //Stone door creation
 
     this.stoneDoor = new doorSprite({
       scene: this,
-      x: 700,
-      y: 125 + this.gB.firstSq.y,
+      x: 875,
+      y: 700 + this.map.config.y,
       key: "doorSheet",
       depth: 2,
       scale: 1.5,
       immovable: true,
       bodySize: { x: 100, y: 100 },
+      angle: 90,
     });
 
     //altar creation
     this.altar = new altar({
       scene: this,
-      x: 300,
-      y: 300 + this.gB.firstSq.y,
+      x: 700,
+      y: 500 + this.map.config.y,
       key: "altar",
       gB: this.gB,
       selected: this.selectedSquare,
-      endX: 950,
-      endY: 125 + this.gB.firstSq.y,
+      endX: 875,
+      endY: 950 + this.map.config.y,
     }).setImmovable(true);
 
     this.pillars = [
       new Pillar({
         scene: this,
-        x: 500,
-        y: 300 + this.gB.firstSq.y,
+        x: 300,
+        y: 700 + this.map.config.y,
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
       }),
-      // new Pillar({
-      //   scene: this,
-      //   x: 700,
-      //   y: 500 + this.gB.firstSq.y,
-      //   key: "pillar",
-      //   gB: this.gB,
-      //   selected: this.selectedSquare,
-      // }),
       new Pillar({
         scene: this,
         x: 500,
-        y: 500 + this.gB.firstSq.y,
+        y: 900 + this.map.config.y,
+        key: "pillar",
+        gB: this.gB,
+        selected: this.selectedSquare,
+      }),
+      new Pillar({
+        scene: this,
+        x: 700,
+        y: 700 + this.map.config.y,
         key: "pillar",
         gB: this.gB,
         selected: this.selectedSquare,
@@ -353,37 +367,37 @@ export default class Level2 extends Scene {
     this.treeRopes = [
       new tree({
         scene: this,
-        pos: { x: 1000, y: 1200 },
+        pos: { x: 1200, y: 1200 },
         speed: 0.03,
         angle: 30,
-        depth: 3
+        depth: 3,
       }),
       new tree({
         scene: this,
         pos: { x: 100, y: 900 },
         speed: 0.04,
         angle: -270,
-        depth: 3
+        depth: 3,
       }),
       new tree({
         scene: this,
-        pos: { x: 1160, y: 700 },
+        pos: { x: 250, y: 1650 },
         speed: 0.05,
-        depth: 5
+        depth: 1,
       }),
-      new tree({
-        scene: this,
-        pos: { x: 1150, y: 950 },
-        speed: 0.1,
-        depth: 4
-      }),
-      new tree({
-        scene: this,
-        pos: { x: 1000, y:200  },
-        speed: 0.03,
-        depth: 3
-    
-      }),
+      // new tree({
+      //   scene: this,
+      //   pos: { x: 1150, y: 950 },
+      //   speed: 0.1,
+      //   depth: 4
+      // }),
+      // new tree({
+      //   scene: this,
+      //   pos: { x: 1000, y:200  },
+      //   speed: 0.03,
+      //   depth: 3
+
+      // }),
     ];
   }
   createGui() {
@@ -394,8 +408,15 @@ export default class Level2 extends Scene {
     new win({
       scene: this,
       gB: this.gB,
-      leave: { x: 500, y: -700 },
-      key: this.keyWin
+      leave: { x: 1000, y: 700 + this.map.config.y },
+      key: this.keyWin,
     });
+  }
+  lightFX() {
+    this.lights.enable();
+    this.lights.setAmbientColor(0x808080);
+    this.lights.addLight(900, 500, 1000).setColor(0xffffff).setIntensity(1);
+    this.lights.addLight(1300, 1400, 1000).setColor(0xffffff).setIntensity(1);
+    this.lights.addLight(0, 1500, 1000).setColor(0xffffff).setIntensity(1);
   }
 }

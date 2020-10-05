@@ -1,6 +1,5 @@
 import { Scene } from "phaser";
 import stoneSprite from "../logic/stoneSprite";
-import CircleSprite from "../logic/CircleSprite";
 import doorSprite from "../logic/doorSprite";
 import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
@@ -10,6 +9,7 @@ import menu from "../logic/menu";
 import win from "../logic/win";
 import tree from "../logic/tree";
 import createMap from "../logic/createMap";
+import spriteCreation from "../logic/spriteCreation";
 
 export default class Level3 extends Scene {
   constructor(config) {
@@ -287,7 +287,7 @@ export default class Level3 extends Scene {
   }
   createSprites() {
     this.spriteSelection = [
-      new CircleSprite({
+      new spriteCreation({
         scene: this,
         x: 500,
         y: 1500,

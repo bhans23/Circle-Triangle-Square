@@ -1,5 +1,4 @@
 import { Scene } from "phaser";
-
 import level1Map from "../assets/level1.json";
 import level2Map from "../assets/level2.json";
 import level3Map from "../assets/level3.json";
@@ -8,9 +7,7 @@ import level5Map from "../assets/level5.json";
 import logo from "../assets/sQTLogo.png";
 import startButton from "../assets/startButton.png";
 import title from "../assets/title.png";
-
 import grass from "../assets/grass.png";
-import stone from "../assets/stone.png";
 import dirt from "../assets/dirt.png";
 import water from "../assets/water.png";
 import stoneBg from "../assets/stoneBg.png";
@@ -34,26 +31,27 @@ export default class bootScene extends Scene {
     this.load.image("dirt", dirt);
     this.load.image("altar", ["/assets/altar.png", "/assets/alter-n.png"]);
     this.load.image("title", title);
-    this.load.image("stone", stone);
+    this.load.image("stone", ["/assets/stone.png", "/assets/stone_n.png"]);
     this.load.image("startButton", startButton);
     this.load.image("logo", logo);
     this.load.image("water", water);
     this.load.image("stoneBg", stoneBg);
     this.load.image("tree", ["/assets/tree.png", "/assets/tree-n.png"]);
     //level 1 assets
-
     this.load.tilemapTiledJSON("level1", level1Map);
     this.load.tilemapTiledJSON("level2", level2Map);
     this.load.tilemapTiledJSON("level3", level3Map);
     this.load.tilemapTiledJSON("level4", level4Map);
     this.load.tilemapTiledJSON("level5", level5Map);
-
     this.load.image("pillar", ["/assets/pillar.png", "/assets/pillar-n.png"]);
-    this.load.image("tiles", ["/assets/tiles.png", "/assets/tiles-n.png"]);
-    this.load.setPath('assets/');
-    this.load.multiatlas('circleSheet', "circleSheet.json");
-   
-    this.load.multiatlas('doorSheet', "doorSheet.json");
+    this.load.image("tiles", [
+      "/assets/dirtWorldTiles2.png",
+      "/assets/dirtWorldTiles2_n.png",
+    ]);
+    this.load.setPath("assets/");
+    this.load.multiatlas("circleSheet", "circleSheet.json");
+
+    this.load.multiatlas("doorSheet", "doorSheet.json");
   }
   create() {
     this.scene.start("Title");

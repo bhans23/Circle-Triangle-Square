@@ -13,11 +13,11 @@ export default class Pillar extends Phaser.Physics.Arcade.Sprite {
   }
   update() {
     
-    if(this.body.onWorldBounds === true){
-      this.scene.bounceReset(this.scene.spriteSelection[0]);
-          this.scene.sprite.moves();
-          this.scene.impactSFX.play();
-    }
+    // if(this.body.onWorldBounds === true){
+    //   this.scene.bounceReset(this.scene.spriteSelection);
+    //       this.scene.sprite.moves();
+    //       this.scene.impactSFX.play();
+    // }
   }
   dust() {
     if (this.body.touching.down) {
@@ -25,16 +25,6 @@ export default class Pillar extends Phaser.Physics.Arcade.Sprite {
       let y = this.y + 100;
       this.dustEmitter(x, y);
     }
-    //   if(){
-
-    //   }
-    //   if(){
-
-    //   }
-    //   if(){
-
-    //   }
-    //   else {}
   }
   dustEmitter(x, y) {
     let particles = this.scene.add.particles("dirt").createEmitter({

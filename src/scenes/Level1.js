@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 import stoneSprite from "../logic/stoneSprite";
-import CircleSprite from "../logic/CircleSprite";
+import scoreBar from "../logic/scoreBar";
 import doorSprite from "../logic/doorSprite";
 import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
@@ -10,6 +10,7 @@ import menu from "../logic/menu";
 import win from "../logic/win";
 import tree from "../logic/tree";
 import createMap from "../logic/createMap";
+import spriteCreation from "../logic/spriteCreation";
 
 export default class Level1 extends Scene {
   constructor(config) {
@@ -21,30 +22,17 @@ export default class Level1 extends Scene {
   preload() {}
 
   create() {
-    this.lights.enable();
-    this.lights.setAmbientColor(0x808080);
-    this.lights.addLight(600, 600, 1000).setColor(0xffffff).setIntensity(1);
-    this.lights.addLight(1000,1200, 1000).setColor(0xffffff).setIntensity(1);
-    this.lights.addLight(0,1500, 1000).setColor(0xffffff).setIntensity(1);
-    // this.lights.addLight(0,400, 1000).setColor(0xffffff).setIntensity(.9);
-    // this.lights.addLight(600, 600, 3000).setColor(0xffffff).setIntensity(1.2);
-
-    // this.lights.addLight(600, 600, 3000).setColor(0xffffff).setIntensity(1.2);
-
-
-
+    this.lightFX();
     // //create the tilemap
     this.createAudio();
     this.squareGameBoard();
-    // this.higlightSquares()
     this.events.on("resize", this.resize, this);
     this.createMap();
     this.createSprites();
     this.createGameObjects();
-    this.spriteMoveTo();
+    this.pointerXY(this.spriteSelection);
     this.addCollisions();
     this.createGui();
-    
   }
 
   update() {
@@ -57,67 +45,27 @@ export default class Level1 extends Scene {
 
   //--Sprite Move functions----------------------------------------------------
 
-  handlePointerDown(selectedSprite) {
-    this.spriteSelection.forEach((sprite) => {
-      if (sprite === selectedSprite) {
-        if (sprite.isTinted) {
-          sprite.deselect();
-          this.pointerXY(sprite, 0);
-        } else {
-          sprite.select();
-          sprite.moves();
-          this.pointerXY(sprite, 400);
-        }
-      } else if (sprite !== selectedSprite) {
-        sprite.deselect();
-        this.pointerXY(sprite, 0);
-      } else {
-      }
-    });
-  }
-
-  spriteMoveTo() {
-    this.spriteSelection.forEach((sprite) => {
-      sprite.setInteractive();
-      sprite.on(
-        "pointerdown",
-        () => {
-          this.getSpriteSquare(sprite);
-          this.handlePointerDown(sprite);
-        },
-        this
-      );
-    });
-  }
   getSpriteSquare(sprite) {
     let sqX = Math.floor(sprite.x / this.gB.sqW);
     let sqY = Math.floor((sprite.y - this.gB.firstSq.y) / this.gB.sqH);
 
     this.spSq = this.gB.squareMatrix[sqX][sqY];
   }
-  pointerXY(sprite, speed) {
+  pointerXY(sprite) {
     this.input.on(
       "pointerdown",
       function (pointer) {
-        if (sprite.body.speed === 0) {
-          let sqX = Math.floor(pointer.x / this.gB.sqW);
-          let sqY = Math.floor((pointer.y - this.gB.firstSq.y) / this.gB.sqH);
-          this.sqI = this.gB.squareMatrix[sqX][sqY];
-          sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
-          sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
+        let sqX = Math.floor(pointer.x / this.gB.sqW);
+        let sqY = Math.floor((pointer.y - this.gB.firstSq.y) / this.gB.sqH);
+        this.sqI = this.gB.squareMatrix[sqX][sqY];
+        sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
+        sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
 
-          if (sprite.availableMoves.some((x) => x === this.sqI)) {
-            this.rockRollSFX.play();
-
-            this.physics.moveTo(
-              sprite,
-              sprite.target.x,
-              sprite.target.y,
-              speed
-            );
-            sprite.moveDirection();
-          } else {
-          }
+        if (sprite.availableMoves.some((x) => x === this.sqI)) {
+          this.rockRollSFX.play();
+          this.scoreBox.addMove();
+          this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
+          sprite.moveDirection();
         } else {
         }
       },
@@ -126,14 +74,13 @@ export default class Level1 extends Scene {
   }
 
   spriteMoves() {
-    this.spriteSelection.forEach((sprite) => {
-      sprite.update();
-      if (sprite.body.speed === 0) {
-        this.rockMove.pause();
-      } else {
-        this.rockMove.resume();
-      }
-    });
+    this.spriteSelection.update();
+    if (this.spriteSelection.body.speed === 0) {
+      this.rockMove.pause();
+    } else {
+      this.rockMove.resume();
+    }
+
     this.stone.update();
     this.stoneDoor.update();
   }
@@ -173,7 +120,6 @@ export default class Level1 extends Scene {
     });
 
     this.bounceReset = (object) => {
-      console.log(object);
       let remainder = this.gB.firstSq.y % 100;
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
       let y =
@@ -182,7 +128,7 @@ export default class Level1 extends Scene {
         remainder;
 
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
+      // this.impactSFX.play();
       object.body.reset(x, y);
     };
 
@@ -222,13 +168,13 @@ export default class Level1 extends Scene {
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
+        console.log(pillar);
         if (
           pillar.body.velocity.x !== 0 ||
           (pillar.body.velocity.y !== 0 &&
             pillar.body.speed === 0 &&
             sprite.body.speed !== 0)
         ) {
-          this.slideShortSFX.play();
         }
       }
     );
@@ -286,6 +232,7 @@ export default class Level1 extends Scene {
       scene: this,
       mapKey: this.key,
       tileMap: "tiles",
+      y: 468,
     });
   }
 
@@ -298,22 +245,19 @@ export default class Level1 extends Scene {
     this.doorMoveSFX = this.sound.add("doorMove", { volume: 0.4 });
   }
   createSprites() {
-    this.spriteSelection = [
-      new CircleSprite({
-        scene: this,
-        x: 500,
-        y: 1500,
-        key: "circleSheet",
-        gB: this.gB,
-        bodySize: { x: 150, y: 150 },
-        depth: 1,
-        introSq: { x: 500, y: 700 + this.gB.firstSq.y },
-      })
-    ];
-    //Sprite Intros
-    this.spriteSelection.map((x) => {
-      x.intro();
+    this.spriteSelection = new spriteCreation({
+      scene: this,
+      x: 500,
+      y: 1500,
+      key: "circleSheet",
+      gB: this.gB,
+      bodySize: { x: 150, y: 150 },
+      depth: 1,
+      introSq: { x: 500, y: 700 + this.gB.firstSq.y },
     });
+
+    //Sprite Intros
+    this.spriteSelection.intro();
   }
 
   createGameObjects() {
@@ -327,7 +271,7 @@ export default class Level1 extends Scene {
     });
 
     //Stone door creation
-    
+
     this.stoneDoor = new doorSprite({
       scene: this,
       x: 500,
@@ -394,19 +338,19 @@ export default class Level1 extends Scene {
       }),
       new tree({
         scene: this,
-        pos: { x: 1095, y: 600 + this.gB.firstSq.y },
+        pos: { x: 1200, y: 600 + this.gB.firstSq.y },
         speed: 0.05,
         depth: 3,
       }),
       new tree({
         scene: this,
-        pos: { x: 1095, y: 950 + this.gB.firstSq.y },
+        pos: { x: 1200, y: 950 + this.gB.firstSq.y },
         speed: 0.1,
         depth: 3,
       }),
       new tree({
         scene: this,
-        pos: { x: 1000, y: 100 + this.gB.firstSq.y },
+        pos: { x: 1200, y: 300 + this.gB.firstSq.y },
         speed: 0.03,
         depth: 3,
       }),
@@ -415,6 +359,15 @@ export default class Level1 extends Scene {
   createGui() {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
     this.menu = new menu({ scene: this, level: this.key });
+    this.scoreBar = new scoreBar({
+      scene: this,
+      location: { x: 300, y: 25 },
+      stars: {
+        one: 12,
+        two: 10,
+        one: 9,
+      },
+    });
   }
   winCon() {
     new win({
@@ -423,5 +376,13 @@ export default class Level1 extends Scene {
       leave: { x: 500, y: -700 },
       key: this.keyWin,
     });
+  }
+
+  lightFX() {
+    this.lights.enable();
+    this.lights.setAmbientColor(0x808080);
+    this.lights.addLight(600, 500, 1000).setColor(0xffffff).setIntensity(1);
+    this.lights.addLight(1300, 1200, 1000).setColor(0xffffff).setIntensity(1);
+    this.lights.addLight(0, 1500, 1000).setColor(0xffffff).setIntensity(1);
   }
 }

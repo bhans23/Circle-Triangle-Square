@@ -12,6 +12,7 @@ export default class stoneSprite extends Phaser.Physics.Arcade.Sprite {
     this.target = new Phaser.Math.Vector2();
     this.setImmovable(true);
     this.intro();
+    this.setPipeline("Light2D")
   }
   preload() {}
 

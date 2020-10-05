@@ -11,20 +11,20 @@ export default class win {
 
   winCon() {
     if (
-      this.scene.spriteSelection[0].x ===
+      this.scene.spriteSelection.x ===
         this.gB.sqNum[this.gB.exit].x + this.gB.sqW / 2 &&
-      this.scene.spriteSelection[0].y ===
+      this.scene.spriteSelection.y ===
         this.gB.sqNum[this.gB.exit].y + this.gB.sqH / 2
     ) {
-      this.scene.spriteSelection[0].target.x = this.config.leave.x;
-      this.scene.spriteSelection[0].target.y = this.config.leave.y;
+      this.scene.spriteSelection.target.x = this.config.leave.x;
+      this.scene.spriteSelection.target.y = this.config.leave.y;
       this.scene.physics.moveTo(
-        this.scene.spriteSelection[0],
-        this.scene.spriteSelection[0].target.x,
-        this.scene.spriteSelection[0].target.y,
+        this.scene.spriteSelection,
+        this.scene.spriteSelection.target.x,
+        this.scene.spriteSelection.target.y,
         400
       );
-      this.scene.spriteSelection[0].play("roll");
+      this.scene.spriteSelection.play("roll");
       this.scene.scene.get("levelMap").localStorage.setItem(this.key, this.key);
 
       var timer = this.scene.time.addEvent({

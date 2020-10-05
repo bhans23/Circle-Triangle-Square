@@ -4,7 +4,7 @@ import { config } from "process";
 export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   constructor(spriteValues) {
     super(spriteValues.scene, spriteValues.x, spriteValues.y, spriteValues.key);
-    
+
     spriteValues.scene.add.existing(this);
     spriteValues.scene.physics.add.existing(this);
     this.spriteValues = spriteValues;
@@ -16,9 +16,9 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     this.depth = spriteValues.depth;
     this.bodySize = spriteValues.bodySize;
     this.introSq = spriteValues.introSq;
-    this.setPipeline("Light2D")
+    this.setPipeline("Light2D");
     this.attributes();
-   
+    this.rockAnim();
   }
   preload() {}
 
@@ -28,50 +28,22 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     this.spriteMoves();
   }
 
-  select() {
-    this.setTint(0x0e9c2a);
-  }
-
-  deselect() {
-    this.clearTint();
-    this.graphics.clear();
-  }
-
   attributes() {
     this.setDepth(this.depth);
     this.setBodySize(this.bodySize.x, this.bodySize.y);
   }
   moveDirection() {
-    if (
-      this.body.velocity.x >= 0 &&
-      this.body.velocity.y < 0 &&
-      this.isTinted
-    ) {
+    if (this.body.velocity.x >= 0 && this.body.velocity.y < 0) {
       this.setAngle(0);
     }
-    if (
-      this.body.velocity.x >= 0 &&
-      this.body.velocity.y === 0 &&
-      this.isTinted
-    ) {
+    if (this.body.velocity.x >= 0 && this.body.velocity.y === 0) {
       this.setAngle(90);
     }
-    if (
-      this.body.velocity.x < 0 &&
-      this.body.velocity.y >= 0 &&
-      this.isTinted
-    ) {
+    if (this.body.velocity.x < 0 && this.body.velocity.y >= 0) {
       this.setAngle(-90);
     }
-    if (
-      this.body.velocity.x >= 0 &&
-      this.body.velocity.y > 0 &&
-      this.isTinted
-    ) {
+    if (this.body.velocity.x >= 0 && this.body.velocity.y > 0) {
       this.setAngle(180);
-    }
-    if (this.isTinted) {
-      this.rockMove.pause("roll");
     }
   }
   intro() {
@@ -115,21 +87,32 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
         x === this.selectedSquare - this.gB.rows
     );
 
-    // console.log(this.availableMoves)
-
     // Add highlights to squares
     this.graphics.clear();
-    if (this.isTinted === true) {
-      this.availableMoves.map((x) => {
-        if (x === this.gB.exit || x === this.gB.altar) {
-          this.graphics.fillStyle(0xf5e102, 0.4);
-          this.graphics.fillRectShape(this.gB.sqNum[x]);
-        } else {
-          this.graphics.fillStyle(0x419ef0, 0.4);
-          this.graphics.fillRectShape(this.gB.sqNum[x]);
-        }
-      });
-    }
+
+    this.availableMoves.map((x) => {
+      if (x === this.gB.exit || x === this.gB.altar) {
+        this.graphics.fillStyle(0xf5e102, 0.4);
+        this.graphics.fillRectShape(this.gB.sqNum[x]);
+      } else {
+        this.graphics.fillStyle(0x419ef0, 0.4);
+        this.graphics.fillRectShape(this.gB.sqNum[x]);
+      }
+    });
+  }
+  rockAnim() {
+    var config = {
+      key: "roll",
+      frames: this.scene.anims.generateFrameNames("circleSheet", {
+        start: 1,
+        end: 60,
+        first: 1,
+      }),
+      frameRate: 90,
+      repeat: -1,
+    };
+    this.scene.rockMove = this.scene.anims.create(config);
+    this.rockMove = this.scene.rockMove;
   }
   spriteMoves() {
     this.distance = Phaser.Math.Distance.Between(

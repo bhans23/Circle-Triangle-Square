@@ -1,18 +1,18 @@
 import Phaser from "phaser";
-import spriteCreation from "./spriteCreation";
 
 export default class score {
   constructor(config) {
     this.scene = config.scene;
     this.totalMoves = config.totalMoves;
+
     this.scoreBox();
   }
   addMove() {
-    
-    this.totalMoves++
+    this.totalMoves++;
     this.box.clear();
     this.scoreText.destroy();
     this.scoreBox();
+    scene.add.existing(this.bar);
   }
 
   scoreBox() {
@@ -39,6 +39,5 @@ export default class score {
         color: "#ffffff",
       })
       .setDepth(13);
-   
   }
 }
