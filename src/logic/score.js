@@ -12,7 +12,7 @@ export default class score {
     this.box.clear();
     this.scoreText.destroy();
     this.scoreBox();
-    scene.add.existing(this.bar);
+    
   }
 
   scoreBox() {

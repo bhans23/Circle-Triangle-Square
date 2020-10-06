@@ -41,6 +41,7 @@ export default class Level1 extends Scene {
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
+   
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -55,6 +56,8 @@ export default class Level1 extends Scene {
     this.input.on(
       "pointerdown",
       function (pointer) {
+        if(sprite.body.speed === 0) {
+        this.scoreBar.draw()
         let sqX = Math.floor(pointer.x / this.gB.sqW);
         let sqY = Math.floor((pointer.y - this.gB.firstSq.y) / this.gB.sqH);
         this.sqI = this.gB.squareMatrix[sqX][sqY];
@@ -68,6 +71,7 @@ export default class Level1 extends Scene {
           sprite.moveDirection();
         } else {
         }
+      }
       },
       this
     );
