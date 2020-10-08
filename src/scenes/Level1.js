@@ -41,6 +41,7 @@ export default class Level1 extends Scene {
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
+    this.scoreBar.draw()
    
   }
 
@@ -367,9 +368,9 @@ export default class Level1 extends Scene {
       scene: this,
       location: { x: 300, y: 25 },
       stars: {
-        one: 12,
-        two: 10,
-        one: 9,
+        one: 16,
+        two: 12,
+        three: 9,
       },
     });
   }
