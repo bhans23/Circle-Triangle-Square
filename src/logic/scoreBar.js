@@ -9,10 +9,12 @@ export default class scoreBar {
     this.twoStar = config.stars.two;
     this.threeStar = config.stars.three;
     this.objects();
+    this.draw()
 
     this.scene.add.existing(this.bar);
   }
   objects() {
+    
     this.length = 600;
     this.unit = (this.length - 5) / this.threeStar;
     this.bar = new Phaser.GameObjects.Graphics(this.scene);
@@ -37,13 +39,32 @@ export default class scoreBar {
         .setScale(0.2),
     };
     this.starTween1 = this.scene.tweens.add({
-      targets: [this.stars.s1, this.stars.s2, this.stars.s3],
+      targets: this.stars.s1,
       angle: {star: 0,from: 30, to: -30},
       duration:2000,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut",
     });
+    this.starTween2 = this.scene.tweens.add({
+      targets:this.stars.s2,
+      angle: {star: 0,from: 30, to: -30},
+      duration:2000,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+    });
+    this.starTween3 = this.scene.tweens.add({
+      targets: this.stars.s3,
+      angle: {star: 0,from: 30, to: -30},
+      duration:2000,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+    });
+   
+     
+ 
   }
   draw() {
     //BG
@@ -59,7 +80,7 @@ export default class scoreBar {
     this.bar.fillRect(this.x + 2, this.y + 2, 595, 95);
     this.bar.fillStyle(0x643dff, 0.6);
 
-    if (this.scene.scoreBox.totalMoves < this.threeStar) {
+    if (this.scene.scoreBox.totalMoves + 1 < this.threeStar ) {
       this.value = this.length - 5;
       this.bar.fillRect(this.x + 2, this.y + 2, this.value, 95);
     } else {
@@ -67,20 +88,39 @@ export default class scoreBar {
         this.value =
           this.length -
           5 -
-          (this.scene.scoreBox.totalMoves * this.unit - (this.length - 5));
+          ((this.scene.scoreBox.totalMoves + 1 ) * this.unit - (this.length - 5));
 
         this.bar.fillRect(this.x + 2, this.y + 2, this.value, 95);
       } else {
       }
     }
-    //Stars
-    if (this.scene.scoreBox.totalMoves > this.threeStar) {
-      this.stars.s3.destroy();
+    //Stars 
+    
+   this.starDestroy(this.threeStar,this.starTween3,this.stars.s3)
+   this.starDestroy(this.twoStar,this.starTween2,this.stars.s2)
+  }
+  starDestroy(count, tween,star){
+    if (this.scene.scoreBox.totalMoves === count ) {
+      tween.stop()
+      this.scene.tweens.add({
+        targets: star,
+        scale: {star: .2,from: .1, to: .4},
+        duration:500,
+        yoyo: true,
+        repeat: 0,
+        ease: "Sine.easeInOut",
+      });
+     
+      var timer = this.scene.time.addEvent({
+        delay: 500,
+        callback: () => star.destroy(),
+        callbackScope: this,
+      });
+      
+      
+      
     } else {
     }
-    if (this.scene.scoreBox.totalMoves > this.twoStar) {
-      this.stars.s2.destroy();
-    } else {
-    }
+   
   }
 }
