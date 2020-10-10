@@ -19,12 +19,17 @@ export default class scoreBar {
     this.unit = (this.length - 5) / this.threeStar;
     this.bar = new Phaser.GameObjects.Graphics(this.scene);
     //star
-    this.s1Pos = (this.threeStar / this.oneStar) * this.length;
+    this.s1Pos = this.length - (this.oneStar - this.threeStar) * this.unit;
     this.s2Pos = this.length - (this.twoStar - this.threeStar) * this.unit;
 
+
     this.stars = {
+      f: this.scene.add
+        .image(this.x , this.y + 50, "feather")
+        .setDepth(18)
+        .setScale(0.15).setAngle(50),
       s1: this.scene.add
-        .image(this.x, this.y + 50, "star")
+        .image(this.x + this.s1Pos, this.y + 50, "star")
         .setDepth(18)
         .setScale(0.2),
 
@@ -37,7 +42,16 @@ export default class scoreBar {
         .image(this.x + this.length, this.y + 50, "star")
         .setDepth(18)
         .setScale(0.2),
+        
     };
+    this.fTween = this.scene.tweens.add({
+      targets: this.stars.f,
+      angle: {start: 50,from: 80, to: 20},
+      duration:2000,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+    });
     this.starTween1 = this.scene.tweens.add({
       targets: this.stars.s1,
       angle: {star: 0,from: 30, to: -30},
@@ -98,6 +112,7 @@ export default class scoreBar {
     
    this.starDestroy(this.threeStar,this.starTween3,this.stars.s3)
    this.starDestroy(this.twoStar,this.starTween2,this.stars.s2)
+   this.starDestroy(this.oneStar,this.starTween1,this.stars.s1)
   }
   starDestroy(count, tween,star){
     if (this.scene.scoreBox.totalMoves === count ) {

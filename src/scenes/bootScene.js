@@ -12,6 +12,7 @@ import dirt from "../assets/dirt.png";
 import water from "../assets/water.png";
 import stoneBg from "../assets/stoneBg.png";
 import star from "../assets/star.png";
+import feather from "../assets/feather.png";
 
 export default class bootScene extends Scene {
   constructor() {
@@ -45,6 +46,8 @@ export default class bootScene extends Scene {
     this.load.tilemapTiledJSON("level4", level4Map);
     this.load.tilemapTiledJSON("level5", level5Map);
     this.load.image("star", star)
+    this.load.image("feather", feather)
+  
     this.load.image("pillar", ["/assets/pillar.png", "/assets/pillar-n.png"]);
     this.load.image("tiles", [
       "/assets/dirtWorldTiles2.png",

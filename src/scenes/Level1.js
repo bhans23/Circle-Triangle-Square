@@ -135,6 +135,7 @@ export default class Level1 extends Scene {
       this.cameras.main.shake(300, 0.003);
       // this.impactSFX.play();
       object.body.reset(x, y);
+      this.scoreBox.rmMove()
     };
 
     this.physics.add.collider(

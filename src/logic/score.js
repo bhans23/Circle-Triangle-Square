@@ -7,6 +7,14 @@ export default class score {
 
     this.scoreBox();
   }
+
+  rmMove() {
+    this.totalMoves--;
+    this.box.clear();
+    this.scoreText.destroy();
+    this.scoreBox();
+    
+  }
   addMove() {
     this.totalMoves++;
     this.box.clear();
