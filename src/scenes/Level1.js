@@ -12,6 +12,7 @@ import tree from "../logic/tree";
 import createMap from "../logic/createMap";
 import spriteCreation from "../logic/spriteCreation";
 
+
 export default class Level1 extends Scene {
   constructor(config) {
     super("level1");
