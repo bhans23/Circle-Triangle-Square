@@ -22,6 +22,7 @@ export default class stoneSprite extends Phaser.Physics.Arcade.Sprite {
     this.spriteMoves();
   }
   intro() {
+    this.setAngle(this.spriteValues.angle)
     this.target.x = this.introSq.x;
     this.target.y = this.introSq.y;
     this.scene.slideSFX.play();

@@ -12,7 +12,6 @@ import tree from "../logic/tree";
 import createMap from "../logic/createMap";
 import spriteCreation from "../logic/spriteCreation";
 
-
 export default class Level1 extends Scene {
   constructor(config) {
     super("level1");
@@ -24,7 +23,6 @@ export default class Level1 extends Scene {
 
   create() {
     this.lightFX();
-    // //create the tilemap
     this.createAudio();
     this.squareGameBoard();
     this.events.on("resize", this.resize, this);
@@ -42,8 +40,7 @@ export default class Level1 extends Scene {
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
-    // 
-   
+    //
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -58,22 +55,22 @@ export default class Level1 extends Scene {
     this.input.on(
       "pointerdown",
       function (pointer) {
-        if(sprite.body.speed === 0) {
-        this.scoreBar.draw()
-        let sqX = Math.floor(pointer.x / this.gB.sqW);
-        let sqY = Math.floor((pointer.y - this.gB.firstSq.y) / this.gB.sqH);
-        this.sqI = this.gB.squareMatrix[sqX][sqY];
-        sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
-        sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
+        if (sprite.body.speed === 0) {
+          this.scoreBar.draw();
+          let sqX = Math.floor(pointer.x / this.gB.sqW);
+          let sqY = Math.floor((pointer.y - this.gB.firstSq.y) / this.gB.sqH);
+          this.sqI = this.gB.squareMatrix[sqX][sqY];
+          sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
+          sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
 
-        if (sprite.availableMoves.some((x) => x === this.sqI)) {
-          this.rockRollSFX.play();
-          this.scoreBox.addMove();
-          this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
-          sprite.moveDirection();
-        } else {
+          if (sprite.availableMoves.some((x) => x === this.sqI)) {
+            this.rockRollSFX.play();
+            this.scoreBox.addMove();
+            this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
+            sprite.moveDirection();
+          } else {
+          }
         }
-      }
       },
       this
     );
@@ -136,7 +133,7 @@ export default class Level1 extends Scene {
       this.cameras.main.shake(300, 0.003);
       // this.impactSFX.play();
       object.body.reset(x, y);
-      this.scoreBox.rmMove()
+      this.scoreBox.rmMove();
     };
 
     this.physics.add.collider(

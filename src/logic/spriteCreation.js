@@ -50,6 +50,7 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     this.target.x = this.introSq.x;
     this.target.y = this.introSq.y;
     this.scene.physics.moveTo(this, this.target.x, this.target.y, 400);
+    this.moveDirection()
     this.play("roll");
   }
 

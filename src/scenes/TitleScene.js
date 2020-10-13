@@ -8,12 +8,8 @@ export default class TitleScene extends Phaser.Scene {
   preload() {}
 
   create() {
-    
     // Background image
-    const bgImage = this.add
-      .image(0, 0, "title")
-      .setOrigin(0, 0)
-      .setDepth(0);
+    const bgImage = this.add.image(0, 0, "title").setOrigin(0, 0).setDepth(0);
     bgImage.displayWidth = 1200;
     bgImage.displayHeight = 1200;
 
@@ -33,7 +29,4 @@ export default class TitleScene extends Phaser.Scene {
 
     // this.input.on("pointerdown", () => this.scene.start("level1"));
   }
-
-  
-      
 }

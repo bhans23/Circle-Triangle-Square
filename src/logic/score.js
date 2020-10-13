@@ -13,18 +13,17 @@ export default class score {
     this.box.clear();
     this.scoreText.destroy();
     this.scoreBox();
-    
   }
   addMove() {
     this.totalMoves++;
     this.box.clear();
     this.scoreText.destroy();
     this.scoreBox();
-    
   }
 
   scoreBox() {
     //Box
+
     let rect = new Phaser.Geom.Rectangle(1000, 0, 200, 200);
     this.box = this.scene.add
       .graphics({ fillStyle: { color: 0xdbc997, alpha: 0.6 } })

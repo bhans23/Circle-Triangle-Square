@@ -1,6 +1,7 @@
 import { Scene } from "phaser";
 import stoneSprite from "../logic/stoneSprite";
 import doorSprite from "../logic/doorSprite";
+import scoreBar from "../logic/scoreBar";
 import Pillar from "../logic/Pillar";
 import GameBoard from "../logic/GameBoard";
 import altar from "../logic/altar";
@@ -24,15 +25,13 @@ export default class Level2 extends Scene {
     this.lightFX();
     this.createAudio();
     this.squareGameBoard();
-    // this.higlightSquares()
     this.events.on("resize", this.resize, this);
     this.createMap();
     this.createSprites();
     this.createGameObjects();
-    this.spriteMoveTo();
+    this.pointerXY(this.spriteSelection);
     this.addCollisions();
     this.createGui();
-    console.log(this.map.config.y);
   }
 
   update() {
@@ -45,67 +44,31 @@ export default class Level2 extends Scene {
 
   //--Sprite Move functions----------------------------------------------------
 
-  handlePointerDown(selectedSprite) {
-    this.spriteSelection.forEach((sprite) => {
-      if (sprite === selectedSprite) {
-        if (sprite.isTinted) {
-          sprite.deselect();
-          this.pointerXY(sprite, 0);
-        } else {
-          sprite.select();
-          sprite.moves();
-          this.pointerXY(sprite, 400);
-        }
-      }
-      if (sprite !== selectedSprite) {
-        sprite.deselect();
-        this.pointerXY(sprite, 0);
-      } else {
-      }
-    });
-  }
-
-  spriteMoveTo() {
-    this.spriteSelection.forEach((sprite) => {
-      sprite.setInteractive();
-      sprite.on(
-        "pointerdown",
-        () => {
-          this.getSpriteSquare(sprite);
-          this.handlePointerDown(sprite);
-        },
-        this
-      );
-    });
-  }
   getSpriteSquare(sprite) {
     let sqX = Math.floor(sprite.x / this.gB.sqW);
     let sqY = Math.floor((sprite.y - this.gB.firstSq.y) / this.gB.sqH);
 
     this.spSq = this.gB.squareMatrix[sqX][sqY];
   }
-  pointerXY(sprite, speed) {
+  pointerXY(sprite) {
     this.input.on(
       "pointerdown",
       function (pointer) {
         if (sprite.body.speed === 0) {
+          this.scoreBar.draw();
           let sqX = Math.floor(pointer.x / this.gB.sqW);
           let sqY = Math.floor((pointer.y - this.gB.firstSq.y) / this.gB.sqH);
           this.sqI = this.gB.squareMatrix[sqX][sqY];
           sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
           sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
+
           if (sprite.availableMoves.some((x) => x === this.sqI)) {
             this.rockRollSFX.play();
             this.scoreBox.addMove();
-            this.physics.moveTo(
-              sprite,
-              sprite.target.x,
-              sprite.target.y,
-              speed
-            );
+            this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
             sprite.moveDirection();
+          } else {
           }
-        } else {
         }
       },
       this
@@ -113,14 +76,13 @@ export default class Level2 extends Scene {
   }
 
   spriteMoves() {
-    this.spriteSelection.forEach((sprite) => {
-      sprite.update();
-      if (sprite.body.speed === 0) {
-        this.rockMove.pause();
-      } else {
-        this.rockMove.resume();
-      }
-    });
+    this.spriteSelection.update();
+    if (this.spriteSelection.body.speed === 0) {
+      this.rockMove.pause();
+    } else {
+      this.rockMove.resume();
+    }
+
     this.stone.update();
     this.stoneDoor.update();
   }
@@ -160,15 +122,17 @@ export default class Level2 extends Scene {
     });
 
     this.bounceReset = (object) => {
-      console.log(object);
+      let remainder = this.gB.firstSq.y % 100;
       let x = (this.gB.sqW / 2) * Math.round(object.x / (this.gB.sqW / 2));
       let y =
-        (this.gB.sqW / 2) * Math.round((object.y - 36) / (this.gB.sqW / 2)) +
-        36;
+        (this.gB.sqW / 2) *
+          Math.round((object.y - remainder) / (this.gB.sqW / 2)) +
+        remainder;
 
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
+      // this.impactSFX.play();
       object.body.reset(x, y);
+      this.scoreBox.rmMove();
     };
 
     this.physics.add.collider(
@@ -284,22 +248,18 @@ export default class Level2 extends Scene {
     this.doorMoveSFX = this.sound.add("doorMove", { volume: 0.4 });
   }
   createSprites() {
-    this.spriteSelection = [
-      new spriteCreation({
-        scene: this,
-        x: 300,
-        y: 1500,
-        key: "circleSheet",
-        gB: this.gB,
-        bodySize: { x: 150, y: 150 },
-        depth: 1,
-        introSq: { x: 300, y: 900 + this.map.config.y },
-      }),
-    ];
-    //Sprite Intros
-    this.spriteSelection.map((x) => {
-      x.intro();
-    });
+    this.spriteSelection = new spriteCreation({
+      scene: this,
+      x: 300,
+      y: 1500,
+      key: "circleSheet",
+      gB: this.gB,
+      bodySize: { x: 150, y: 150 },
+      depth: 1,
+      introSq: { x: 300, y: 900 + this.map.config.y },
+    }),
+      //Sprite Intros
+      this.spriteSelection.intro();
   }
 
   createGameObjects() {
@@ -403,6 +363,15 @@ export default class Level2 extends Scene {
   createGui() {
     this.scoreBox = new score({ scene: this, totalMoves: 0 });
     this.menu = new menu({ scene: this, level: "level2" });
+    this.scoreBar = new scoreBar({
+      scene: this,
+      location: { x: 300, y: 25 },
+      stars: {
+        one: 16,
+        two: 12,
+        three: 9,
+      },
+    });
   }
   winCon() {
     new win({

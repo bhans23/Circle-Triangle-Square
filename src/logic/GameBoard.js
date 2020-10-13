@@ -68,7 +68,6 @@ export default class GameBoard {
 
   numbers() {
     for (let i = 0; i < this.sqNum.length; i++) {
-      
       this.scene.add
         .text(this.sqNum[i].x, this.sqNum[i].y, i, {
           fontFamily: "Arial",
