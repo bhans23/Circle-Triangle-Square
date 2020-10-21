@@ -7,39 +7,39 @@ export default class altar extends Phaser.Physics.Arcade.Sprite {
     config.scene.physics.add.existing(this);
     this.config = config;
     this.scene = this.config.scene;
-    this.endX = config.endX
-    this.endY = config.endY
+    this.endX = config.endX;
+    this.endY = config.endY;
     this.setPipeline("Light2D");
     this.create();
   }
   preload() {}
 
   create() {
+    this.atlarSFX = this.scene.sound.add("altar", { volume: 1 });
     this.isPressed = false;
     this.emitter = this.scene.add.particles("grass").createEmitter({
-        x: this.config.x,
-        y: this.config.y,
-        blendMode: "SCREEN",
-        scale: { start: 0.03, end: 0 },
-        speed: { min: -100, max: 100 },
+      x: this.config.x,
+      y: this.config.y,
+      blendMode: "SCREEN",
+      scale: { start: 0.03, end: 0 },
+      speed: { min: -100, max: 100 },
+      quantity: 20,
+      emitZone: {
+        source: new Phaser.Geom.Circle(0, 0, 100),
+        type: "edge",
         quantity: 20,
-        emitZone: {
-          source: new Phaser.Geom.Circle(0, 0, 100),
-          type: "edge",
-          quantity: 20,
-        },
-      });
+      },
+    });
   }
 
-  update() {
-    
-  }
+  update() {}
 
   altarPress() {
     if (this.isPressed === false) {
       //Emitter Altar FX
       this.emitter.explode();
       this.emitter.killAll();
+      this.atlarSFX.play();
       //Door move FX
       this.scene.doorMoveSFX.play();
       this.scene.stoneDoor.target.x = this.endX;
@@ -50,17 +50,9 @@ export default class altar extends Phaser.Physics.Arcade.Sprite {
         this.scene.stoneDoor.target.y,
         200
       );
-      this.scene.stoneDoor.play("rollDoor")
+      this.scene.stoneDoor.play("rollDoor");
       this.scene.cameras.main.shake(1000, 0.005);
       this.isPressed = true;
     }
   }
-
- 
-  
-  
-    
-    
-    
-  
 }

@@ -12,10 +12,10 @@ export default class menu {
   restart() {
     this.box = this.scene.add.sprite(0, 0, "button").setDepth(15).setOrigin(0);
     let arrow = this.scene.add
-      .sprite(25, 10, "redo")
+      .sprite(10, 10, "redo")
       .setDepth(16)
       .setOrigin(0)
-      .setScale(0.16);
+      .setScale(0.5);
 
     this.box.displayWidth = 125;
     this.box.displayHeight = 125;

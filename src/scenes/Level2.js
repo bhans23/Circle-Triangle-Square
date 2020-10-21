@@ -22,6 +22,7 @@ export default class Level2 extends Scene {
   preload() {}
 
   create() {
+    this.sound.stopAll()
     this.lightFX();
     this.createAudio();
     this.squareGameBoard();
@@ -367,9 +368,9 @@ export default class Level2 extends Scene {
       scene: this,
       location: { x: 300, y: 25 },
       stars: {
-        one: 16,
-        two: 12,
-        three: 9,
+        one: 8,
+        two: 7,
+        three: 6,
       },
     });
   }

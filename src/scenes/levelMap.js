@@ -16,6 +16,7 @@ export default class levelMap extends Phaser.Scene {
     this.levels();
     this.buttons();
     this.hover();
+    console.log(this.localStorage.getItem("level1R"))
     // this.rewards()
 
     // this.localStorage.clear()

@@ -10,6 +10,7 @@ export default class win {
   }
 
   winCon() {
+    this.winMusic = this.scene.sound.add("win");
     if (
       this.scene.spriteSelection.x ===
         this.gB.sqNum[this.gB.exit].x + this.gB.sqW / 2 &&
@@ -28,7 +29,7 @@ export default class win {
       this.scene.scene.get("levelMap").localStorage.setItem(this.key, this.key);
 
       var timer = this.scene.time.addEvent({
-        delay: 1000,
+        delay: 500,
         callback: () => this.winScreen(),
         callbackScope: this.scene,
       });
@@ -36,6 +37,10 @@ export default class win {
   }
 
   winScreen() {
+    //Audio events
+    this.scene.sound.stopAll();
+    this.winMusic.play({ volume: 0.7 });
+
     //Pause events
     this.scene.menu.box.off("pointerdown");
     this.scene.menu.box2.off("pointerdown");
@@ -79,6 +84,69 @@ export default class win {
       ease: "Sine.easeInOut",
     });
     this.buttons();
+    this.rewards();
+  }
+
+  rewards() {
+    //Update totals
+    this.scene.scene
+      .get("levelMap")
+      .localStorage.setItem(
+        `${this.scene.key}R`,
+        this.scene.scoreBar.starNumCal()
+      );
+    this.scene.scene
+      .get("levelMap")
+      .localStorage.setItem(`${this.scene.key}F`, 1);
+    //create reward totals gui
+    //Stars
+
+    this.scene.add.rectangle(0, 900, 200, 100, 0xffffff, 0.5).setOrigin(0).setDepth(22);
+    let star = this.scene.add.image(45,940, "star").setScale(0.16).setDepth(22)
+    this.scene.tweens.add({
+      targets: star,
+      scale: { start: 0.16, from: 0.12, to: 0.16 },
+      duration: 2000,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+    });
+    this.scene.add
+      .text(
+        50,
+        900,
+        this.scene.scene.get("levelMap").localStorage.getItem("stars"),
+        {
+          fontFamily: "Arial",
+          fontSize: 48,
+          color: "#ffffff",
+        }
+      )
+      .setDepth(23);
+
+    //Feather
+    this.scene.add.rectangle(900, 900, 200, 100, 0xffffff, 0.5).setOrigin(0).setDepth(22);
+    let feather = this.scene.add.image(940, 940, "feather").setScale(0.14).setDepth(22);
+    this.scene.tweens.add({
+      targets: feather,
+      scale: { start: 0.14, from: 0.12, to: 0.14 },
+      duration: 2000,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+    });
+    this.scene.add
+      .text(
+        950,
+        900,
+        this.scene.scene.get("levelMap").localStorage.getItem("feathers"),
+        {
+          fontFamily: "Arial",
+          fontSize: 48,
+          color: "#ffffff",
+        }
+      )
+      .setDepth(23);
   }
 
   buttons() {
@@ -109,10 +177,10 @@ export default class win {
       .setDepth(21)
       .setOrigin(0);
     let redo = this.scene.add
-      .sprite(570, 1065, "redo")
+      .sprite(560, 1065, "redo")
       .setDepth(22)
       .setOrigin(0)
-      .setScale(0.16);
+      .setScale(0.5);
 
     box2.displayWidth = 125;
     box2.displayHeight = 125;
@@ -128,10 +196,10 @@ export default class win {
       .setDepth(21)
       .setOrigin(0);
     let next = this.scene.add
-      .sprite(815, 1060, "next")
+      .sprite(810, 1060, "next")
       .setDepth(22)
       .setOrigin(0)
-      .setScale(0.16);
+      .setScale(0.5);
 
     box3.displayWidth = 125;
     box3.displayHeight = 125;

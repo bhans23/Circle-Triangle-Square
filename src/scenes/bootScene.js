@@ -13,8 +13,8 @@ import water from "../assets/water.png";
 import stoneBg from "../assets/stoneBg.png";
 import star from "../assets/star.png";
 import feather from "../assets/feather.png";
-import redo from "../assets/next.png";
-import next from "../assets/redo.png";
+import next from "../assets/next.png";
+import redo from "../assets/redo.png";
 import map from "../assets/map.png";
 import button from "../assets/button.png";
 
@@ -32,6 +32,9 @@ export default class bootScene extends Scene {
     this.load.audio("rockRoll", "/assets/rockRoll.mp3");
     this.load.audio("doorMove", "/assets/doorMove.mp3");
     this.load.audio("water", "/assets/water.mp3");
+    this.load.audio("star", "/assets/star.mp3");
+    this.load.audio("altar", "/assets/altar.mp3");
+    this.load.audio("win", "/assets/win.mp3");
     // title Scene assets
     this.load.image("grass", grass);
     this.load.image("dirt", dirt);

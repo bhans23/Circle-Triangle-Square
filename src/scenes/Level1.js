@@ -22,6 +22,7 @@ export default class Level1 extends Scene {
   preload() {}
 
   create() {
+    this.sound.stopAll()
     this.lightFX();
     this.createAudio();
     this.squareGameBoard();

@@ -11,6 +11,11 @@ export default class scoreBar {
     this.objects();
     this.draw();
     this.scene.add.existing(this.bar);
+    console.log(
+      this.scene.scene
+        .get("levelMap")
+        .localStorage.getItem(`${this.scene.key}F`)
+    );
   }
   objects() {
     this.length = 600;
@@ -18,6 +23,7 @@ export default class scoreBar {
     this.bar = new Phaser.GameObjects.Graphics(this.scene);
 
     //star
+    this.starSFX = this.scene.sound.add("star", { volume: 0.2 });
     this.s1Pos = this.length - (this.oneStar - this.threeStar) * this.unit;
     this.s2Pos = this.length - (this.twoStar - this.threeStar) * this.unit;
 
@@ -42,6 +48,42 @@ export default class scoreBar {
         .setDepth(22)
         .setScale(0.2),
     };
+    // Mark off already gotten stars
+    if (
+      this.scene.scene
+        .get("levelMap")
+        .localStorage.getItem(`${this.scene.key}R`) == 3
+    ) {
+      this.stars.s1.setAlpha(0.3);
+      this.stars.s2.setAlpha(0.3);
+      this.stars.s3.setAlpha(0.3);
+    }
+    if (
+      this.scene.scene
+        .get("levelMap")
+        .localStorage.getItem(`${this.scene.key}R`) == 2
+    ) {
+      this.stars.s1.setAlpha(0.3);
+      this.stars.s2.setAlpha(0.3);
+    }
+    if (
+      this.scene.scene
+        .get("levelMap")
+        .localStorage.getItem(`${this.scene.key}R`) == 1
+    ) {
+      this.stars.s1.setAlpha(0.3);
+    } else {
+    }
+    if (
+      this.scene.scene
+        .get("levelMap")
+        .localStorage.getItem(`${this.scene.key}F`) == 1
+    ) {
+      this.stars.f.setAlpha(0.5);
+    } else {
+    }
+
+    //Animate Stars
     this.fTween = this.scene.tweens.add({
       targets: this.stars.f,
       angle: { start: 50, from: 80, to: 20 },
@@ -80,11 +122,11 @@ export default class scoreBar {
     //BG
     this.bar.clear();
     this.bar.setDepth(17);
-    this.bar.fillStyle(0x000000, 0.5);
+    this.bar.fillStyle(0x000000, 0.3);
     this.bar.fillRect(this.x, this.y, this.length, 100);
 
     //  Health Bar
-    this.bar.fillStyle(0xffffff, 0.5);
+    this.bar.fillStyle(0xffffff, 0.3);
     this.bar.fillRect(this.x + 2, this.y + 2, 595, 95);
     this.bar.fillStyle(0x643dff, 0.6);
 
@@ -114,19 +156,39 @@ export default class scoreBar {
       tween.stop();
       this.scene.tweens.add({
         targets: star,
-        scale: { star: 0.2, from: 0.1, to: 0.4 },
+        scale: { star: 0.2, from: 0.1, to: 0.3 },
         duration: 500,
         yoyo: true,
         repeat: 0,
         ease: "Sine.easeInOut",
       });
-
+      this.starSFX.play();
       var timer = this.scene.time.addEvent({
         delay: 500,
         callback: () => star.destroy(),
         callbackScope: this,
       });
     } else {
+    }
+  }
+
+  starNumCal() {
+    if (this.scene.scoreBox.totalMoves <= this.threeStar) {
+      return 3;
+    }
+    if (
+      this.scene.scoreBox.totalMoves <= this.twoStar &&
+      this.scene.scoreBox.totalMoves > this.threeStar
+    ) {
+      return 2;
+    }
+    if (
+      this.scene.scoreBox.totalMoves <= this.oneStar &&
+      this.scene.scoreBox.totalMoves > this.twoStar
+    ) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 }
