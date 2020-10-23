@@ -16,10 +16,11 @@ export default class levelMap extends Phaser.Scene {
     this.levels();
     this.buttons();
     this.hover();
-    console.log(this.localStorage.getItem("level1R"))
-    // this.rewards()
+    this.rewardCount();
+    this.rewards();
+    console.log(this.localStorage.getItem("feather"));
 
-    // this.localStorage.clear()
+    this.localStorage.clear()
   }
 
   buttons() {
@@ -121,6 +122,49 @@ export default class levelMap extends Phaser.Scene {
     this.localStorage.setItem("level1", "level1");
   }
 
+  rewardCount() {
+    //Feather count
+    this.featherCount = 0;
+    let feather = () => {
+      for (let i = 0; i < this.levelKeys.length; i++) {
+        if (
+          Number.isInteger(
+            parseInt(this.localStorage.getItem(`${this.levelKeys[i]}F`), 10)
+          )
+        ) {
+         
+          
+          this.featherCount =
+            this.featherCount +
+            parseInt(this.localStorage.getItem(`${this.levelKeys[i]}F`), 10);
+        } else {
+        }
+      }
+      this.localStorage.setItem("feather", parseInt(this.featherCount, 10));
+    };
+    feather();
+     //Star count
+     this.starCount = 0;
+     let star = () => {
+       for (let i = 0; i < this.levelKeys.length; i++) {
+         if (
+           Number.isInteger(
+             parseInt(this.localStorage.getItem(`${this.levelKeys[i]}R`), 10)
+           )
+         ) {
+          
+           
+           this.starCount =
+             this.starCount +
+             parseInt(this.localStorage.getItem(`${this.levelKeys[i]}R`), 10);
+         } else {
+         }
+       }
+       this.localStorage.setItem("stars", parseInt(this.starCount, 10));
+     };
+     star();
+  }
+
   rewards() {
     //Stars
 
@@ -154,7 +198,7 @@ export default class levelMap extends Phaser.Scene {
       ease: "Sine.easeInOut",
     });
     this.add
-      .text(125, 25, this.localStorage.getItem("feathers"), {
+      .text(125, 25, this.localStorage.getItem("feather"), {
         fontFamily: "Arial",
         fontSize: 48,
         color: "#ffffff",

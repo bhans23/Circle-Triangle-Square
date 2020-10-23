@@ -6,11 +6,11 @@ export default class win {
     this.scene = config.scene;
     this.gB = config.gB;
     this.key = config.key;
+
     this.winCon();
   }
 
   winCon() {
-    this.winMusic = this.scene.sound.add("win");
     if (
       this.scene.spriteSelection.x ===
         this.gB.sqNum[this.gB.exit].x + this.gB.sqW / 2 &&
@@ -29,7 +29,7 @@ export default class win {
       this.scene.scene.get("levelMap").localStorage.setItem(this.key, this.key);
 
       var timer = this.scene.time.addEvent({
-        delay: 500,
+        delay: 300,
         callback: () => this.winScreen(),
         callbackScope: this.scene,
       });
@@ -38,7 +38,13 @@ export default class win {
 
   winScreen() {
     //Audio events
+    this.starEarnSFX = this.scene.sound.add("starEarn");
+    this.starEarnSFX.play({ volume: 0.1 });
+    this.starEarnSFX2 = this.scene.sound.add("starEarn2");
+    this.starEarnSFX2.play({ volume: 0.3 });
     this.scene.sound.stopAll();
+    this.winMusic = this.scene.sound.add("win");
+
     this.winMusic.play({ volume: 0.7 });
 
     //Pause events
@@ -82,6 +88,8 @@ export default class win {
       duration: 1000,
       repeat: 0,
       ease: "Sine.easeInOut",
+      onCompleteScope: this,
+      onComplete: this.animateRewards,
     });
     this.buttons();
     this.rewards();
@@ -98,15 +106,21 @@ export default class win {
     this.scene.scene
       .get("levelMap")
       .localStorage.setItem(`${this.scene.key}F`, 1);
-    //create reward totals gui
+
     //Stars
 
-    this.scene.add.rectangle(0, 900, 200, 100, 0xffffff, 0.5).setOrigin(0).setDepth(22);
-    let star = this.scene.add.image(45,940, "star").setScale(0.16).setDepth(22)
+    this.scene.add
+      .rectangle(0, 900, 100, 100, 0xffffff, 0.5)
+      .setOrigin(0)
+      .setDepth(22);
+    this.star = this.scene.add
+      .image(45, 940, "star")
+      .setScale(0.16)
+      .setDepth(22);
     this.scene.tweens.add({
-      targets: star,
+      targets: this.star,
       scale: { start: 0.16, from: 0.12, to: 0.16 },
-      duration: 2000,
+      duration: 1000,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut",
@@ -125,12 +139,18 @@ export default class win {
       .setDepth(23);
 
     //Feather
-    this.scene.add.rectangle(900, 900, 200, 100, 0xffffff, 0.5).setOrigin(0).setDepth(22);
-    let feather = this.scene.add.image(940, 940, "feather").setScale(0.14).setDepth(22);
+    this.scene.add
+      .rectangle(900, 900, 100, 100, 0xffffff, 0.5)
+      .setOrigin(0)
+      .setDepth(22);
+    let feather = this.scene.add
+      .image(940, 940, "feather")
+      .setScale(0.14)
+      .setDepth(22);
     this.scene.tweens.add({
       targets: feather,
       scale: { start: 0.14, from: 0.12, to: 0.14 },
-      duration: 2000,
+      duration: 1000,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut",
@@ -139,7 +159,7 @@ export default class win {
       .text(
         950,
         900,
-        this.scene.scene.get("levelMap").localStorage.getItem("feathers"),
+        this.scene.scene.get("levelMap").localStorage.getItem("feather"),
         {
           fontFamily: "Arial",
           fontSize: 48,
@@ -208,5 +228,86 @@ export default class win {
     box3.on("pointerdown", () => {
       this.scene.scene.start(this.scene.keyWin);
     });
+  }
+  animateRewards() {
+    let star1Complete = (tw, target, sprite) => {
+      sprite.destroy();
+
+      this.scene.tweens.add({
+        targets: this.star,
+        scale: { from: 0.16, to: 0.25 },
+        yoyo: true,
+        duration: 100,
+        ease: "Sine.easeInOut",
+        onStart: () => this.starEarnSFX.play({ volume: 0.1 }),
+      });
+    };
+
+    let star1 = () => {
+      this.scene.tweens.add({
+        targets: this.scene.scoreBar.stars.s1,
+        x: { from: this.scene.scoreBar.stars.s1.x, to: this.star.x },
+        y: { from: this.scene.scoreBar.stars.s1.y, to: this.star.y },
+        scale: { from: 0.4, to: 0 },
+        duration: 300,
+        ease: "Sine.easeInOut",
+        onStart: () => this.starEarnSFX2.play({ volume: 0.3 }),
+        onComplete: star1Complete,
+        onCompleteParams: [this.scene.scoreBar.stars.s1],
+      });
+    };
+    let star2Complete = (tw, target, sprite) => {
+      sprite.destroy();
+
+      this.scene.tweens.add({
+        targets: this.star,
+        scale: { from: 0.16, to: 0.25 },
+        yoyo: true,
+        duration: 100,
+        ease: "Sine.easeInOut",
+        onStart: () => this.starEarnSFX.play({ volume: 0.1 }),
+        onComplete: star1,
+      });
+    };
+    let star2 = () => {
+      this.scene.tweens.add({
+        targets: this.scene.scoreBar.stars.s2,
+        x: { from: this.scene.scoreBar.stars.s2.x, to: this.star.x },
+        y: { from: this.scene.scoreBar.stars.s2.y, to: this.star.y },
+        scale: { from: 0.4, to: 0 },
+        duration: 300,
+        ease: "Sine.easeInOut",
+        onStart: () => this.starEarnSFX2.play({ volume: 0.3 }),
+        onComplete: star2Complete,
+        onCompleteParams: [this.scene.scoreBar.stars.s2],
+      });
+    };
+    let star3Complete = (tw, target, sprite) => {
+      sprite.destroy();
+
+      this.scene.tweens.add({
+        targets: this.star,
+        scale: { from: 0.16, to: 0.25 },
+        yoyo: true,
+        duration: 100,
+        ease: "Sine.easeInOut",
+        onStart: () => this.starEarnSFX.play({ volume: 0.1 }),
+        onComplete: star2,
+      });
+    };
+
+    if (this.scene.scoreBar.stars.s3.alpha === 1) {
+      this.scene.tweens.add({
+        targets: this.scene.scoreBar.stars.s3,
+        x: { from: this.scene.scoreBar.stars.s3.x, to: this.star.x },
+        y: { from: this.scene.scoreBar.stars.s3.y, to: this.star.y },
+        scale: { from: 0.4, to: 0 },
+        duration: 300,
+        ease: "Sine.easeInOut",
+        onStart: () => this.starEarnSFX2.play({ volume: 0.3 }),
+        onComplete: star3Complete,
+        onCompleteParams: [this.scene.scoreBar.stars.s3],
+      });
+    }
   }
 }
