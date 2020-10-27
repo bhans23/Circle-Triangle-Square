@@ -132,12 +132,12 @@ export default class win {
       .rectangle(900, 900, 100, 100, 0xffffff, 0.5)
       .setOrigin(0)
       .setDepth(22);
-    let feather = this.scene.add
+    this.feather = this.scene.add
       .image(940, 940, "feather")
       .setScale(0.14)
       .setDepth(22);
     this.scene.tweens.add({
-      targets: feather,
+      targets: this.feather,
       scale: { start: 0.14, from: 0.12, to: 0.14 },
       duration: 1000,
       yoyo: true,
@@ -219,6 +219,45 @@ export default class win {
     });
   }
   animateRewards() {
+    let featherComplete = (tw, target, sprite) => {
+      sprite.destroy();
+
+      this.scene.tweens.add({
+        targets: this.star,
+        scale: { from: 0.16, to: 0.25 },
+        yoyo: true,
+        duration: 100,
+        ease: "Sine.easeInOut",
+        onCompleteScope: this,
+        onStart: () => this.starEarnSFX.play({ volume: 0.1 }),
+        onComplete: this.starAnimate,
+      });
+    };
+    let featherCount = parseInt(
+      this.scene.scene
+        .get("levelMap")
+        .localStorage.getItem(`${this.scene.key}R`),
+      10
+    );
+    //feather
+    if (this.scene.scoreBar.stars.f.alpha === 1) {
+      this.scene.tweens.add({
+        targets: this.scene.scoreBar.stars.f,
+        x: { from: this.scene.scoreBar.stars.f.x, to: this.feather.x },
+        y: { from: this.scene.scoreBar.stars.f.y, to: this.feather.y },
+        scale: { from: 0.4, to: 0 },
+        duration: 300,
+        ease: "Sine.easeInOut",
+        onStart: () => this.starEarnSFX2.play({ volume: 0.3 }),
+        onComplete: featherComplete,
+        onCompleteParams: [this.scene.scoreBar.stars.f],
+      });
+    } else {
+      this.starAnimate();
+    }
+  }
+
+  starAnimate() {
     let star1Complete = (tw, target, sprite) => {
       sprite.destroy();
 
@@ -300,12 +339,9 @@ export default class win {
         .get("levelMap")
         .localStorage.getItem(`${this.scene.key}R`)
     );
-    console.log(starCount);
-    console.log(this.scene.scoreBar.starNumCal());
-    console.log(Number.isInteger(starCount));
 
     if (
-      (starCount < 3 || Number.isInteger(starCount)) &&
+      (starCount < 3 || Number.isInteger(starCount) === false) &&
       this.scene.scoreBar.starNumCal() === 3
     ) {
       this.scene.tweens.add({
@@ -320,17 +356,18 @@ export default class win {
         onCompleteParams: [this.scene.scoreBar.stars.s3],
       });
     } else if (
-      (starCount < 2 || Number.isInteger(starCount)) &&
+      (starCount < 2 || Number.isInteger(starCount) === false) &&
       this.scene.scoreBar.starNumCal() === 2
     ) {
       star2();
     } else if (
-      (starCount < 1 || Number.isInteger(starCount)) &&
+      (starCount < 1 || Number.isInteger(starCount) === false) &&
       this.scene.scoreBar.starNumCal() === 1
     ) {
       star1();
     } else {
     }
+
     //Update totals
     this.scene.scene
       .get("levelMap")
