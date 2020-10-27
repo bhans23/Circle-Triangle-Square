@@ -96,17 +96,6 @@ export default class win {
   }
 
   rewards() {
-    //Update totals
-    this.scene.scene
-      .get("levelMap")
-      .localStorage.setItem(
-        `${this.scene.key}R`,
-        this.scene.scoreBar.starNumCal()
-      );
-    this.scene.scene
-      .get("levelMap")
-      .localStorage.setItem(`${this.scene.key}F`, 1);
-
     //Stars
 
     this.scene.add
@@ -244,17 +233,19 @@ export default class win {
     };
 
     let star1 = () => {
-      this.scene.tweens.add({
-        targets: this.scene.scoreBar.stars.s1,
-        x: { from: this.scene.scoreBar.stars.s1.x, to: this.star.x },
-        y: { from: this.scene.scoreBar.stars.s1.y, to: this.star.y },
-        scale: { from: 0.4, to: 0 },
-        duration: 300,
-        ease: "Sine.easeInOut",
-        onStart: () => this.starEarnSFX2.play({ volume: 0.3 }),
-        onComplete: star1Complete,
-        onCompleteParams: [this.scene.scoreBar.stars.s1],
-      });
+      if (this.scene.scoreBar.stars.s1.alpha === 1) {
+        this.scene.tweens.add({
+          targets: this.scene.scoreBar.stars.s1,
+          x: { from: this.scene.scoreBar.stars.s1.x, to: this.star.x },
+          y: { from: this.scene.scoreBar.stars.s1.y, to: this.star.y },
+          scale: { from: 0.4, to: 0 },
+          duration: 300,
+          ease: "Sine.easeInOut",
+          onStart: () => this.starEarnSFX2.play({ volume: 0.3 }),
+          onComplete: star1Complete,
+          onCompleteParams: [this.scene.scoreBar.stars.s1],
+        });
+      }
     };
     let star2Complete = (tw, target, sprite) => {
       sprite.destroy();
@@ -270,17 +261,20 @@ export default class win {
       });
     };
     let star2 = () => {
-      this.scene.tweens.add({
-        targets: this.scene.scoreBar.stars.s2,
-        x: { from: this.scene.scoreBar.stars.s2.x, to: this.star.x },
-        y: { from: this.scene.scoreBar.stars.s2.y, to: this.star.y },
-        scale: { from: 0.4, to: 0 },
-        duration: 300,
-        ease: "Sine.easeInOut",
-        onStart: () => this.starEarnSFX2.play({ volume: 0.3 }),
-        onComplete: star2Complete,
-        onCompleteParams: [this.scene.scoreBar.stars.s2],
-      });
+      if (this.scene.scoreBar.stars.s2.alpha === 1) {
+        this.scene.tweens.add({
+          targets: this.scene.scoreBar.stars.s2,
+          x: { from: this.scene.scoreBar.stars.s2.x, to: this.star.x },
+          y: { from: this.scene.scoreBar.stars.s2.y, to: this.star.y },
+          scale: { from: 0.4, to: 0 },
+          duration: 300,
+          ease: "Sine.easeInOut",
+          onStart: () => this.starEarnSFX2.play({ volume: 0.3 }),
+          onComplete: star2Complete,
+          onCompleteParams: [this.scene.scoreBar.stars.s2],
+        });
+      } else {
+      }
     };
     let star3Complete = (tw, target, sprite) => {
       sprite.destroy();
@@ -295,8 +289,25 @@ export default class win {
         onComplete: star2,
       });
     };
+    let starCount = parseInt(
+      this.scene.scene
+        .get("levelMap")
+        .localStorage.getItem(`${this.scene.key}R`),
+      10
+    );
+    console.log(
+      this.scene.scene
+        .get("levelMap")
+        .localStorage.getItem(`${this.scene.key}R`)
+    );
+    console.log(starCount);
+    console.log(this.scene.scoreBar.starNumCal());
+    console.log(Number.isInteger(starCount));
 
-    if (this.scene.scoreBar.stars.s3.alpha === 1) {
+    if (
+      (starCount < 3 || Number.isInteger(starCount)) &&
+      this.scene.scoreBar.starNumCal() === 3
+    ) {
       this.scene.tweens.add({
         targets: this.scene.scoreBar.stars.s3,
         x: { from: this.scene.scoreBar.stars.s3.x, to: this.star.x },
@@ -308,6 +319,27 @@ export default class win {
         onComplete: star3Complete,
         onCompleteParams: [this.scene.scoreBar.stars.s3],
       });
+    } else if (
+      (starCount < 2 || Number.isInteger(starCount)) &&
+      this.scene.scoreBar.starNumCal() === 2
+    ) {
+      star2();
+    } else if (
+      (starCount < 1 || Number.isInteger(starCount)) &&
+      this.scene.scoreBar.starNumCal() === 1
+    ) {
+      star1();
+    } else {
     }
+    //Update totals
+    this.scene.scene
+      .get("levelMap")
+      .localStorage.setItem(
+        `${this.scene.key}R`,
+        this.scene.scoreBar.starNumCal()
+      );
+    this.scene.scene
+      .get("levelMap")
+      .localStorage.setItem(`${this.scene.key}F`, 1);
   }
 }

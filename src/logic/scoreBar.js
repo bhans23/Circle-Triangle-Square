@@ -11,11 +11,6 @@ export default class scoreBar {
     this.objects();
     this.draw();
     this.scene.add.existing(this.bar);
-    console.log(
-      this.scene.scene
-        .get("levelMap")
-        .localStorage.getItem(`${this.scene.key}F`)
-    );
   }
   objects() {
     this.length = 600;

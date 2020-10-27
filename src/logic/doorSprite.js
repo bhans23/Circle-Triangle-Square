@@ -8,7 +8,6 @@ export default class doorSprite extends Phaser.Physics.Arcade.Sprite {
     this.config = config;
     this.scene = this.config.scene;
     this.target = new Phaser.Math.Vector2();
-    console.log(this.scene.textures.get("doorSheet"))
     this.attributes();
     this.doorAnim();
     

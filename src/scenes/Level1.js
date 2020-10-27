@@ -173,7 +173,7 @@ export default class Level1 extends Scene {
       this.spriteSelection,
       this.pillars,
       (sprite, pillar) => {
-        console.log(pillar);
+       
         if (
           pillar.body.velocity.x !== 0 ||
           (pillar.body.velocity.y !== 0 &&

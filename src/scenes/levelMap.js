@@ -18,9 +18,8 @@ export default class levelMap extends Phaser.Scene {
     this.hover();
     this.rewardCount();
     this.rewards();
-    console.log(this.localStorage.getItem("feather"));
 
-    this.localStorage.clear()
+    // this.localStorage.clear()
   }
 
   buttons() {
