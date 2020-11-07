@@ -22,6 +22,7 @@ export default class Level2 extends Scene {
   preload() {}
 
   create() {
+    
     this.sound.stopAll()
     this.lightFX();
     this.createAudio();
@@ -33,11 +34,12 @@ export default class Level2 extends Scene {
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
     this.createGui();
+    this.winCon();
   }
 
   update() {
     this.spriteMoves();
-    this.winCon();
+    
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
@@ -80,6 +82,7 @@ export default class Level2 extends Scene {
     this.spriteSelection.update();
     if (this.spriteSelection.body.speed === 0) {
       this.rockMove.pause();
+      this.winCondition.winCon();
     } else {
       this.rockMove.resume();
     }
@@ -375,6 +378,7 @@ export default class Level2 extends Scene {
     });
   }
   winCon() {
+    this.winCondition = 
     new win({
       scene: this,
       gB: this.gB,

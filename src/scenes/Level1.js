@@ -33,11 +33,11 @@ export default class Level1 extends Scene {
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
     this.createGui();
+    this.winCon()
   }
 
   update() {
     this.spriteMoves();
-    this.winCon();
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
@@ -69,6 +69,7 @@ export default class Level1 extends Scene {
             this.scoreBox.addMove();
             this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
             sprite.moveDirection();
+            
           } else {
           }
         }
@@ -81,6 +82,7 @@ export default class Level1 extends Scene {
     this.spriteSelection.update();
     if (this.spriteSelection.body.speed === 0) {
       this.rockMove.pause();
+      this.winCondition.winCon();
     } else {
       this.rockMove.resume();
     }
@@ -376,6 +378,7 @@ export default class Level1 extends Scene {
     });
   }
   winCon() {
+    this.winCondition = 
     new win({
       scene: this,
       gB: this.gB,

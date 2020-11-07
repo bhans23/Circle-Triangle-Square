@@ -37,6 +37,7 @@ export default class win {
   }
 
   winScreen() {
+    this.drawNum();
     //Audio events
     this.starEarnSFX = this.scene.sound.add("starEarn");
     this.starEarnSFX.play({ volume: 0.1 });
@@ -99,7 +100,7 @@ export default class win {
     //Stars
 
     this.scene.add
-      .rectangle(0, 900, 100, 100, 0xffffff, 0.5)
+      .rectangle(0, 900, 200, 100, 0xffffff, 0.5)
       .setOrigin(0)
       .setDepth(22);
     this.star = this.scene.add
@@ -108,28 +109,16 @@ export default class win {
       .setDepth(22);
     this.scene.tweens.add({
       targets: this.star,
-      scale: { start: 0.16, from: 0.12, to: 0.16 },
+      angle: { start: 0, from: -15, to: 15 },
       duration: 1000,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut",
     });
-    this.scene.add
-      .text(
-        50,
-        900,
-        this.scene.scene.get("levelMap").localStorage.getItem("stars"),
-        {
-          fontFamily: "Arial",
-          fontSize: 48,
-          color: "#ffffff",
-        }
-      )
-      .setDepth(23);
 
     //Feather
     this.scene.add
-      .rectangle(900, 900, 100, 100, 0xffffff, 0.5)
+      .rectangle(900, 900, 200, 100, 0xffffff, 0.5)
       .setOrigin(0)
       .setDepth(22);
     this.feather = this.scene.add
@@ -138,24 +127,12 @@ export default class win {
       .setDepth(22);
     this.scene.tweens.add({
       targets: this.feather,
-      scale: { start: 0.14, from: 0.12, to: 0.14 },
+      angle: { start: 0, from: -15, to: 15 },
       duration: 1000,
       yoyo: true,
       repeat: -1,
       ease: "Sine.easeInOut",
     });
-    this.scene.add
-      .text(
-        950,
-        900,
-        this.scene.scene.get("levelMap").localStorage.getItem("feather"),
-        {
-          fontFamily: "Arial",
-          fontSize: 48,
-          color: "#ffffff",
-        }
-      )
-      .setDepth(23);
   }
 
   buttons() {
@@ -223,13 +200,13 @@ export default class win {
       sprite.destroy();
 
       this.scene.tweens.add({
-        targets: this.star,
+        targets: this.feather,
         scale: { from: 0.16, to: 0.25 },
         yoyo: true,
         duration: 100,
         ease: "Sine.easeInOut",
         onCompleteScope: this,
-        onStart: () => this.starEarnSFX.play({ volume: 0.1 }),
+        onStart: this.updateFeather(),
         onComplete: this.starAnimate,
       });
     };
@@ -260,14 +237,15 @@ export default class win {
   starAnimate() {
     let star1Complete = (tw, target, sprite) => {
       sprite.destroy();
-
+      console.log(this.star);
       this.scene.tweens.add({
         targets: this.star,
         scale: { from: 0.16, to: 0.25 },
         yoyo: true,
         duration: 100,
         ease: "Sine.easeInOut",
-        onStart: () => this.starEarnSFX.play({ volume: 0.1 }),
+        onStartScope: this,
+        onStart: this.updateStar,
       });
     };
 
@@ -295,7 +273,8 @@ export default class win {
         yoyo: true,
         duration: 100,
         ease: "Sine.easeInOut",
-        onStart: () => this.starEarnSFX.play({ volume: 0.1 }),
+        onStartScope: this,
+        onStart: this.updateStar,
         onComplete: star1,
       });
     };
@@ -317,14 +296,15 @@ export default class win {
     };
     let star3Complete = (tw, target, sprite) => {
       sprite.destroy();
-
+      console.log(this.star);
       this.scene.tweens.add({
         targets: this.star,
         scale: { from: 0.16, to: 0.25 },
         yoyo: true,
         duration: 100,
         ease: "Sine.easeInOut",
-        onStart: () => this.starEarnSFX.play({ volume: 0.1 }),
+        onStartScope: this,
+        onStart: this.updateStar,
         onComplete: star2,
       });
     };
@@ -367,8 +347,106 @@ export default class win {
       star1();
     } else {
     }
+    this.updateTotals();
+  }
+  updateStar() {
+    this.starEarnSFX.play({ volume: 0.3 });
 
-    //Update totals
+    this.starItem = this.scene.scene
+      .get("levelMap")
+      .localStorage.getItem("stars");
+
+    this.convertZero(this.starItem);
+
+    let starNumber = parseInt(
+      this.scene.scene.get("levelMap").localStorage.getItem("stars"),
+      10
+    );
+    console.log(starNumber);
+    starNumber++;
+
+    let starString = starNumber.toString();
+    console.log(starString);
+    this.scene.scene.get("levelMap").localStorage.setItem("stars", starString);
+    this.textCreate();
+  }
+  convertZero(starItem) {
+    if (starItem === null) {
+      this.scene.scene.get("levelMap").localStorage.setItem("stars", "0");
+
+      return this.starItem;
+    } else {
+    }
+  }
+
+  updateFeather() {
+    this.starEarnSFX.play({ volume: 0.3 });
+
+    this.featherItem = this.scene.scene
+      .get("levelMap")
+      .localStorage.getItem("stars");
+
+    this.convertFeatherZero(this.featherItem);
+
+    let featherNumber = parseInt(
+      this.scene.scene.get("levelMap").localStorage.getItem("feather"),
+      10
+    );
+
+    featherNumber++;
+
+    let featherString = featherNumber.toString();
+
+    this.scene.scene
+      .get("levelMap")
+      .localStorage.setItem("feather", featherString);
+    this.textCreate();
+  }
+  convertFeatherZero(item) {
+    if (item === null) {
+      this.scene.scene.get("levelMap").localStorage.setItem("feather", "0");
+
+      return this.featherItem;
+    } else {
+    }
+  }
+  textCreate() {
+    this.starNum.destroy();
+    this.fCount.destroy();
+    this.drawNum();
+  }
+
+  drawNum() {
+    //Star Numbers
+    this.starNum = this.scene.add
+      .text(
+        100,
+        900,
+        this.scene.scene.get("levelMap").localStorage.getItem("stars"),
+        {
+          fontFamily: "Arial",
+          fontSize: 48,
+          color: "#000000",
+        }
+      )
+      .setDepth(24);
+
+    //feathers
+    this.fCount = this.scene.add
+      .text(
+        1000,
+        900,
+        this.scene.scene.get("levelMap").localStorage.getItem("feather"),
+        {
+          fontFamily: "Arial",
+          fontSize: 48,
+          color: "#000000",
+        }
+      )
+      .setDepth(24);
+  }
+  // //Update totals
+  updateTotals() {
     this.scene.scene
       .get("levelMap")
       .localStorage.setItem(

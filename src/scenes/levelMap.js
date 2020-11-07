@@ -19,7 +19,7 @@ export default class levelMap extends Phaser.Scene {
     this.rewardCount();
     this.rewards();
 
-    this.localStorage.clear()
+    // this.localStorage.clear()
   }
 
   buttons() {
