@@ -18,9 +18,8 @@ export default class levelMap extends Phaser.Scene {
     this.hover();
     this.rewardCount();
     this.rewards();
-    
-    //  console.log(this.rewardArray)
-    // this.localStorage.clear()
+
+    // this.localStorage.clear();
   }
 
   buttons() {
@@ -85,8 +84,8 @@ export default class levelMap extends Phaser.Scene {
     });
     // this.levelArray.map((star) => this.addRewards(star))
 
-    for (let i = 0;i < this.levelArray.length;i++){
-       this.addRewards(this.levelArray[i])
+    for (let i = 0; i < this.levelArray.length; i++) {
+      this.addRewards(this.levelArray[i]);
     }
     // console.log(this.rewardArray)
   }
@@ -209,28 +208,28 @@ export default class levelMap extends Phaser.Scene {
       .setDepth(13);
   }
   addRewards(star) {
-   
     //creating stars
-     let index = this.levelArray.indexOf(star)
-    this.rewardArray[index] = new Array(3).fill(
+    let index = this.levelArray.indexOf(star);
+    this.starColor = (i) => {
+      if (
+        i < parseInt(this.localStorage.getItem(`${this.levelKeys[index]}R`), 10)
+      ) {
+        return 0xf7b90f;
+      } else {
+        return 0xa8acad;
+      }
+    };
+    this.rewardArray[index] = new Array(3).fill(null).map((_, i) => {
       this.add
         .star(
-          this.levelArray[index].x,
+          this.levelArray[index].x - 50 + i * 50,
           this.levelArray[index].y + 70,
           5,
           10,
           20,
-          0xff6699
+          this.starColor(i)
         )
-        .setDepth(30)
-    );
-    
-    //Aligning stars
-    for (let i = 0; i < this.rewardArray[index]; i++) {
-      
-      this.rewardArray[index][i].x =
-        this.levelArray[i].x - ((this.levelArray[i].width / 2) + (i * 50));
-      
-    }
+        .setDepth(30);
+    });
   }
 }
