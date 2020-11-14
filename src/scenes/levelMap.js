@@ -18,7 +18,8 @@ export default class levelMap extends Phaser.Scene {
     this.hover();
     this.rewardCount();
     this.rewards();
-
+    
+    //  console.log(this.rewardArray)
     // this.localStorage.clear()
   }
 
@@ -82,6 +83,12 @@ export default class levelMap extends Phaser.Scene {
         x.setFillStyle(0xa18785, 0.5);
       }
     });
+    // this.levelArray.map((star) => this.addRewards(star))
+
+    for (let i = 0;i < this.levelArray.length;i++){
+       this.addRewards(this.levelArray[i])
+    }
+    // console.log(this.rewardArray)
   }
 
   hover() {
@@ -119,6 +126,7 @@ export default class levelMap extends Phaser.Scene {
   levels() {
     this.levelKeys = ["level1", "level2", "level3", "level4", "level5"];
     this.localStorage.setItem("level1", "level1");
+    this.rewardArray = new Array(this.levelKeys.length).fill([]);
   }
 
   rewardCount() {
@@ -131,8 +139,6 @@ export default class levelMap extends Phaser.Scene {
             parseInt(this.localStorage.getItem(`${this.levelKeys[i]}F`), 10)
           )
         ) {
-         
-          
           this.featherCount =
             this.featherCount +
             parseInt(this.localStorage.getItem(`${this.levelKeys[i]}F`), 10);
@@ -142,26 +148,24 @@ export default class levelMap extends Phaser.Scene {
       this.localStorage.setItem("feather", parseInt(this.featherCount, 10));
     };
     feather();
-     //Star count
-     this.starCount = 0;
-     let star = () => {
-       for (let i = 0; i < this.levelKeys.length; i++) {
-         if (
-           Number.isInteger(
-             parseInt(this.localStorage.getItem(`${this.levelKeys[i]}R`), 10)
-           )
-         ) {
-          
-           
-           this.starCount =
-             this.starCount +
-             parseInt(this.localStorage.getItem(`${this.levelKeys[i]}R`), 10);
-         } else {
-         }
-       }
-       this.localStorage.setItem("stars", parseInt(this.starCount, 10));
-     };
-     star();
+    //Star count
+    this.starCount = 0;
+    let star = () => {
+      for (let i = 0; i < this.levelKeys.length; i++) {
+        if (
+          Number.isInteger(
+            parseInt(this.localStorage.getItem(`${this.levelKeys[i]}R`), 10)
+          )
+        ) {
+          this.starCount =
+            this.starCount +
+            parseInt(this.localStorage.getItem(`${this.levelKeys[i]}R`), 10);
+        } else {
+        }
+      }
+      this.localStorage.setItem("stars", parseInt(this.starCount, 10));
+    };
+    star();
   }
 
   rewards() {
@@ -203,5 +207,30 @@ export default class levelMap extends Phaser.Scene {
         color: "#ffffff",
       })
       .setDepth(13);
+  }
+  addRewards(star) {
+   
+    //creating stars
+     let index = this.levelArray.indexOf(star)
+    this.rewardArray[index] = new Array(3).fill(
+      this.add
+        .star(
+          this.levelArray[index].x,
+          this.levelArray[index].y + 70,
+          5,
+          10,
+          20,
+          0xff6699
+        )
+        .setDepth(30)
+    );
+    
+    //Aligning stars
+    for (let i = 0; i < this.rewardArray[index]; i++) {
+      
+      this.rewardArray[index][i].x =
+        this.levelArray[i].x - ((this.levelArray[i].width / 2) + (i * 50));
+      
+    }
   }
 }
