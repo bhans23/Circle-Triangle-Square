@@ -12,21 +12,27 @@ export default class stoneSprite extends Phaser.Physics.Arcade.Sprite {
     this.target = new Phaser.Math.Vector2();
     this.setImmovable(true);
     this.intro();
+    this.setPipeline("Light2D");
+    this.create();
   }
   preload() {}
 
-  create() {}
+  create() {
+    this.slideSFX = this.scene.sound.add("slide", { volume: 0.2 });
+    this.impactSFX = this.scene.sound.add("impact", { volume: 0.3 });
+  }
 
   update() {
     this.spriteMoves();
   }
   intro() {
+    this.setAngle(this.spriteValues.angle);
     this.target.x = this.introSq.x;
     this.target.y = this.introSq.y;
-    this.scene.slideSFX.play();
+
     this.scene.physics.moveTo(this, this.target.x, this.target.y, 300);
   }
-  
+
   spriteMoves() {
     this.distance = Phaser.Math.Distance.Between(
       this.x,
@@ -34,15 +40,25 @@ export default class stoneSprite extends Phaser.Physics.Arcade.Sprite {
       this.target.x,
       this.target.y
     );
-
+    
+    if (this.body.speed === 0) {
+      this.slideSFX.stop();
+    }
     if (this.body.speed > 0) {
+      if (!this.slideSFX.isPlaying) {
+        this.slideSFX.play();
+      }
+      
       //  4 is our distance tolerance, i.e. how close the source can get to the this.target
       //  before it is considered as being there. The faster it moves, the more tolerance is required.
 
       if (this.distance < 10) {
         this.body.reset(this.target.x, this.target.y);
         this.scene.cameras.main.shake(300, 0.002);
-        this.scene.impactSFX.play();
+        if (!this.impactSFX.isPlaying) {
+          this.impactSFX.play();
+        } else {
+        }
       }
     }
   }

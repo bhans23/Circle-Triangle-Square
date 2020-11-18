@@ -1,13 +1,20 @@
 import Phaser from "phaser";
-import spriteCreation from "./spriteCreation";
 
 export default class score {
   constructor(config) {
     this.scene = config.scene;
     this.totalMoves = config.totalMoves;
+
     this.scoreBox();
   }
-  addMove(sprite) {
+
+  rmMove() {
+    this.totalMoves--;
+    this.box.clear();
+    this.scoreText.destroy();
+    this.scoreBox();
+  }
+  addMove() {
     this.totalMoves++;
     this.box.clear();
     this.scoreText.destroy();
@@ -16,6 +23,7 @@ export default class score {
 
   scoreBox() {
     //Box
+
     let rect = new Phaser.Geom.Rectangle(1000, 0, 200, 200);
     this.box = this.scene.add
       .graphics({ fillStyle: { color: 0xdbc997, alpha: 0.6 } })
@@ -38,6 +46,5 @@ export default class score {
         color: "#ffffff",
       })
       .setDepth(13);
-   
   }
 }

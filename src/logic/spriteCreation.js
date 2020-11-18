@@ -4,10 +4,11 @@ import { config } from "process";
 export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   constructor(spriteValues) {
     super(spriteValues.scene, spriteValues.x, spriteValues.y, spriteValues.key);
+
     spriteValues.scene.add.existing(this);
     spriteValues.scene.physics.add.existing(this);
     this.spriteValues = spriteValues;
-    this.scene = this.spriteValues.scene;
+    this.scene = spriteValues.scene;
     this.gB = spriteValues.gB;
     this.graphics = this.scene.add.graphics().setDepth(1);
     this.speed = null;
@@ -15,25 +16,19 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     this.depth = spriteValues.depth;
     this.bodySize = spriteValues.bodySize;
     this.introSq = spriteValues.introSq;
+    this.setPipeline("Light2D");
     this.attributes();
-
-    
+    this.rockAnim();
+    this.create()
   }
   preload() {}
 
-  create() {}
+  create() {
+    this.impactSFX = this.scene.sound.add("impact", { volume: 0.3 });
+  }
 
   update() {
     this.spriteMoves();
-  }
-
-  select() {
-    this.setTint(0x0e9c2a);
-  }
-
-  deselect() {
-    this.clearTint();
-    this.graphics.clear();
   }
 
   attributes() {
@@ -41,43 +36,27 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     this.setBodySize(this.bodySize.x, this.bodySize.y);
   }
   moveDirection() {
-    if (
-      this.body.velocity.x >= 0 &&
-      this.body.velocity.y < 0 &&
-      this.isTinted
-    ) {
+    if (this.body.velocity.x >= 0 && this.body.velocity.y < 0) {
       this.setAngle(0);
     }
-    if (
-      this.body.velocity.x >= 0 &&
-      this.body.velocity.y === 0 &&
-      this.isTinted
-    ) {
+    if (this.body.velocity.x >= 0 && this.body.velocity.y === 0) {
       this.setAngle(90);
     }
-    if (
-      this.body.velocity.x < 0 &&
-      this.body.velocity.y >= 0 &&
-      this.isTinted
-    ) {
+    if (this.body.velocity.x < 0 && this.body.velocity.y >= 0) {
       this.setAngle(-90);
     }
-    if (
-      this.body.velocity.x >= 0 &&
-      this.body.velocity.y > 0 &&
-      this.isTinted
-    ) {
+    if (this.body.velocity.x >= 0 && this.body.velocity.y > 0) {
       this.setAngle(180);
-    }
-    if (this.isTinted) {
-      this.rockMove.pause();
     }
   }
   intro() {
     this.target.x = this.introSq.x;
     this.target.y = this.introSq.y;
     this.scene.physics.moveTo(this, this.target.x, this.target.y, 400);
+    this.moveDirection()
     this.play("roll");
+    
+    this.scene.scoreBox.rmMove()
   }
 
   moves(x, y) {
@@ -114,21 +93,32 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
         x === this.selectedSquare - this.gB.rows
     );
 
-    // console.log(this.availableMoves)
-
     // Add highlights to squares
     this.graphics.clear();
-    if (this.isTinted === true) {
-      this.availableMoves.map((x) => {
-        if (x === this.gB.exit || x === this.gB.altar) {
-          this.graphics.fillStyle(0xf5e102, 0.6);
-          this.graphics.fillRectShape(this.gB.sqNum[x]);
-        } else {
-          this.graphics.fillStyle(0x419ef0, 0.6);
-          this.graphics.fillRectShape(this.gB.sqNum[x]);
-        }
-      });
-    }
+
+    this.availableMoves.map((x) => {
+      if (x === this.gB.exit || x === this.gB.altar) {
+        this.graphics.fillStyle(0xf5e102, 0.4);
+        this.graphics.fillRectShape(this.gB.sqNum[x]);
+      } else {
+        this.graphics.fillStyle(0x419ef0, 0.4);
+        this.graphics.fillRectShape(this.gB.sqNum[x]);
+      }
+    });
+  }
+  rockAnim() {
+    var config = {
+      key: "roll",
+      frames: this.scene.anims.generateFrameNames("circleSheet", {
+        start: 1,
+        end: 60,
+        first: 1,
+      }),
+      frameRate: 90,
+      repeat: -1,
+    };
+    this.scene.rockMove = this.scene.anims.create(config);
+    this.rockMove = this.scene.rockMove;
   }
   spriteMoves() {
     this.distance = Phaser.Math.Distance.Between(
@@ -144,6 +134,11 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
 
       if (this.distance < 10) {
         this.body.reset(this.target.x, this.target.y);
+        this.scene.scoreBox.addMove();
+        if (!this.impactSFX.isPlaying) {
+          // this.impactSFX.play();
+        } else {
+        }
       }
     }
     if (this.distance > 0 && this.body.speed > 0) {

@@ -10,50 +10,40 @@ export default class menu {
   }
 
   restart() {
-    //Box
-    let rect = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, 100, 100).setDepth(16).setOrigin(0);
-    rect.inputEnabled = true;
-    
-    this.box = this.scene.add
-      .graphics({ fillStyle: { color: 0x07e825, alpha: 0.7 } }). setDepth(15)
-      
-    this.box.fillRectShape(rect);
-    rect.setInteractive();
-    rect.on("pointerdown", () => {
+    this.box = this.scene.add.sprite(0, 0, "button").setDepth(15).setOrigin(0);
+    let arrow = this.scene.add
+      .sprite(10, 10, "redo")
+      .setDepth(16)
+      .setOrigin(0)
+      .setScale(0.5);
+
+    this.box.displayWidth = 125;
+    this.box.displayHeight = 125;
+
+    this.box.setInteractive();
+    this.box.on("pointerdown", () => {
       this.scene.scene.start(this.level);
     });
-    //text moves
-
-    this.text = this.scene.add
-      .text(0, 25, "Restart", {
-        fontFamily: "Arial",
-        fontSize: 28,
-        color: "#ffffff",
-      })
-      .setDepth(17);
   }
 
   levelMenu() {
     //Box
-    let rect = new Phaser.GameObjects.Rectangle(this.scene, 125, 0, 100, 100).setDepth(14).setOrigin(0);;
-    console.log(rect);
-    rect.inputEnabled = true;
-    this.box = this.scene.add
-      .graphics({ fillStyle: { color: 0x07e825, alpha: 0.7 } }). setDepth(12)
-      
-    this.box.fillRectShape(rect);
-    rect.setInteractive();
-    rect.on("pointerdown", () => {
+    this.box2 = this.scene.add
+      .sprite(130, 0, "button")
+      .setDepth(15)
+      .setOrigin(0);
+    let arrow = this.scene.add
+      .sprite(140, 10, "map")
+      .setDepth(16)
+      .setOrigin(0)
+      .setScale(0.16);
+
+    this.box2.displayWidth = 125;
+    this.box2.displayHeight = 125;
+
+    this.box2.setInteractive();
+    this.box2.on("pointerdown", () => {
       this.scene.scene.start("levelMap");
     });
-    //text moves
-
-    this.text = this.scene.add
-      .text(125, 25, "Levels", {
-        fontFamily: "Arial",
-        fontSize: 32,
-        color: "#ffffff",
-      })
-      .setDepth(17);
   }
 }
