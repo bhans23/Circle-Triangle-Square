@@ -9,32 +9,33 @@ export default class Pillar extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
     this.setDepth(1);
     this.setPipeline("Light2D");
-    
+    this.create();
+  }
+
+  create() {
+    this.slideSFX = this.scene.sound.add("slide", { volume: 0.2 });
+    this.impactSFX = this.scene.sound.add("impact", { volume: 0.3 });
   }
   update() {
-    
-    // if(this.body.onWorldBounds === true){
-    //   this.scene.bounceReset(this.scene.spriteSelection);
-    //       this.scene.sprite.moves();
-    //       this.scene.impactSFX.play();
-    // }
+    this.spriteMoves();
   }
-  dust() {
-    if (this.body.touching.down) {
-      let x = this.x;
-      let y = this.y + 100;
-      this.dustEmitter(x, y);
+  spriteLog() {}
+  spriteMoves() {
+    if (this.body.speed === 0) {
+      this.slideSFX.stop();
     }
-  }
-  dustEmitter(x, y) {
-    let particles = this.scene.add.particles("dirt").createEmitter({
-      x: x,
-      y: y,
-      scale: { start: 0.02, end: 0 },
-      speed: { min: -100, max: 100 },
-      quantity: 10,
-      _frequency: 10,
-      blendMode: "SCREEN",
-    });
+
+    if (this.body.speed > 0) {
+      if (this.body.velocity.x === 0 && this.body.velocity.y === 0) {
+        this.impactSFX.play();
+
+        
+      } else {
+      }
+      if (!this.slideSFX.isPlaying) {
+        this.slideSFX.play();
+      } else {
+      }
+    }
   }
 }

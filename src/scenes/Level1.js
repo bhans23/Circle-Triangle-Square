@@ -22,26 +22,29 @@ export default class Level1 extends Scene {
   preload() {}
 
   create() {
-    this.sound.stopAll()
+    this.sound.stopAll();
     this.lightFX();
     this.createAudio();
     this.squareGameBoard();
     this.events.on("resize", this.resize, this);
     this.createMap();
+    this.createGui();
     this.createSprites();
     this.createGameObjects();
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
-    this.createGui();
-    this.winCon()
+    
+    this.winCon();
   }
 
   update() {
     this.spriteMoves();
+    this.pillars.forEach((pillar) => {
+      pillar.update();
+    });
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
-    //
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -63,13 +66,13 @@ export default class Level1 extends Scene {
           this.sqI = this.gB.squareMatrix[sqX][sqY];
           sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
           sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
-
+              
           if (sprite.availableMoves.some((x) => x === this.sqI)) {
+            
             this.rockRollSFX.play();
-            this.scoreBox.addMove();
+            
             this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
             sprite.moveDirection();
-            
           } else {
           }
         }
@@ -134,18 +137,22 @@ export default class Level1 extends Scene {
         remainder;
 
       this.cameras.main.shake(300, 0.003);
-      // this.impactSFX.play();
+
       object.body.reset(x, y);
-      this.scoreBox.rmMove();
+      
     };
 
     this.physics.add.collider(
       this.pillars,
       this.pillars,
       (pillar1, pillar2) => {
-        this.impactSFX.play();
         this.pillars.forEach((pillar) => {
           this.bounceReset(pillar);
+          this.impactSFX.stop();
+          if (!this.impactSFX.isPlaying) {
+            this.impactSFX.play();
+          } else {
+          }
         });
       }
     );
@@ -160,35 +167,18 @@ export default class Level1 extends Scene {
     );
     this.physics.add.collider(this.pillars, this.stoneDoor, () => {
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
     });
     this.physics.add.collider(this.pillars, this.stone, () => {
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
     });
     this.physics.add.collider(this.pillars, this.map.door),
       () => {
         this.cameras.main.shake(300, 0.003);
-        this.impactSFX.play();
       };
-    this.physics.add.collider(
-      this.spriteSelection,
-      this.pillars,
-      (sprite, pillar) => {
-       
-        if (
-          pillar.body.velocity.x !== 0 ||
-          (pillar.body.velocity.y !== 0 &&
-            pillar.body.speed === 0 &&
-            sprite.body.speed !== 0)
-        ) {
-        }
-      }
-    );
+    this.physics.add.collider(this.spriteSelection, this.pillars);
     this.physics.add.collider(this.spriteSelection, this.map.wall);
     this.physics.add.collider(this.pillars, this.map.wall, () => {
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
     });
     this.physics.add.collider(this.pillars, this.altar);
     this.physics.add.overlap(
@@ -198,7 +188,6 @@ export default class Level1 extends Scene {
         if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
           this.bounceReset(sprite);
           sprite.moves();
-          this.impactSFX.play();
         }
       }
     );
@@ -250,7 +239,6 @@ export default class Level1 extends Scene {
     this.impactSFX = this.sound.add("impact", { volume: 0.3 });
     this.rockRollSFX = this.sound.add("rockRoll", { volume: 0.5 });
     this.doorMoveSFX = this.sound.add("doorMove", { volume: 0.4 });
-    
   }
   createSprites() {
     this.spriteSelection = new spriteCreation({
@@ -378,8 +366,7 @@ export default class Level1 extends Scene {
     });
   }
   winCon() {
-    this.winCondition = 
-    new win({
+    this.winCondition = new win({
       scene: this,
       gB: this.gB,
       leave: { x: 500, y: -700 },

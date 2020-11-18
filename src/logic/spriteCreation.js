@@ -8,7 +8,7 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     spriteValues.scene.add.existing(this);
     spriteValues.scene.physics.add.existing(this);
     this.spriteValues = spriteValues;
-    this.scene = this.spriteValues.scene;
+    this.scene = spriteValues.scene;
     this.gB = spriteValues.gB;
     this.graphics = this.scene.add.graphics().setDepth(1);
     this.speed = null;
@@ -19,10 +19,13 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     this.setPipeline("Light2D");
     this.attributes();
     this.rockAnim();
+    this.create()
   }
   preload() {}
 
-  create() {}
+  create() {
+    this.impactSFX = this.scene.sound.add("impact", { volume: 0.3 });
+  }
 
   update() {
     this.spriteMoves();
@@ -52,6 +55,8 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.moveTo(this, this.target.x, this.target.y, 400);
     this.moveDirection()
     this.play("roll");
+    
+    this.scene.scoreBox.rmMove()
   }
 
   moves(x, y) {
@@ -129,6 +134,11 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
 
       if (this.distance < 10) {
         this.body.reset(this.target.x, this.target.y);
+        this.scene.scoreBox.addMove();
+        if (!this.impactSFX.isPlaying) {
+          // this.impactSFX.play();
+        } else {
+        }
       }
     }
     if (this.distance > 0 && this.body.speed > 0) {

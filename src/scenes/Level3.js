@@ -37,10 +37,13 @@ export default class Level2 extends Scene {
 
   update() {
     this.spriteMoves();
-    this.winCon();
+    this.pillars.forEach((pillar) => {
+      pillar.update();
+    });
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
+    
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -140,7 +143,7 @@ export default class Level2 extends Scene {
       this.pillars,
       this.pillars,
       (pillar1, pillar2) => {
-        this.impactSFX.play();
+       
         this.pillars.forEach((pillar) => {
           this.bounceReset(pillar);
         });
@@ -157,35 +160,26 @@ export default class Level2 extends Scene {
     );
     this.physics.add.collider(this.pillars, this.stoneDoor, () => {
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
+      
     });
     this.physics.add.collider(this.pillars, this.stone, () => {
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
+      
     });
     this.physics.add.collider(this.pillars, this.map.door),
       () => {
         this.cameras.main.shake(300, 0.003);
-        this.impactSFX.play();
+       
       };
     this.physics.add.collider(
       this.spriteSelection,
       this.pillars,
-      (sprite, pillar) => {
-        if (
-          pillar.body.velocity.x !== 0 ||
-          (pillar.body.velocity.y !== 0 &&
-            pillar.body.speed === 0 &&
-            sprite.body.speed !== 0)
-        ) {
-          this.slideShortSFX.play();
-        }
-      }
+     
     );
    
     this.physics.add.collider(this.pillars, this.map.wall, () => {
       this.cameras.main.shake(300, 0.003);
-      this.impactSFX.play();
+     
     });
     this.physics.add.collider(this.pillars, this.altar);
     this.physics.add.collider(
@@ -194,7 +188,7 @@ export default class Level2 extends Scene {
       (sprite, wall) => {
         this.bounceReset(sprite);
         sprite.moves();
-        this.impactSFX.play();
+        
       }
     );
     this.physics.add.overlap(
@@ -204,7 +198,7 @@ export default class Level2 extends Scene {
         if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
           this.bounceReset(sprite);
           sprite.moves();
-          this.impactSFX.play();
+          
         }
       }
     );
