@@ -38,13 +38,15 @@ export default class score {
         color: "#ffffff",
       })
       .setDepth(13);
-
+  if(this.totalMoves >= 0){
     this.scoreText = this.scene.add
-      .text(1070, 110, this.totalMoves, {
-        fontFamily: "Arial",
-        fontSize: 70,
-        color: "#ffffff",
-      })
-      .setDepth(13);
+    .text(1070, 110, this.totalMoves, {
+      fontFamily: "Arial",
+      fontSize: 70,
+      color: "#ffffff",
+    })
+    .setDepth(13);
+  }
+   
   }
 }

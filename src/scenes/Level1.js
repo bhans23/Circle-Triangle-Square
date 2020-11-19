@@ -33,7 +33,6 @@ export default class Level1 extends Scene {
     this.createGameObjects();
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
-    
     this.winCon();
   }
 
@@ -66,11 +65,9 @@ export default class Level1 extends Scene {
           this.sqI = this.gB.squareMatrix[sqX][sqY];
           sprite.target.x = this.gB.sqNum[this.sqI].x + this.gB.sqW / 2;
           sprite.target.y = this.gB.sqNum[this.sqI].y + this.gB.sqH / 2;
-              
+
           if (sprite.availableMoves.some((x) => x === this.sqI)) {
-            
             this.rockRollSFX.play();
-            
             this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
             sprite.moveDirection();
           } else {
@@ -135,11 +132,8 @@ export default class Level1 extends Scene {
         (this.gB.sqW / 2) *
           Math.round((object.y - remainder) / (this.gB.sqW / 2)) +
         remainder;
-
       this.cameras.main.shake(300, 0.003);
-
       object.body.reset(x, y);
-      
     };
 
     this.physics.add.collider(
@@ -207,8 +201,7 @@ export default class Level1 extends Scene {
     this.box = this.add
       .graphics({ fillStyle: { color: 0x000000, alpha: 0.2 } })
       .setDepth(8);
-    // this.box.fillRectShape(rect)
-
+      
     this.box.setMask(mask);
 
     this.bg = this.add

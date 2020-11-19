@@ -22,18 +22,17 @@ export default class Level2 extends Scene {
   preload() {}
 
   create() {
-    
-    this.sound.stopAll()
+    this.sound.stopAll();
     this.lightFX();
     this.createAudio();
     this.squareGameBoard();
     this.events.on("resize", this.resize, this);
     this.createMap();
+    this.createGui();
     this.createSprites();
     this.createGameObjects();
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
-    this.createGui();
     this.winCon();
   }
 
@@ -45,7 +44,6 @@ export default class Level2 extends Scene {
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
-    
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -70,7 +68,6 @@ export default class Level2 extends Scene {
 
           if (sprite.availableMoves.some((x) => x === this.sqI)) {
             this.rockRollSFX.play();
-            this.scoreBox.addMove();
             this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
             sprite.moveDirection();
           } else {
@@ -137,18 +134,21 @@ export default class Level2 extends Scene {
         remainder;
 
       this.cameras.main.shake(300, 0.003);
-      // this.impactSFX.play();
+
       object.body.reset(x, y);
-      this.scoreBox.rmMove();
     };
 
     this.physics.add.collider(
       this.pillars,
       this.pillars,
       (pillar1, pillar2) => {
-       
         this.pillars.forEach((pillar) => {
           this.bounceReset(pillar);
+          this.impactSFX.stop();
+          if (!this.impactSFX.isPlaying) {
+            this.impactSFX.play();
+          } else {
+          }
         });
       }
     );
@@ -163,35 +163,18 @@ export default class Level2 extends Scene {
     );
     this.physics.add.collider(this.pillars, this.stoneDoor, () => {
       this.cameras.main.shake(300, 0.003);
-      
     });
     this.physics.add.collider(this.pillars, this.stone, () => {
       this.cameras.main.shake(300, 0.003);
-      
     });
     this.physics.add.collider(this.pillars, this.map.door),
       () => {
         this.cameras.main.shake(300, 0.003);
-       
       };
-    this.physics.add.collider(
-      this.spriteSelection,
-      this.pillars,
-      (sprite, pillar) => {
-        if (
-          pillar.body.velocity.x !== 0 ||
-          (pillar.body.velocity.y !== 0 &&
-            pillar.body.speed === 0 &&
-            sprite.body.speed !== 0)
-        ) {
-          
-        }
-      }
-    );
+    this.physics.add.collider(this.spriteSelection, this.pillars);
     this.physics.add.collider(this.spriteSelection, this.map.wall);
     this.physics.add.collider(this.pillars, this.map.wall, () => {
       this.cameras.main.shake(300, 0.003);
-     
     });
     this.physics.add.collider(this.pillars, this.altar);
     this.physics.add.overlap(
@@ -201,7 +184,6 @@ export default class Level2 extends Scene {
         if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
           this.bounceReset(sprite);
           sprite.moves();
-         
         }
       }
     );
@@ -221,8 +203,6 @@ export default class Level2 extends Scene {
     this.box = this.add
       .graphics({ fillStyle: { color: 0x000000, alpha: 0.2 } })
       .setDepth(8);
-    // this.box.fillRectShape(rect)
-
     this.box.setMask(mask);
 
     this.bg = this.add
@@ -255,7 +235,7 @@ export default class Level2 extends Scene {
     this.doorMoveSFX = this.sound.add("doorMove", { volume: 0.4 });
   }
   createSprites() {
-    this.spriteSelection = new spriteCreation({
+    (this.spriteSelection = new spriteCreation({
       scene: this,
       x: 300,
       y: 1500,
@@ -264,7 +244,7 @@ export default class Level2 extends Scene {
       bodySize: { x: 150, y: 150 },
       depth: 1,
       introSq: { x: 300, y: 900 + this.map.config.y },
-    }),
+    })),
       //Sprite Intros
       this.spriteSelection.intro();
   }
@@ -352,19 +332,6 @@ export default class Level2 extends Scene {
         speed: 0.05,
         depth: 1,
       }),
-      // new tree({
-      //   scene: this,
-      //   pos: { x: 1150, y: 950 },
-      //   speed: 0.1,
-      //   depth: 4
-      // }),
-      // new tree({
-      //   scene: this,
-      //   pos: { x: 1000, y:200  },
-      //   speed: 0.03,
-      //   depth: 3
-
-      // }),
     ];
   }
   createGui() {
@@ -381,8 +348,7 @@ export default class Level2 extends Scene {
     });
   }
   winCon() {
-    this.winCondition = 
-    new win({
+    this.winCondition = new win({
       scene: this,
       gB: this.gB,
       leave: { x: 1000, y: 700 + this.map.config.y },

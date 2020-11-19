@@ -28,6 +28,9 @@ export default class win {
       this.scene.spriteSelection.play("roll");
       this.scene.scene.get("levelMap").localStorage.setItem(this.key, this.key);
 
+      //Removing addMove function, so it does not add an additional move at the end of level
+      this.scene.scoreBox.addMove = () => {};
+
       var timer = this.scene.time.addEvent({
         delay: 300,
         callback: () => this.winScreen(),
