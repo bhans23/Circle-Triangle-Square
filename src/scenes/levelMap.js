@@ -8,9 +8,11 @@ export default class levelMap extends Phaser.Scene {
 
   create() {
     // Background image
-    const bgImage = this.add.image(0, 0, "title").setOrigin(0, 0).setDepth(0);
+    const bgImage = this.add.image(0, 350, "title").setOrigin(0, 0).setDepth(0);
     bgImage.displayWidth = 1200;
     bgImage.displayHeight = 1200;
+    this.add.rectangle(0,0,1200,1920,0x000000,.3).setOrigin(0)
+
     this.localStorage = window.localStorage;
     this.sound.stopAll();
     this.levels();
@@ -181,7 +183,7 @@ export default class levelMap extends Phaser.Scene {
       ease: "Sine.easeInOut",
     });
     this.add
-      .text(1175, 25, this.localStorage.getItem("stars"), {
+      .text(1135, 25, this.localStorage.getItem("stars"), {
         fontFamily: "Arial",
         fontSize: 48,
         color: "#ffffff",

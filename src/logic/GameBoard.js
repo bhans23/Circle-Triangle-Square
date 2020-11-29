@@ -11,7 +11,7 @@ export default class GameBoard {
     this.altar = config.altar;
     this.firstSq = config.firstSq;
     this.squareBoard();
-    this.numbers();
+    // this.numbers();
   }
 
   squareBoard() {

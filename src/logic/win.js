@@ -103,11 +103,11 @@ export default class win {
     //Stars
 
     this.scene.add
-      .rectangle(0, 900, 200, 100, 0xffffff, 0.5)
+      .rectangle(1000, 800, 200, 200, 0xffffff, 0.5)
       .setOrigin(0)
       .setDepth(22);
     this.star = this.scene.add
-      .image(45, 940, "star")
+      .image(1060, 900, "star")
       .setScale(0.16)
       .setDepth(22);
     this.scene.tweens.add({
@@ -121,11 +121,11 @@ export default class win {
 
     //Feather
     this.scene.add
-      .rectangle(900, 900, 200, 100, 0xffffff, 0.5)
+      .rectangle(0, 800, 200, 200, 0xffffff, 0.5)
       .setOrigin(0)
       .setDepth(22);
     this.feather = this.scene.add
-      .image(940, 940, "feather")
+      .image(65, 900, "feather")
       .setScale(0.14)
       .setDepth(22);
     this.scene.tweens.add({
@@ -423,8 +423,8 @@ export default class win {
     //Star Numbers
     this.starNum = this.scene.add
       .text(
-        100,
-        900,
+        1120,
+        875,
         this.scene.scene.get("levelMap").localStorage.getItem("stars"),
         {
           fontFamily: "Arial",
@@ -437,8 +437,8 @@ export default class win {
     //feathers
     this.fCount = this.scene.add
       .text(
-        1000,
-        900,
+        130,
+        875,
         this.scene.scene.get("levelMap").localStorage.getItem("feather"),
         {
           fontFamily: "Arial",
