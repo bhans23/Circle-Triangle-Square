@@ -9,7 +9,7 @@ export default class TitleScene extends Phaser.Scene {
 
   create() {
     // Background image
-    const bgImage = this.add.image(0, 0, "title").setOrigin(0, 0).setDepth(0);
+    const bgImage = this.add.image(0, 350, "title").setOrigin(0, 0).setDepth(0);
     bgImage.displayWidth = 1200;
     bgImage.displayHeight = 1200;
 

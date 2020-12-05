@@ -62,7 +62,7 @@ export default class spriteCreation extends Phaser.Physics.Arcade.Sprite {
   moves(x, y) {
     //filter out available moves and border
     this.selectedSquare = this.gB.sqNum.indexOf(this.gB.sqNum[this.scene.spSq]);
-
+   console.log(this.selectedSquare)
     //Removing border squares
     this.availableMoves = this.gB.sqIndex.filter(
       (x) => x < this.gB.sqIndex.length - this.gB.rows

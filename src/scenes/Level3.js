@@ -12,7 +12,7 @@ import tree from "../logic/tree";
 import createMap from "../logic/createMap";
 import spriteCreation from "../logic/spriteCreation";
 
-export default class Level2 extends Scene {
+export default class Level3 extends Scene {
   constructor(config) {
     super("level3");
     this.key = "level3";
@@ -22,17 +22,18 @@ export default class Level2 extends Scene {
   preload() {}
 
   create() {
-    this.sound.stopAll()
+    this.sound.stopAll();
     this.lightFX();
     this.createAudio();
     this.squareGameBoard();
     this.events.on("resize", this.resize, this);
     this.createMap();
+    this.createGui();
     this.createSprites();
     this.createGameObjects();
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
-    this.createGui();
+    this.winCon();
   }
 
   update() {
@@ -43,7 +44,6 @@ export default class Level2 extends Scene {
     this.treeRopes.forEach((tree) => {
       tree.update();
     });
-    
   }
 
   //--Sprite Move functions----------------------------------------------------
@@ -68,7 +68,6 @@ export default class Level2 extends Scene {
 
           if (sprite.availableMoves.some((x) => x === this.sqI)) {
             this.rockRollSFX.play();
-            this.scoreBox.addMove();
             this.physics.moveTo(sprite, sprite.target.x, sprite.target.y, 400);
             sprite.moveDirection();
           } else {
@@ -83,6 +82,7 @@ export default class Level2 extends Scene {
     this.spriteSelection.update();
     if (this.spriteSelection.body.speed === 0) {
       this.rockMove.pause();
+      this.winCondition.winCon();
     } else {
       this.rockMove.resume();
     }
@@ -132,20 +132,21 @@ export default class Level2 extends Scene {
         (this.gB.sqW / 2) *
           Math.round((object.y - remainder) / (this.gB.sqW / 2)) +
         remainder;
-
       this.cameras.main.shake(300, 0.003);
-      // this.impactSFX.play();
       object.body.reset(x, y);
-      this.scoreBox.rmMove();
     };
 
     this.physics.add.collider(
       this.pillars,
       this.pillars,
       (pillar1, pillar2) => {
-       
         this.pillars.forEach((pillar) => {
           this.bounceReset(pillar);
+          this.impactSFX.stop();
+          if (!this.impactSFX.isPlaying) {
+            this.impactSFX.play();
+          } else {
+          }
         });
       }
     );
@@ -160,37 +161,20 @@ export default class Level2 extends Scene {
     );
     this.physics.add.collider(this.pillars, this.stoneDoor, () => {
       this.cameras.main.shake(300, 0.003);
-      
     });
     this.physics.add.collider(this.pillars, this.stone, () => {
       this.cameras.main.shake(300, 0.003);
-      
     });
     this.physics.add.collider(this.pillars, this.map.door),
       () => {
         this.cameras.main.shake(300, 0.003);
-       
       };
-    this.physics.add.collider(
-      this.spriteSelection,
-      this.pillars,
-     
-    );
-   
+    this.physics.add.collider(this.spriteSelection, this.pillars);
+    this.physics.add.collider(this.spriteSelection, this.map.wall);
     this.physics.add.collider(this.pillars, this.map.wall, () => {
       this.cameras.main.shake(300, 0.003);
-     
     });
     this.physics.add.collider(this.pillars, this.altar);
-    this.physics.add.collider(
-      this.spriteSelection,
-      this.map.wall,
-      (sprite, wall) => {
-        this.bounceReset(sprite);
-        sprite.moves();
-        
-      }
-    );
     this.physics.add.overlap(
       this.spriteSelection,
       this.pillars,
@@ -198,7 +182,6 @@ export default class Level2 extends Scene {
         if (pillar.body.velocity.x === 0 && pillar.body.velocity.y === 0) {
           this.bounceReset(sprite);
           sprite.moves();
-          
         }
       }
     );
@@ -218,7 +201,6 @@ export default class Level2 extends Scene {
     this.box = this.add
       .graphics({ fillStyle: { color: 0x000000, alpha: 0.2 } })
       .setDepth(8);
-    // this.box.fillRectShape(rect)
 
     this.box.setMask(mask);
 
@@ -252,7 +234,7 @@ export default class Level2 extends Scene {
     this.doorMoveSFX = this.sound.add("doorMove", { volume: 0.4 });
   }
   createSprites() {
-    this.spriteSelection = new spriteCreation({
+    (this.spriteSelection = new spriteCreation({
       scene: this,
       x: -200,
       y: 700 + this.map.config.y,
@@ -261,7 +243,7 @@ export default class Level2 extends Scene {
       bodySize: { x: 150, y: 150 },
       depth: 1,
       introSq: { x: 300, y: 700 + this.map.config.y },
-    }),
+    })),
       //Sprite Intros
       this.spriteSelection.intro();
   }
@@ -274,7 +256,7 @@ export default class Level2 extends Scene {
       y: 700 + this.map.config.y,
       key: "stone",
       introSq: { x: 100, y: 700 + this.map.config.y },
-      angle: 90
+      angle: 90,
     });
 
     //Stone door creation
@@ -379,7 +361,7 @@ export default class Level2 extends Scene {
     });
   }
   winCon() {
-    new win({
+    this.winCondition = new win({
       scene: this,
       gB: this.gB,
       leave: { x: 1200, y: 700 + this.map.config.y },
