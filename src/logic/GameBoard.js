@@ -12,6 +12,7 @@ export default class GameBoard {
     this.firstSq = config.firstSq;
     this.squareBoard();
     // this.numbers();
+   
   }
 
   squareBoard() {
@@ -51,14 +52,15 @@ export default class GameBoard {
       .map((x) => (x = num2++ * this.sqW));
     xSq = Array(this.rows).fill(xSq);
     xSq = xSq.flat();
-
+    console.log((xSq[0] + this.firstSq.x))
     for (let i = 0; i < this.sqNum.length; i++) {
       this.sqNum[i] = new Phaser.GameObjects.Rectangle(
         this.scene,
         xSq[i] + this.firstSq.x,
         ySq[i] + this.firstSq.y,
         this.sqW,
-        this.sqH
+        this.sqH,
+        
       );
 
       this.scene.add.existing(this.sqNum[i]);

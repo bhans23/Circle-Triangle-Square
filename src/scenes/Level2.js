@@ -51,7 +51,8 @@ export default class Level2 extends Scene {
   getSpriteSquare(sprite) {
     let sqX = Math.floor(sprite.x / this.gB.sqW);
     let sqY = Math.floor((sprite.y - this.gB.firstSq.y) / this.gB.sqH);
-
+    console.log(sprite.x)
+    console.log(sprite.y)
     this.spSq = this.gB.squareMatrix[sqX][sqY];
   }
   pointerXY(sprite) {
