@@ -59,12 +59,17 @@ export default class win {
       .rectangle(0, 0, 1200, 2160, 0x000000, 0.5)
       .setDepth(20)
       .setOrigin(0);
+      this.scene.add
+      .image(0, 600, "stoneBg")
+      .setOrigin(0)
+      .setScale(0.6, 0.4)
+      .setDepth(20)
     let box = new Phaser.GameObjects.Rectangle(
       this.scene,
-      0,
-      600,
-      1200,
-      800,
+      50,
+      650,
+      1100,
+      750,
       0xffffff,
       0.55
     )

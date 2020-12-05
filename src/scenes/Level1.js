@@ -11,6 +11,7 @@ import win from "../logic/win";
 import tree from "../logic/tree";
 import createMap from "../logic/createMap";
 import spriteCreation from "../logic/spriteCreation";
+import intro from "../logic/intro";
 
 export default class Level1 extends Scene {
   constructor(config) {
@@ -34,6 +35,7 @@ export default class Level1 extends Scene {
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
     this.winCon();
+    this.introHelp()
   }
 
   update() {
@@ -247,6 +249,13 @@ export default class Level1 extends Scene {
 
     //Sprite Intros
     this.spriteSelection.intro();
+    
+  }
+
+  introHelp() {
+    new intro({
+      scene: this
+    })
   }
 
   createGameObjects() {
