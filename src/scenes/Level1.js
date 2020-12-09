@@ -35,7 +35,7 @@ export default class Level1 extends Scene {
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
     this.winCon();
-    this.introHelp()
+    this.introHelp();
   }
 
   update() {
@@ -203,7 +203,7 @@ export default class Level1 extends Scene {
     this.box = this.add
       .graphics({ fillStyle: { color: 0x000000, alpha: 0.2 } })
       .setDepth(8);
-      
+
     this.box.setMask(mask);
 
     this.bg = this.add
@@ -249,13 +249,13 @@ export default class Level1 extends Scene {
 
     //Sprite Intros
     this.spriteSelection.intro();
-    
   }
 
   introHelp() {
-    new intro({
-      scene: this
-    })
+    this.intro = new intro({
+      scene: this,
+    });
+   
   }
 
   createGameObjects() {
