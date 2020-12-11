@@ -37,6 +37,7 @@ export default class bootScene extends Scene {
     this.load.audio("win", "/assets/win.mp3");
     this.load.audio("starEarn", "/assets/starEarn.mp3");
     this.load.audio("starEarn2", "/assets/starEarn2.mp3");
+    this.load.audio("title", "/assets/title.mp3");
     // title Scene assets
     this.load.image("grass", grass);
     this.load.image("dirt", dirt);
