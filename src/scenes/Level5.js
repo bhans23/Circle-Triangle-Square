@@ -16,7 +16,7 @@ export default class Level1 extends Scene {
   constructor(config) {
     super("level5");
     this.key = "level5";
-    this.keyWin = "level6";
+    this.keyWin = "beatGame";
   }
   // Preload, create, update functions ---------------------------------
   preload() {}

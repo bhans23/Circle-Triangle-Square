@@ -35,7 +35,7 @@ export default class Level1 extends Scene {
     this.pointerXY(this.spriteSelection);
     this.addCollisions();
     this.winCon();
-    this.introHelp()
+    this.introHelp();
   }
 
   update() {
@@ -190,22 +190,6 @@ export default class Level1 extends Scene {
   }
 
   createMap() {
-    let rect0 = new Phaser.GameObjects.Rectangle(this, 100, 200, 950, 950)
-      .setDepth(8)
-      .setOrigin(0);
-    let rect = new Phaser.GameObjects.Rectangle(this, 0, 136, 1200, 1200)
-      .setDepth(8)
-      .setOrigin(0);
-    let shape = this.make.graphics();
-    shape.fillRectShape(rect0);
-    var mask = shape.createGeometryMask();
-    mask.setInvertAlpha();
-    this.box = this.add
-      .graphics({ fillStyle: { color: 0x000000, alpha: 0.2 } })
-      .setDepth(8);
-      
-    this.box.setMask(mask);
-
     this.bg = this.add
       .image(0, 0, "stoneBg")
       .setOrigin(0)
@@ -249,13 +233,12 @@ export default class Level1 extends Scene {
 
     //Sprite Intros
     this.spriteSelection.intro();
-    
   }
 
   introHelp() {
-    new intro({
-      scene: this
-    })
+    this.intro = new intro({
+      scene: this,
+    });
   }
 
   createGameObjects() {

@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import button from "../logic/button";
 export default class levelMap extends Phaser.Scene {
   constructor() {
     super("levelMap");
@@ -7,23 +8,47 @@ export default class levelMap extends Phaser.Scene {
   preload() {}
 
   create() {
+    this.music();
     // Background image
-    const bgImage = this.add.image(0, 350, "title").setOrigin(0, 0).setDepth(0);
+    this.bg = this.add
+      .image(0, 0, "stoneBg")
+      .setOrigin(0)
+      .setScale(0.6, 0.6)
+      .setDepth(3)
+      .setCrop(0, 0, 2000, 785);
+    this.add
+      .image(0, 1000, "stoneBg")
+      .setOrigin(0)
+      .setScale(0.6, 0.6)
+      .setDepth(3)
+      .setCrop(0, 1075, 2000, 2000);
+
+    const bgImage = this.add.image(0, 468, "title").setOrigin(0, 0).setDepth(0);
     bgImage.displayWidth = 1200;
     bgImage.displayHeight = 1200;
-    this.add.rectangle(0,0,1200,1920,0x000000,.3).setOrigin(0)
+    this.add.rectangle(0, 0, 1200, 1920, 0x000000, 0.3).setOrigin(0);
 
     this.localStorage = window.localStorage;
-    this.sound.stopAll();
+
     this.levels();
     this.buttons();
     this.hover();
     this.rewardCount();
     this.rewards();
+    this.resetButton();
 
     // this.localStorage.clear();
   }
-
+  music() {
+    
+    const bgMusic = this.sound.get("title");
+    console.log(bgMusic.isPlaying)
+    if (bgMusic.isPlaying !== true) {
+      const stopped = this.sound.stopByKey("level1");
+      const music = this.sound.add("title", { loop: true, volume: 0.5 }).play();
+    } else {
+    }
+  }
   buttons() {
     //Level squares
 
@@ -174,6 +199,7 @@ export default class levelMap extends Phaser.Scene {
 
     this.add.rectangle(1000, 0, 200, 100, 0xffffff, 0.5).setOrigin(0);
     let star = this.add.image(1050, 50, "star").setScale(0.16);
+    star.setDepth(4);
     this.tweens.add({
       targets: star,
       scale: { start: 0.16, from: 0.12, to: 0.16 },
@@ -193,6 +219,7 @@ export default class levelMap extends Phaser.Scene {
     //Feather
     this.add.rectangle(0, 0, 200, 100, 0xffffff, 0.5).setOrigin(0);
     let feather = this.add.image(50, 50, "feather").setScale(0.14);
+    feather.setDepth(4);
     this.tweens.add({
       targets: feather,
       scale: { start: 0.14, from: 0.12, to: 0.14 },
@@ -233,5 +260,28 @@ export default class levelMap extends Phaser.Scene {
         )
         .setDepth(30);
     });
+  }
+  resetButton() {
+    this.rButton = new button({
+      scene: this,
+      x: 600,
+      y: 50,
+      bType: "redo",
+      scale: 0.5,
+      depth: 20,
+      function: () => {
+        this.localStorage.clear();
+        this.scene.start("levelMap");
+      },
+    });
+
+    this.add
+      .text(600, 130, "Reset Progress", {
+        fontFamily: "Arial",
+        fontSize: 45,
+        color: "#ffffff",
+      })
+      .setDepth(20)
+      .setOrigin(0.5);
   }
 }
