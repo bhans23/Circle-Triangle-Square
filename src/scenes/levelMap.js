@@ -8,20 +8,20 @@ export default class levelMap extends Phaser.Scene {
   preload() {}
 
   create() {
-    this.music()
+    this.music();
     // Background image
     this.bg = this.add
-    .image(0, 0, "stoneBg")
-    .setOrigin(0)
-    .setScale(0.6, 0.6)
-    .setDepth(3)
-    .setCrop(0, 0, 2000, 785);
-  this.add
-    .image(0, 1000, "stoneBg")
-    .setOrigin(0)
-    .setScale(0.6, 0.6)
-    .setDepth(3)
-    .setCrop(0, 1075, 2000, 2000);
+      .image(0, 0, "stoneBg")
+      .setOrigin(0)
+      .setScale(0.6, 0.6)
+      .setDepth(3)
+      .setCrop(0, 0, 2000, 785);
+    this.add
+      .image(0, 1000, "stoneBg")
+      .setOrigin(0)
+      .setScale(0.6, 0.6)
+      .setDepth(3)
+      .setCrop(0, 1075, 2000, 2000);
 
     const bgImage = this.add.image(0, 468, "title").setOrigin(0, 0).setDepth(0);
     bgImage.displayWidth = 1200;
@@ -29,7 +29,7 @@ export default class levelMap extends Phaser.Scene {
     this.add.rectangle(0, 0, 1200, 1920, 0x000000, 0.3).setOrigin(0);
 
     this.localStorage = window.localStorage;
-    
+
     this.levels();
     this.buttons();
     this.hover();
@@ -39,14 +39,16 @@ export default class levelMap extends Phaser.Scene {
 
     // this.localStorage.clear();
   }
-music(){
-  
-if(this.scene.get("Title").music.isPlaying !== true){
-  
-  var stopped = this.sound.stopByKey("level1")
-  let music = this.sound.add("title", { loop: true, volume: .5 }).play()
-}
-}
+  music() {
+    
+    const bgMusic = this.sound.get("title");
+    console.log(bgMusic.isPlaying)
+    if (bgMusic.isPlaying !== true) {
+      const stopped = this.sound.stopByKey("level1");
+      const music = this.sound.add("title", { loop: true, volume: 0.5 }).play();
+    } else {
+    }
+  }
   buttons() {
     //Level squares
 

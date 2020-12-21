@@ -9,7 +9,7 @@ export default class TitleScene extends Phaser.Scene {
 
   create() {
     //Music
-    this.music = this.sound.add("title", { loop: true, volume: .5 }).play()
+    this.bgMusic = this.sound.add("title", { loop: true, volume: .5 }).play()
     // Background image
     const bgImage = this.add.image(0, 468, "title").setOrigin(0, 0).setDepth(0);
     bgImage.displayWidth = 1200;
